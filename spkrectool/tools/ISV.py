@@ -52,33 +52,33 @@ class ISVTool (UBMGMMTool):
   #######################################################
   ################ ISV training #########################
   def train_enroler(self, train_files, enroler_file):
-    # create a JFABasemachine with the UBM from the base class
-    self.m_jfabase = bob.machine.JFABaseMachine(self.m_ubm, self.m_config.ru)
-    self.m_jfabase.ubm = self.m_ubm
+    # create a ISVBase with the UBM from the base class
+    self.m_isvbase = bob.machine.ISVBase(self.m_ubm, self.m_config.ru)
+    self.m_isvbase.ubm = self.m_ubm
 
     # load GMM stats from training files
     gmm_stats = self.__load_gmm_stats_list__(train_files)
 
-    t = bob.trainer.JFABaseTrainer(self.m_jfabase)
-    t.train_isv(gmm_stats, self.m_config.n_iter_train, self.m_config.relevance_factor)
+    t = bob.trainer.ISVTrainer(self.m_config.n_iter_train, self.m_config.relevance_factor)
+    t.train(self.m_isvbase, gmm_stats)
 
-    # Save the JFA base AND the UBM into the same file
-    self.m_jfabase.save(bob.io.HDF5File(enroler_file, "w"))
+    # Save the ISV base AND the UBM into the same file
+    self.m_isvbase.save(bob.io.HDF5File(enroler_file, "w"))
 
    
 
   #######################################################
-  ################## JFA model enrol ####################
+  ################## ISV model enrol ####################
   def load_enroler(self, enroler_file):
     """Reads the UBM model from file"""
-    # now, load the JFA base, if it is included in the file
-    self.m_jfabase = bob.machine.JFABaseMachine(bob.io.HDF5File(enroler_file))
+    # now, load the ISV base, if it is included in the file
+    self.m_isvbase = bob.machine.ISVBase(bob.io.HDF5File(enroler_file))
     # add UBM model from base class
-    self.m_jfabase.ubm = self.m_ubm
+    self.m_isvbase.ubm = self.m_ubm
 
-    self.m_machine = bob.machine.JFAMachine(self.m_jfabase)
-    self.m_base_trainer = bob.trainer.JFABaseTrainer(self.m_jfabase)
-    self.m_trainer = bob.trainer.JFATrainer(self.m_machine, self.m_base_trainer)
+    self.m_machine = bob.machine.ISVMachine(self.m_isvbase)
+    self.m_trainer = bob.trainer.ISVTrainer(self.m_config.n_iter_train, self.m_config.relevance_factor)
+    
     
   def project_isv(self, feature_array, projected_ubm):
     #""Computes GMM statistics against a UBM, given an input 2D numpy.ndarray of feature vectors""
@@ -86,7 +86,7 @@ class ISVTool (UBMGMMTool):
     projected_isv = numpy.ndarray(shape=(self.m_ubm.dim_c*self.m_ubm.dim_d,), dtype=numpy.float64)
     #print projected_isv.shape
     
-    model = bob.machine.JFAMachine(self.m_jfabase)
+    model = bob.machine.ISVMachine(self.m_isvbase)
     model.estimate_ux(projected_ubm, projected_isv)
     #
     return [projected_ubm, projected_isv]
@@ -109,7 +109,7 @@ class ISVTool (UBMGMMTool):
   
   def enrol(self, enrol_features):
     """Performs ISV enrolment"""
-    self.m_trainer.enrol(enrol_features, self.m_config.n_iter_enrol)
+    self.m_trainer.enrol(self.m_machine, enrol_features, self.m_config.n_iter_enrol)
     # return the resulting gmm    
     return self.m_machine
 
@@ -117,10 +117,10 @@ class ISVTool (UBMGMMTool):
   ######################################################
   ################ Feature comparison ##################
   def read_model(self, model_file):
-    """Reads the JFA Machine that holds the model"""
+    """Reads the ISV Machine that holds the model"""
     print model_file
-    machine = bob.machine.JFAMachine(bob.io.HDF5File(model_file))
-    machine.jfa_base = self.m_jfabase
+    machine = bob.machine.ISVMachine(bob.io.HDF5File(model_file))
+    machine.isv_base = self.m_isvbase
     return machine
 
   def read_probe(self, probe_file):

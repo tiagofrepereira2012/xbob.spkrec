@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Manuel Guenther <Manuel.Guenther@idiap.ch>
+# Modified by Elie Khoury <Elie.Khoury@idiap.ch>
 
 import os
 import numpy
@@ -123,13 +124,6 @@ class ToolChainZT:
         preprocessed_image_file = preprocessed_image_files[k]
         
         #print image_file + "    " + preprocessed_image_file
-        
-        """
-        if os.path.isfile(preprocessed_image_file):
-          featuresTmp = bob.io.load(str(preprocessed_image_file));
-          if self.check_features(featuresTmp)==0: 
-            print "FILE TO CHECK: something's wrong with the features: ", str(preprocessed_image_file)
-        """
 
         if not self.__check_file__(preprocessed_image_file, force):
           annotations = None
@@ -513,13 +507,7 @@ class ToolChainZT:
   
         # Saves to text file
         self.__save_scores__(self.m_file_selector.no_norm_file(model_id, group), a, probe_objects, self.m_file_selector.client_id(model_id))
-        """
-        scores_list = utils.convertScoreToList(numpy.reshape(a,a.size), probe_objects)
-        f_nonorm = open(self.m_file_selector.no_norm_file(model_id, group), 'w')
-        for x in scores_list:
-          f_nonorm.write(str(x[2]) + " " + str(x[1]) + " " + str(x[3]) + " " + str(x[4]) + "\n")
-        f_nonorm.close()
-        """
+
 
   def __scores_b__(self, model_ids, group, force, preload_probes):
     """Computes B scores"""
@@ -675,27 +663,7 @@ class ToolChainZT:
           print "computing D scores"
           self.__scores_d__(tmodel_ids_short, group, force, preload_probes)
       
-      
-  """
-  def __scores_c_normalize__(self, model_ids, tmodel_ids, group):
-    # read all tmodel scores
-    c_for_all = None
-    for tmodel_id in tmodel_ids:
-      tmp = bob.io.load(self.m_file_selector.c_file(tmodel_id, group))
-      if c_for_all == None:
-        c_for_all = tmp
-      else:
-        c_for_all = numpy.vstack((c_for_all, tmp))
-    # iterate over all models and generate C matrices for that specific model
-    probe_objects = self.m_file_selector.probe_files(group, self.m_use_projected_ubm_dir, self.m_use_projected_isv_dir)
-    for model_id in model_ids:
-      # select the correct probe files for the current model
-      model_probes = self.m_file_selector.probe_files_for_model(model_id, group, self.m_use_projected_ubm_dir, self.m_use_projected_isv_dir)
-      probes_used = utils.probes_used_generate_vector(probe_objects, model_probes)
-      c_for_model = utils.probes_used_extract_scores(c_for_all, probes_used)
-      # Save C matrix to file
-      bob.io.save(c_for_model, self.m_file_selector.c_file_for_model(model_id, group))
-  """
+
   def __c_matrix_split_for_model__(self, selected_probe_objects, all_probe_objects, all_c_scores):
     """Helper function to sub-select the c-scores in case not all probe files were used to compute A scores."""
     c_scores_for_model = numpy.ndarray((all_c_scores.shape[0], len(selected_probe_objects)), numpy.float64)
@@ -732,27 +700,6 @@ class ToolChainZT:
     # initialize D and D_same_value matrices
     d_for_all = None
     d_same_value = None
-    """
-    n_nonempty_tmodels = 0
-    n_scores_per_model = 0
-    for tmodel_id in tmodel_ids:
-      tmp = bob.io.load(self.m_file_selector.d_file(tmodel_id, group))
-      tmp2 = bob.io.load(self.m_file_selector.d_same_value_file(tmodel_id, group))
-      if not (d_for_all == None and d_same_value == None):
-        n_nonempty_tmodels += 1
-        if n_scores_per_model == 0:
-            n_scores_per_model = tmp.shape[1]
-    d_for_all = numpy.array(shape=(n_nonempty_tmodels,n_scores_per_model), dtype=numpy.float64)
-    d_same_value = numpy.array(shape=(n_nonempty_tmodels,n_scores_per_model), dtype=numpy.uint8)
-    row=0
-    for tmodel_id in tmodel_ids:
-      tmp = bob.io.load(self.m_file_selector.d_file(tmodel_id, group))
-      tmp2 = bob.io.load(self.m_file_selector.d_same_value_file(tmodel_id, group))
-      if not (d_for_all == None and d_same_value == None):
-        d_for_all[row,:] = tmp
-        d_same_value[row,:] = tmp2
-        row+=1
-    """
     
     for tmodel_id in tmodel_ids:
       tmp = bob.io.load(self.m_file_selector.d_file(tmodel_id, group))
@@ -809,40 +756,7 @@ class ToolChainZT:
         # Saves to text file
         self.__save_scores__(self.m_file_selector.zt_norm_file(model_id, group), zt_scores, probe_objects, self.m_file_selector.client_id(model_id))
         
-        """
-        ztscores_list = utils.convertScoreToList(numpy.reshape(ztscores_m, ztscores_m.size), probe_objects)
-        sc_ztnorm_filename = self.m_file_selector.zt_norm_file(model_id, group)
-        f_ztnorm = open(sc_ztnorm_filename, 'w')
-        for x in ztscores_list:
-          f_ztnorm.write(str(x[2]) + " " + str(x[1]) + " " + str(x[3]) + " " + str(x[4]) + "\n")
-        f_ztnorm.close()
-        """
 
-
-
-  """
-  def concatenate(self, compute_zt_norm, groups = ['dev', 'eval']):
-    for group in groups:
-      # (sorted) list of models
-      model_ids = self.m_file_selector.model_ids(group)
-
-      f = open(self.m_file_selector.no_norm_result_file(group), 'w')
-      # Concatenates the scores
-      for model_id in model_ids:
-        model_file = self.m_file_selector.no_norm_file(model_id, group)
-        assert os.path.exists(model_file)
-        res_file = open(model_file, 'r')
-        f.write(res_file.read())
-      f.close()
-
-      if compute_zt_norm:
-        f = open(self.m_file_selector.zt_norm_result_file(group), 'w')
-        # Concatenates the scores
-        for model_id in model_ids:
-          res_file = open(self.m_file_selector.zt_norm_file(model_id, group), 'r')
-          f.write(res_file.read())
-        f.close()
-  """
         
   def concatenate(self, compute_zt_norm, groups = ['dev', 'eval']):
     """Concatenates all results into one (or two) score files per group."""

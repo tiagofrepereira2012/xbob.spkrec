@@ -23,3 +23,4 @@ class NullPreprocessor:
     bob.io.save(image, output_file)
 
 from MOD_4HZ import MOD_4HZ
+from Energy import Energy

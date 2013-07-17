@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Manuel Guenther <Manuel.Guenther@idiap.ch>
-
+# Modified by Elie Khoury <Elie.Khoury@idiap.ch>
 import os
 from .. import utils
 import bob
@@ -33,7 +33,6 @@ class FileSelectorZT:
   ### Original images and preprocessing
   def original_image_list(self):
     """Returns the list of original images that can be used for image preprocessing"""
-    #return self.m_db.files(directory=self.m_config.img_input_dir, extension=self.m_config.img_input_ext, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
     known = set()
     directory=self.m_config.img_input_dir
@@ -45,7 +44,6 @@ class FileSelectorZT:
     if not hasattr(self.m_config, 'pos_input_dir') or self.m_config.pos_input_dir == None:
       return None
 
-    #return self.m_db.files(directory=self.m_config.pos_input_dir, extension=self.m_config.pos_input_ext, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
     known = set()
     directory=self.m_config.pos_input_dir
@@ -56,7 +54,6 @@ class FileSelectorZT:
   def preprocessed_image_list(self):
     """Returns the list of preprocessed images and assures that the normalized image path is existing"""
     utils.ensure_dir(self.m_config.preprocessed_dir)
-    #return self.m_db.files(directory=self.m_config.preprocessed_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
     known = set()
     directory=self.m_config.preprocessed_dir
@@ -67,7 +64,6 @@ class FileSelectorZT:
   def feature_list(self):
     """Returns the list of features and assures that the feature path is existing"""
     utils.ensure_dir(self.m_config.features_dir)
-    #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
     known = set()
     directory=self.m_config.features_dir
@@ -77,7 +73,6 @@ class FileSelectorZT:
   ### Training and projecting features
   def training_image_list(self):
     """Returns the list of images that should be used for extractor training"""
-    #return self.m_db.files(directory=self.m_config.preprocessed_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, groups='world', **self.__options__('world_extractor_options'))  
     files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, groups='world', **self.__options__('world_extractor_options')))
     known = set()
     directory=self.m_config.preprocessed_dir
@@ -87,7 +82,6 @@ class FileSelectorZT:
 
   def training_feature_list(self):
     """Returns the list of features that should be used for projector training"""
-    #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, groups='world', **self.__options__('world_projector_options'))  
     files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, groups='world', **self.__options__('world_projector_options')))
     known = set()
     directory=self.m_config.features_dir
@@ -118,14 +112,11 @@ class FileSelectorZT:
     features_by_clients_options = {}
     if 'subworld' in cur_world_options: features_by_clients_options['subworld'] = cur_world_options['subworld']
     features_by_clients_options.update(self.__options__('features_by_clients_options'))
-    #print "self.m_config.world_gender", self.m_config.world_gender
     train_clients = self.m_db.clients(groups='world', protocol=self.m_config.protocol, **features_by_clients_options)
-    #train_clients = self.m_db.clients(groups='world', protocol=self.m_config.protocol, gender= self.m_config.world_gender, **features_by_clients_options)
     training_filenames = {}
     
     for m in train_clients:
       # collect training features for current client id
-      #train_data_m = self.m_db.files(directory=cur_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, groups='world', model_ids=(m,), **cur_world_options) 
       #print m
       files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, groups='world', model_ids=(m.id,), **cur_world_options))
       known = set()
@@ -135,7 +126,6 @@ class FileSelectorZT:
 
       # add this model to the list
       training_filenames[m] = train_data_m
-    # return the list of features which is grouped by client id
     return training_filenames
     
 
@@ -152,7 +142,6 @@ class FileSelectorZT:
   def projected_ubm_list(self):
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.projected_ubm_dir)
-    #return self.m_db.files(directory=self.m_config.projected_ubm_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
     known = set()
     directory=self.m_config.projected_ubm_dir
@@ -164,7 +153,6 @@ class FileSelectorZT:
   def projected_isv_list(self):
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.projected_isv_dir)
-    #return self.m_db.files(directory=self.m_config.projected_isv_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
     known = set()
     directory=self.m_config.projected_isv_dir
@@ -199,7 +187,6 @@ class FileSelectorZT:
   def enrol_files(self, model_id, group, use_projected_ubm_dir):
     """Returns the list of model features used for enrolment of the given model_id from the given group"""
     used_dir = self.m_config.projected_ubm_dir if use_projected_ubm_dir else self.m_config.features_dir 
-    #return self.m_db.files(directory=used_dir, extension=self.m_config.default_extension, groups=group, protocol=self.m_config.protocol, model_ids=(model_id,), purposes='enrol')
     files = self.sort(self.m_db.objects(groups=group, protocol=self.m_config.protocol, model_ids=(model_id,), purposes='enrol'))
     known = set()
     directory=used_dir
@@ -215,24 +202,11 @@ class FileSelectorZT:
 
   def tmodel_ids(self, group):
     """Returns the sorted list of T-Norm-model ids from the given group"""
-    #return sorted(self.m_db.tmodel_ids(groups=group, protocol=self.m_config.protocol, strategy='S1', subworld='onethird')) # This is the default one
-    #return sorted(self.m_db.tmodel_ids(groups=group, protocol=self.m_config.protocol, strategy='S1', subworld='twothirds'))
-    #return sorted(self.m_db.tmodel_ids(groups=group, protocol=self.m_config.protocol, strategy='S2', subworld='twothirds'))
-    #return sorted(self.m_db.tmodel_ids(groups=group, protocol=self.m_config.protocol, strategy='S3', subworld='twothirds'))
-    #return sorted(self.m_db.tmodel_ids(groups=group, protocol=self.m_config.protocol, strategy='S4', subworld='twothirds'))
-    #return sorted(self.m_db.tmodel_ids(groups=group, protocol=self.m_config.protocol, strategy='S5', subworld='twothirds'))
     return sorted(self.m_db.tmodel_ids(groups=group))
     
   def tenrol_files(self, model_id, group, use_projected_ubm_dir):
     """Returns the list of T-model features used for enrolment of the given model_id from the given group"""
     used_dir = self.m_config.projected_ubm_dir if use_projected_ubm_dir else self.m_config.features_dir 
-    #return self.m_db.tfiles(directory=used_dir, extension=self.m_config.default_extension, groups=group, protocol=self.m_config.protocol, model_ids=(model_id,))
-    #tfiles = self.sort(self.m_db.tobjects(groups=group, protocol=self.m_config.protocol, model_ids=(model_id,), strategy='S1', subworld='onethird'))
-    #tfiles = self.sort(self.m_db.tobjects(groups=group, protocol=self.m_config.protocol, model_ids=(model_id,), strategy='S1', subworld='twothirds'))
-    #tfiles = self.sort(self.m_db.tobjects(groups=group, protocol=self.m_config.protocol, model_ids=(model_id,), strategy='S2', subworld='twothirds'))
-    #tfiles = self.sort(self.m_db.tobjects(groups=group, protocol=self.m_config.protocol, model_ids=(model_id,), strategy='S3', subworld='twothirds'))
-    #tfiles = self.sort(self.m_db.tobjects(groups=group, protocol=self.m_config.protocol, model_ids=(model_id,), strategy='S4', subworld='twothirds'))
-    #tfiles = self.sort(self.m_db.tobjects(groups=group, protocol=self.m_config.protocol, model_ids=(model_id,), strategy='S5', subworld='twothirds'))
     tfiles = self.sort(self.m_db.tobjects(groups=group, model_ids=(model_id,)))
 
     known = set()
@@ -325,8 +299,6 @@ class FileSelectorZT:
     
   def zprobe_files(self, group, use_projected_ubm_dir, use_projected_isv_dir):
     """Returns the probe files used to compute the Z-Norm"""
-    #objects = self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, speech_type=['r', 'f','l','p']))
-    #objects = self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, speech_type=['r', 'f'])) # This is the default
     objects = self.sort(self.m_db.zobjects(groups=group)) # This is the default
     known = set()
     directory=self.__probe_dir__(use_projected_ubm_dir, use_projected_isv_dir)
@@ -345,8 +317,6 @@ class FileSelectorZT:
     
   def zprobe_files_for_model(self, model_id, group, use_projected_ubm_dir, use_projected_isv_dir):
     """Returns the probe files used to compute the Z-Norm"""
-    #objects = self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, model_ids=(model_id,), speech_type=['r', 'f','l','p']))
-    #objects = self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, model_ids=(model_id,), speech_type=['r', 'f'])) # This is the default
     objects = self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, model_ids=(model_id,))) # This is the default
     known = set()
     directory=self.__probe_dir__(use_projected_ubm_dir, use_projected_isv_dir)
@@ -361,21 +331,16 @@ class FileSelectorZT:
     
   def zprobe_objects(self, group):
     """Returns the probe objects used to compute the Z-Norm"""
-    #return self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, speech_type=['r', 'f','l','p']))
-    #return self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, speech_type=['r', 'f']))  # This is the default
     return self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group))  # This is the default
     
 
   def probe_objects_for_model(self, model_id, group):
     """Returns the probe objects used to compute the raw scores"""
-    #return self.m_db.objects(directory=self.__probe_dir__(use_projected_ubm_dir, use_projected_isv_dir), extension=self.m_config.default_extension, groups=group, protocol=self.m_config.protocol, purposes="probe", model_ids=(model_id,))
     return self.sort(self.m_db.objects(groups=group, protocol=self.m_config.protocol, purposes="probe", model_ids=(model_id,)))
    
    
   def zprobe_objects_for_model(self, model_id, group):
     """Returns the probe objects used to compute the Z-Norm"""
-    #return self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, model_ids=(model_id,), speech_type=['r', 'f','l','p']))
-    #return self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, model_ids=(model_id,), speech_type=['r', 'f']))  # This is the default
     return self.sort(self.m_db.zobjects(protocol=self.m_config.protocol, groups=group, model_ids=(model_id,)))  # This is the default
     
     

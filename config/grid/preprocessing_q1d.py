@@ -6,11 +6,11 @@
 training_queue = { 'queue':'q1d', 'memfree':'8G'}
 #training_queue = { 'queue':'q1d', 'memfree':'1G'}
 # number of images that one job should preprocess
-number_of_images_per_job = 1000
+number_of_images_per_job = 200
 preprocessing_queue = {'queue':'q1d', 'memfree':'1G'}
 
 # number of features that one job should extract
-number_of_features_per_job = 1000
+number_of_features_per_job = 200
 extraction_queue = {'queue':'q1d', 'memfree':'1G'}
 
 # number of features that one job should project

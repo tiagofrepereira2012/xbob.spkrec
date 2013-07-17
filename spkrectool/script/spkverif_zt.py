@@ -104,7 +104,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
               '--feature-extraction', 
               list_to_split = self.m_file_selector.feature_list(), 
               number_of_files_per_job = self.m_grid_config.number_of_images_per_job, 
-              dependencies = [], 
+              dependencies = deps, 
               **self.m_grid_config.preprocessing_queue)
       deps.append(job_ids['feature_extraction'])      
 

@@ -5,8 +5,8 @@
 import bob
 import numpy
 import logging
-logger = logging.getLogger("bob.c++")
-logger.setLevel(logging.INFO)
+#logger = logging.getLogger("bob.c++")
+#logger.setLevel(logging.INFO)
 
 class UBMGMMTool:
   """Tool chain for computing Universal Background Models and Gaussian Mixture Models of the features"""
