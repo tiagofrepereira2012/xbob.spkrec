@@ -69,7 +69,7 @@ class IVecTool (UBMGMMTool):
 
     # Initialization of the IVectorTrainer
     trainer = bob.trainer.IVectorTrainer(update_sigma=True, convergence_threshold= self.m_config.convergence_threshold, max_iterations=self.m_config.max_iterations)
-    trainer.initialization(self.m_ivector, gmm_stats)
+    trainer.initialize(self.m_ivector, gmm_stats)
 
     # E-Step
     trainer.train(self.m_ivector, gmm_stats)

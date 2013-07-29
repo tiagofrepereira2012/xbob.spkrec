@@ -115,8 +115,8 @@ class FileSelectorIvector:
 
   def training_subspaces_list(self):
     """Returns the list of features that should be used for projector training"""
-    #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, groups='plda', **self.__options__('world_projector_options'))  
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, groups='subspaces', **self.__options__('world_projector_options')))
+    #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('world_projector_options'))  
+    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('world_projector_options')))
     known = set()
     directory=self.m_config.features_dir
     extension=self.m_config.default_extension
@@ -124,8 +124,8 @@ class FileSelectorIvector:
 
   def training_plda_list(self):
     """Returns the list of features that should be used for projector training"""
-    #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, groups='plda', **self.__options__('world_projector_options'))  
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, groups='plda', **self.__options__('world_projector_options')))
+    #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('world_projector_options'))  
+    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('world_projector_options')))
     known = set()
     directory=self.m_config.features_dir
     extension=self.m_config.default_extension
@@ -144,19 +144,19 @@ class FileSelectorIvector:
       group = 'world'
       cur_world_options = self.__options__('world_projector_options')
     elif step == 'train_enroler':
-      group = 'subspaces'
+      group = 'optional_world_1'
       cur_world_options = self.__options__('world_enroler_options')
     elif step == 'train_whitening_enroler':
-      group = 'subspaces'
+      group = 'optional_world_1'
       cur_world_options = self.__options__('world_enroler_options')
     elif step == 'lda_train_projector':
-      group = 'subspaces'
+      group = 'optional_world_1'
       cur_world_options = self.__options__('world_enroler_options')
     elif step == 'wccn_train_projector':
-      group = 'subspaces'
+      group = 'optional_world_1'
       cur_world_options = self.__options__('world_enroler_options')
     elif step == 'train_plda_enroler':
-      group = 'plda'
+      group = 'optional_world_2'
       cur_world_options = self.__options__('world_enroler_options')
       
 

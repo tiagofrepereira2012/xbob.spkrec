@@ -16,6 +16,8 @@ setup(
     entry_points={
       'console_scripts': [
         'spkverif_zt.py = spkrectool.script.spkverif_zt:main',
+        'spkverif_ivector.py = spkrectool.script.spkverif_ivector:main',
+        'spkverif_ivector_cosine.py = spkrectool.script.spkverif_ivector_cosine:main',
         ],
       },
 
