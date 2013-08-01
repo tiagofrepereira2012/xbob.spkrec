@@ -55,7 +55,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.img_input_dir, extension=self.m_config.img_input_ext, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.img_input_dir
@@ -70,7 +71,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.pos_input_dir, extension=self.m_config.pos_input_ext, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.pos_input_dir
@@ -84,7 +86,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.preprocessed_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.preprocessed_dir
@@ -98,7 +101,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.features_dir
@@ -208,7 +212,8 @@ class FileSelectorIvector:
     utils.ensure_dir(directory)
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     extension=self.m_config.default_extension
@@ -221,7 +226,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.projected_ubm_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.projected_ubm_dir
@@ -236,7 +242,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.projected_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.projected_ivector_dir
@@ -249,7 +256,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.whitened_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.whitened_ivector_dir
@@ -262,7 +270,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.lnorm_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.lnorm_ivector_dir
@@ -276,7 +285,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.lda_projected_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.lda_projected_ivector_dir
@@ -289,7 +299,8 @@ class FileSelectorIvector:
     #return self.m_db.files(directory=self.m_config.wccn_projected_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
-    files = files1 + files2 
+    files3 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))
+    files = files1 + files2 + files3 
     files = self.sort(files)
     known = set()
     directory=self.m_config.wccn_projected_ivector_dir
