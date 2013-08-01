@@ -33,7 +33,10 @@ class FileSelectorZT:
   ### Original images and preprocessing
   def original_image_list(self):
     """Returns the list of original images that can be used for image preprocessing"""
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2
+    files = self.sort(files)
     known = set()
     directory=self.m_config.img_input_dir
     extension=self.m_config.img_input_ext
@@ -43,8 +46,10 @@ class FileSelectorZT:
     """Returns the list of annotation files, if any (else None)"""
     if not hasattr(self.m_config, 'pos_input_dir') or self.m_config.pos_input_dir == None:
       return None
-
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.pos_input_dir
     extension=self.m_config.pos_input_ext
@@ -54,7 +59,10 @@ class FileSelectorZT:
   def preprocessed_image_list(self):
     """Returns the list of preprocessed images and assures that the normalized image path is existing"""
     utils.ensure_dir(self.m_config.preprocessed_dir)
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.preprocessed_dir
     extension=self.m_config.default_extension
@@ -64,7 +72,10 @@ class FileSelectorZT:
   def feature_list(self):
     """Returns the list of features and assures that the feature path is existing"""
     utils.ensure_dir(self.m_config.features_dir)
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.features_dir
     extension=self.m_config.default_extension
@@ -88,6 +99,15 @@ class FileSelectorZT:
     extension=self.m_config.default_extension
     return [file.make_path(directory, extension) for file in files if file.path not in known and not known.add(file.path)]
 
+  def training_subspaces_list(self):
+    """Returns the list of features that should be used for projector training"""
+    #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('world_projector_options'))  
+    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('world_projector_options')))
+    known = set()
+    directory=self.m_config.features_dir
+    extension=self.m_config.default_extension
+    return [file.make_path(directory, extension) for file in files if file.path not in known and not known.add(file.path)]
+    
   def training_feature_list_by_clients(self, dir_type, step):
     """Returns the list of training features, which is split up by the client ids."""
     # get the type of directory that is required
@@ -103,16 +123,20 @@ class FileSelectorZT:
     # if requested, define the subset of training data to be used for this step
     if step == 'train_extractor':
       cur_world_options = self.__options__('world_extractor_options')
+      group = 'world'
     elif step == 'train_projector':
       cur_world_options = self.__options__('world_projector_options')
+      group = 'world'
     elif step == 'train_enroler':
       cur_world_options = self.__options__('world_enroler_options')
+      group = 'optional_world_1'
+    print group
 
     # iterate over all training clients
     features_by_clients_options = {}
     if 'subworld' in cur_world_options: features_by_clients_options['subworld'] = cur_world_options['subworld']
     features_by_clients_options.update(self.__options__('features_by_clients_options'))
-    train_clients = self.m_db.clients(groups='world', protocol=self.m_config.protocol, **features_by_clients_options)
+    train_clients = self.m_db.clients(groups=group, protocol=self.m_config.protocol, **features_by_clients_options)
     training_filenames = {}
     
     for m in train_clients:
@@ -142,7 +166,10 @@ class FileSelectorZT:
   def projected_ubm_list(self):
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.projected_ubm_dir)
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.projected_ubm_dir
     extension=self.m_config.default_extension
@@ -153,7 +180,10 @@ class FileSelectorZT:
   def projected_isv_list(self):
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.projected_isv_dir)
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.projected_isv_dir
     extension=self.m_config.default_extension

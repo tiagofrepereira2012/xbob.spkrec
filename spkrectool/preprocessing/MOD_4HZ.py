@@ -151,18 +151,18 @@ class MOD_4HZ:
 
     mod_4hz = self.modulation_4hz(filtering_res, rate_wavsample)
     
-    print "mod_4hz =", mod_4hz
+    #print "mod_4hz =", mod_4hz
     
     mod_4hz = self.averaging(mod_4hz)
-    print len(mod_4hz)
-    print mod_4hz
+    #print len(mod_4hz)
+    #print mod_4hz
 
     base_filename = os.path.splitext(os.path.basename(input_file))[0]
     
     e = bob.ap.Energy(rate_wavsample[0], wl, ws)
     energy_array = e(rate_wavsample[1])
     
-    print energy_array
+    #print energy_array
     
     labels = self.voice_activity_detection(energy_array, mod_4hz)
     #print labels

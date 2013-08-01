@@ -53,7 +53,10 @@ class FileSelectorIvector:
   def original_image_list(self):
     """Returns the list of original images that can be used for image preprocessing"""
     #return self.m_db.files(directory=self.m_config.img_input_dir, extension=self.m_config.img_input_ext, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.img_input_dir
     extension=self.m_config.img_input_ext
@@ -65,7 +68,10 @@ class FileSelectorIvector:
       return None
 
     #return self.m_db.files(directory=self.m_config.pos_input_dir, extension=self.m_config.pos_input_ext, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.pos_input_dir
     extension=self.m_config.pos_input_ext
@@ -76,7 +82,10 @@ class FileSelectorIvector:
     """Returns the list of preprocessed images and assures that the normalized image path is existing"""
     utils.ensure_dir(self.m_config.preprocessed_dir)
     #return self.m_db.files(directory=self.m_config.preprocessed_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.preprocessed_dir
     extension=self.m_config.default_extension
@@ -87,7 +96,10 @@ class FileSelectorIvector:
     """Returns the list of features and assures that the feature path is existing"""
     utils.ensure_dir(self.m_config.features_dir)
     #return self.m_db.files(directory=self.m_config.features_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.features_dir
     extension=self.m_config.default_extension
@@ -194,7 +206,10 @@ class FileSelectorIvector:
     """Returns the list of projected features and assures that the projected feature path is existing"""
     directory = self.select_dir(dir_type)
     utils.ensure_dir(directory)
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     extension=self.m_config.default_extension
     return [file.make_path(directory, extension) for file in files if file.path not in known and not known.add(file.path)]
@@ -204,7 +219,10 @@ class FileSelectorIvector:
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.projected_ubm_dir)
     #return self.m_db.files(directory=self.m_config.projected_ubm_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.projected_ubm_dir
     extension=self.m_config.default_extension
@@ -216,7 +234,10 @@ class FileSelectorIvector:
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.projected_ivector_dir)
     #return self.m_db.files(directory=self.m_config.projected_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.projected_ivector_dir
     extension=self.m_config.default_extension
@@ -226,7 +247,10 @@ class FileSelectorIvector:
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.whitened_ivector_dir)
     #return self.m_db.files(directory=self.m_config.whitened_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.whitened_ivector_dir
     extension=self.m_config.default_extension
@@ -236,7 +260,10 @@ class FileSelectorIvector:
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.lnorm_ivector_dir)
     #return self.m_db.files(directory=self.m_config.lnorm_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.lnorm_ivector_dir
     extension=self.m_config.default_extension
@@ -247,7 +274,10 @@ class FileSelectorIvector:
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.lda_projected_ivector_dir)
     #return self.m_db.files(directory=self.m_config.lda_projected_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.lda_projected_ivector_dir
     extension=self.m_config.default_extension
@@ -257,7 +287,10 @@ class FileSelectorIvector:
     """Returns the list of projected features and assures that the projected feature path is existing"""
     utils.ensure_dir(self.m_config.wccn_projected_ivector_dir)
     #return self.m_db.files(directory=self.m_config.wccn_projected_ivector_dir, extension=self.m_config.default_extension, protocol=self.m_config.protocol, **self.__options__('all_files_options'))
-    files = self.sort(self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options')))
+    files1 = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
+    files2 = self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+    files = files1 + files2 
+    files = self.sort(files)
     known = set()
     directory=self.m_config.wccn_projected_ivector_dir
     extension=self.m_config.default_extension
