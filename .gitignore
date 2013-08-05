@@ -13,10 +13,11 @@ eggs
 downloads
 lib
 facereclib.egg-info
-.mr.developer.cfg
 src
 sphinx
 .project
 .pydevproject
 .settings
 *.egg-info
+.mr.developer.cfg
+
