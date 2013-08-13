@@ -2,7 +2,9 @@ This is the speaker recognition toolkit, designed to run speaker verification/re
 experiments with the SGE grid infrastructure at Idiap. It's originally based on facereclib tool:
 https://github.com/bioidiap/facereclib
 
-To generate the documentation, please change into the docs directory and call:
+It includes tools for voice activity detection, feature extraction, background training, client enrolment, and score computation.
+
+To generate the documentation, please change into the docs directory and run:
 
 make html
 firefox html/index.html
