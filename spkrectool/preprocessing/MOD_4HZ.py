@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""Features for speaker recognition"""
+"""{4Hz modulation energy and energy}-based voice activity detection for speaker recognition"""
 
 import numpy,math
 import bob
@@ -98,11 +98,9 @@ class MOD_4HZ:
     Nyq = float(fs/2)
     Wo = float(4/Nyq)
     Wn = [(Wo - 0.5/Nyq), Wo + 0.5/Nyq]
-    #print Wn
     import scipy.signal
     b, a = scipy.signal.butter(order, Wn, btype='band')
-    #print b
-    #print a
+
     res = scipy.signal.lfilter(b, a, energy_bands)
     return res.T
   
@@ -116,10 +114,8 @@ class MOD_4HZ:
     mean_Energy = numpy.mean(Energy)
     
     win_size = int (2.0 ** math.ceil(math.log(win_length) / math.log(2)))
-    #print "win_size = ", win_size
     n_frames = 1 + (rate_wavsample[1].shape[0] - win_length) / win_shift
     range_modulation = int(fs/win_shift) # This corresponds to 1 sec 
-    #print "range_modulation = ", range_modulation
     res = numpy.zeros(n_frames)
     if n_frames < range_modulation:
       return res
@@ -131,11 +127,10 @@ class MOD_4HZ:
         E_range = E_range/mean_Energy 
         res[w] = numpy.var(E_range)
     res[n_frames-range_modulation:n_frames] = res[n_frames-range_modulation-1] 
-    #print "max_mod_4hz = ", numpy.max(res)
     return res 
   
   def mod_4hz(self, input_file):
-    """Computes and returns normalized cepstral features for the given input wave file"""
+    """Computes and returns the 4Hz modulation energy features for the given input wave file"""
     
     print "Input file : ", input_file
     rate_wavsample = utils.read(input_file)
@@ -160,36 +155,23 @@ class MOD_4HZ:
     c.energy_bands=True
 
     energy_bands = c(rate_wavsample[1])
-    #bob.io.save(energy_bands, 'energy_bands_new2.hdf5')
-        
+
     filtering_res = self.pass_band_filtering(energy_bands, rate_wavsample[0])
-
     mod_4hz = self.modulation_4hz(filtering_res, rate_wavsample)
-    
-    #print "mod_4hz =", mod_4hz
-    
     mod_4hz = self.averaging(mod_4hz)
-    #print len(mod_4hz)
-    #print mod_4hz
-
     base_filename = os.path.splitext(os.path.basename(input_file))[0]
-    
     e = bob.ap.Energy(rate_wavsample[0], wl, ws)
     energy_array = e(rate_wavsample[1])
-    
-    #print energy_array
-    
+
     labels = self.voice_activity_detection(energy_array, mod_4hz)
-    #print labels
 
     labels = utils.smoothing(labels,10) # discard isolated speech less than 100ms
-    #print numpy.sum(labels)
     
     return labels
     
   
   def __call__(self, input_file, output_file, annotations = None):
-    """Computes and returns normalized cepstral features for the given input wave file"""
+    """labels speech (1) and non-speech (0) parts for the given input wave file using 4Hz modulation energy and energy"""
     
     labels = self.mod_4hz(input_file)
     

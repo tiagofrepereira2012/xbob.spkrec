@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""Features for speaker recognition"""
+"""Energy-based voice activity detection for speaker recognition"""
 
 import numpy,math
 import bob
@@ -26,7 +26,7 @@ from .. import utils
 
 
 class Energy:
-  """Extracts Modulation of the Energy at 4Hz features"""
+  """Extracts the Energy"""
   def __init__(self, config):
     self.m_config = config
 
@@ -54,9 +54,6 @@ class Energy:
     
     [variances, weights] = kmeans.get_variances_and_weights_for_each_cluster(normalized_energy)
     means = kmeans.means
-    #print "means = ", means[0], means[1]
-    #print "variances = ", variances[0], variances[1]
-    #print "weights = ", weights[0], weights[1]
     
     # Initializes the GMM
     m_ubm.means = means
@@ -71,8 +68,6 @@ class Energy:
     trainer.train(m_ubm, normalized_energy)
     means = m_ubm.means
     weights = m_ubm.weights
-    #print "means = ", means[0], means[1]
-    #print "weights = ", weights[0], weights[1]
     
     if means[0] < means[1]:
       higher = 1
@@ -122,7 +117,7 @@ class Energy:
     
   
   def __call__(self, input_file, output_file, annotations = None):
-    """Computes and returns normalized cepstral features for the given input wave file"""
+    """labels speech (1) and non-speech (0) parts of the given input wave file using Energy"""
     
     labels = self._compute_energy(input_file)
     

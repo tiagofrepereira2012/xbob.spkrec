@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""Features for speaker recognition"""
+"""Cepstral Features for speaker recognition"""
 
 import numpy,math
 import bob
@@ -50,7 +50,7 @@ class Cepstral:
 
 
   def __call__(self, input_file, vad_file):
-    """Computes and returns normalized cepstral features for the given input wave file"""
+    """Computes and returns normalized cepstral features for the given input wave file and its corresponding VAD file"""
     
     print "Input file : ", input_file
     rate_wavsample = utils.read(input_file)
