@@ -38,19 +38,18 @@ SUBSPACE_DIMENSION_OF_G = 200 # Size of subspace G
 variance_flooring = 1e-5
 
 INIT_SEED = 0 # seed for initializing
-INIT_F_METHOD = bob.trainer.init_f_method.BETWEEN_SCATTER
+INIT_F_METHOD = bob.trainer.PLDATrainer.BETWEEN_SCATTER
 INIT_F_RATIO = 1
-INIT_G_METHOD = bob.trainer.init_g_method.WITHIN_SCATTER
+INIT_G_METHOD = bob.trainer.PLDATrainer.WITHIN_SCATTER
 INIT_G_RATIO = 1
-INIT_S_METHOD = bob.trainer.init_sigma_method.VARIANCE_DATA
+INIT_S_METHOD = bob.trainer.PLDATrainer.VARIANCE_DATA
 INIT_S_RATIO = 1
 
 # 6/ LDA training
 # LDA subspace; if not set, LDA subspace is not truncated
 LDA_SUBSPACE_DIMENSION = 200
 
-# the distance function to compare vectors in Fisher space
-distance_function = bob.math.euclidean_distance
-
+# cosine scoring? Default plda_scoring
+COSINE_SCORING = False
 
 

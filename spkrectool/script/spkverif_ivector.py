@@ -10,15 +10,15 @@ import argparse
 from . import ToolChainExecutor
 from .. import toolchain
 
-class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
-  """Class that executes the ZT tool chain (locally or in the grid)"""
+class ToolChainExecutorIVector (ToolChainExecutor.ToolChainExecutor):
+  """Class that executes the I-Vector tool chain (locally or in the grid)"""
   
   def __init__(self, args):
     # call base class constructor
     ToolChainExecutor.ToolChainExecutor.__init__(self, args)
 
     # specify the file selector and tool chain objects to be used by this class (and its base class) 
-    self.m_file_selector = toolchain.FileSelectorIvector(self.m_configuration, self.m_database_config)
+    self.m_file_selector = toolchain.FileSelector(self.m_configuration, self.m_database_config)
     self.m_tool_chain = toolchain.ToolChainIvector(self.m_file_selector)
     
     
@@ -42,19 +42,19 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     """Executes the ZT tool chain on the local machine"""
     # preprocessing
     if not self.m_args.skip_preprocessing:
-      self.m_tool_chain.preprocess_images(self.m_preprocessor, force = self.m_args.force)
+      self.m_tool_chain.preprocess_images(self.m_preprocessor, self.m_tool, force = self.m_args.force)
     # feature extraction
     #if not self.m_args.skip_feature_extraction_training and hasattr(self.m_feature_extractor, 'train'):
     #  self.m_tool_chain.train_extractor(self.m_feature_extractor, force = self.m_args.force)
     if not self.m_args.skip_feature_extraction:
-      self.m_tool_chain.extract_features(self.m_feature_extractor, force = self.m_args.force)
+      self.m_tool_chain.extract_features(self.m_feature_extractor, self.m_tool, force = self.m_args.force)
     # feature projection
     if not self.m_args.skip_projection_training and hasattr(self.m_tool, 'train_projector'):
       self.m_tool_chain.train_projector(self.m_tool, force = self.m_args.force)
     
-    print self.m_args.skip_projection_ubm, hasattr(self.m_tool, 'project_ubm')
-    if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_ubm'):
-      self.m_tool_chain.project_ubm_features(self.m_tool, force = self.m_args.force, extractor = self.m_feature_extractor)
+    print self.m_args.skip_projection_ubm, hasattr(self.m_tool, 'project_gmm')
+    if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_gmm'):
+      self.m_tool_chain.project_gmm_features(self.m_tool, force = self.m_args.force, extractor = self.m_feature_extractor)
        
     # train enroler
     if not self.m_args.skip_enroler_training and hasattr(self.m_tool, 'train_enroler'):
@@ -134,7 +134,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if not self.m_args.skip_preprocessing:
       job_ids['preprocessing'] = self.submit_grid_job(
               '--preprocess', 
-              list_to_split = self.m_file_selector.original_image_list(), 
+              list_to_split = self.m_file_selector.original_image_list('IVector'), 
               number_of_files_per_job = self.m_grid_config.number_of_images_per_job, 
               dependencies = [], 
               **self.m_grid_config.preprocessing_queue)
@@ -144,9 +144,9 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if not self.m_args.skip_feature_extraction:
       job_ids['feature_extraction'] = self.submit_grid_job(
               '--feature-extraction', 
-              list_to_split = self.m_file_selector.feature_list(), 
+              list_to_split = self.m_file_selector.feature_list('IVector'), 
               number_of_files_per_job = self.m_grid_config.number_of_images_per_job, 
-              dependencies = [], 
+              dependencies = deps, 
               **self.m_grid_config.preprocessing_queue)
       deps.append(job_ids['feature_extraction'])      
 
@@ -160,10 +160,10 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       deps.append(job_ids['projector_training'])
     
     # feature UBM projection
-    if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_ubm'):
+    if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_gmm'):
       job_ids['feature_projection_ubm'] = self.submit_grid_job(
               '--feature-projection-ubm', 
-              list_to_split = self.m_file_selector.feature_list(),
+              list_to_split = self.m_file_selector.feature_list('IVector'),
               number_of_files_per_job = self.m_grid_config.number_of_projections_per_job,
               dependencies = deps, 
               **self.m_grid_config.projection_queue)
@@ -183,7 +183,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if not self.m_args.skip_projection_ivector and hasattr(self.m_tool, 'project_ivector'):
       job_ids['feature_projection_ivector'] = self.submit_grid_job(
               '--feature-projection-ivector', 
-              list_to_split = self.m_file_selector.feature_list(),
+              list_to_split = self.m_file_selector.feature_list('IVector'),
               number_of_files_per_job = self.m_grid_config.number_of_projections_per_job,
               dependencies = deps, 
               **self.m_grid_config.projection_queue)
@@ -203,7 +203,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if not self.m_args.skip_whitening_ivector and hasattr(self.m_tool, 'whitening_ivector'):
       job_ids['whitening_ivector'] = self.submit_grid_job(
               '--whitening-ivector', 
-              list_to_split = self.m_file_selector.feature_list(),
+              list_to_split = self.m_file_selector.feature_list('IVector'),
               number_of_files_per_job = self.m_grid_config.number_of_projections_per_job,
               dependencies = deps, 
               **self.m_grid_config.projection_queue)
@@ -213,7 +213,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if not self.m_args.skip_lnorm_ivector and hasattr(self.m_tool, 'lnorm_ivector'):
       job_ids['lnorm_ivector'] = self.submit_grid_job(
               '--lnorm-ivector', 
-              list_to_split = self.m_file_selector.feature_list(),
+              list_to_split = self.m_file_selector.feature_list('IVector'),
               number_of_files_per_job = self.m_grid_config.number_of_projections_per_job,
               dependencies = deps, 
               **self.m_grid_config.projection_queue)
@@ -232,7 +232,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if not self.m_args.skip_lda_projection and hasattr(self.m_tool, 'lda_project_ivector'):
       job_ids['lda_project_ivector'] = self.submit_grid_job(
               '--lda-project-ivector', 
-              list_to_split = self.m_file_selector.feature_list(),
+              list_to_split = self.m_file_selector.feature_list('IVector'),
               number_of_files_per_job = self.m_grid_config.number_of_projections_per_job,
               dependencies = deps, 
               **self.m_grid_config.projection_queue)
@@ -251,7 +251,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if not self.m_args.skip_wccn_projection and hasattr(self.m_tool, 'wccn_project_ivector'):
       job_ids['wccn_project_ivector'] = self.submit_grid_job(
               '--wccn-project-ivector', 
-              list_to_split = self.m_file_selector.feature_list(),
+              list_to_split = self.m_file_selector.feature_list('IVector'),
               number_of_files_per_job = self.m_grid_config.number_of_projections_per_job,
               dependencies = deps, 
               **self.m_grid_config.projection_queue)
@@ -361,14 +361,16 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if self.m_args.preprocess:
       self.m_tool_chain.preprocess_images(
           self.m_preprocessor, 
-          indices = self.indices(self.m_file_selector.original_image_list(), self.m_grid_config.number_of_images_per_job), 
+          self.m_tool,
+          indices = self.indices(self.m_file_selector.original_image_list('IVector'), self.m_grid_config.number_of_images_per_job), 
           force = self.m_args.force)
     
     # feature extraction
     if self.m_args.feature_extraction:
       self.m_tool_chain.extract_features(
           self.m_feature_extractor, 
-          indices = self.indices(self.m_file_selector.feature_list(), self.m_grid_config.number_of_images_per_job), 
+          self.m_tool,
+          indices = self.indices(self.m_file_selector.feature_list('IVector'), self.m_grid_config.number_of_images_per_job), 
           force = self.m_args.force)
       
     # train the feature projector
@@ -379,9 +381,9 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       
     # project the features ubm
     if self.m_args.projection_ubm:
-      self.m_tool_chain.project_ubm_features(
+      self.m_tool_chain.project_gmm_features(
           self.m_tool, 
-          indices = self.indices(self.m_file_selector.feature_list(), self.m_grid_config.number_of_projections_per_job), 
+          indices = self.indices(self.m_file_selector.feature_list('IVector'), self.m_grid_config.number_of_projections_per_job), 
           force = self.m_args.force,
           extractor = self.m_feature_extractor)
      
@@ -395,7 +397,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     if self.m_args.projection_ivector:
       self.m_tool_chain.project_ivector_features(
           self.m_tool, 
-          indices = self.indices(self.m_file_selector.feature_list(), self.m_grid_config.number_of_projections_per_job), 
+          indices = self.indices(self.m_file_selector.feature_list('IVector'), self.m_grid_config.number_of_projections_per_job), 
           force = self.m_args.force,
           extractor = self.m_feature_extractor)
     
@@ -411,7 +413,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       self.m_tool_chain.whitening_ivector(
           self.m_tool, 
           dir_type='projected_ivector',
-          indices = self.indices(self.m_file_selector.feature_list(), self.m_grid_config.number_of_projections_per_job), 
+          indices = self.indices(self.m_file_selector.feature_list('IVector'), self.m_grid_config.number_of_projections_per_job), 
           force = self.m_args.force)
 
     # project the features ivector
@@ -419,7 +421,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       self.m_tool_chain.lnorm_ivector(
           self.m_tool, 
           dir_type='whitened_ivector',
-          indices = self.indices(self.m_file_selector.feature_list(), self.m_grid_config.number_of_projections_per_job), 
+          indices = self.indices(self.m_file_selector.feature_list('IVector'), self.m_grid_config.number_of_projections_per_job), 
           force = self.m_args.force)
               
     # train LDA projector
@@ -434,7 +436,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       self.m_tool_chain.lda_project_ivector(
           self.m_tool, 
           dir_type='lnorm_ivector',
-          indices = self.indices(self.m_file_selector.feature_list(), self.m_grid_config.number_of_projections_per_job), 
+          indices = self.indices(self.m_file_selector.feature_list('IVector'), self.m_grid_config.number_of_projections_per_job), 
           force = self.m_args.force)
       
     
@@ -450,7 +452,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       self.m_tool_chain.wccn_project_ivector(
           self.m_tool, 
           dir_type='lda_projected_ivector',
-          indices = self.indices(self.m_file_selector.feature_list(), self.m_grid_config.number_of_projections_per_job), 
+          indices = self.indices(self.m_file_selector.feature_list('IVector'), self.m_grid_config.number_of_projections_per_job), 
           force = self.m_args.force)
     
     
@@ -533,7 +535,7 @@ def parse_args(command_line_arguments = sys.argv[1:]):
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
   # add the arguments required for all tool chains
-  config_group, dir_group, file_group, sub_dir_group, other_group, skip_group = ToolChainExecutorZT.required_command_line_options(parser)
+  config_group, dir_group, file_group, sub_dir_group, other_group, skip_group = ToolChainExecutorIVector.required_command_line_options(parser)
   
   sub_dir_group.add_argument('--models-directories', type = str, metavar = 'DIR', nargs = 2, dest='models_dirs',
       default = ['models', 'tmodels'],
@@ -619,7 +621,7 @@ def speaker_verify(args, external_dependencies = [], external_fake_job_id = 0):
   
   
   # generate tool chain executor
-  executor = ToolChainExecutorZT(args)
+  executor = ToolChainExecutorIVector(args)
   # as the main entry point, check whether the grid option was given
   if not args.grid:
     # not in a grid, use default tool chain sequentially
