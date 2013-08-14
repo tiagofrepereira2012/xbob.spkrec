@@ -2,6 +2,7 @@
 # vim: set fileencoding=utf-8 :
 # Laurent El Shafey <Laurent.El-Shafey@idiap.ch>
 # Roy Wallace <roy.wallace@idiap.ch>
+# Elie Khoury <Elie.Khoury@idiap.ch>
 
 import os
 import bob

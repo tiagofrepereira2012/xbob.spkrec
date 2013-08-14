@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
-# Manuel Guenther <Manuel.Guenther@idiap.ch>
-
+# Elie Khoury <Elie.Khoury@idiap.ch>
 
 import sys, os
 import argparse
@@ -9,7 +8,7 @@ import argparse
 from . import ToolChainExecutor
 from .. import toolchain
 
-class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
+class ToolChainExecutorBBF (ToolChainExecutor.ToolChainExecutor):
   """Class that executes the ZT tool chain (locally or in the grid)"""
   
   def __init__(self, args):
@@ -327,7 +326,7 @@ def parse_args(command_line_arguments = sys.argv[1:]):
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
   # add the arguments required for all tool chains
-  config_group, dir_group, file_group, sub_dir_group, other_group, skip_group = ToolChainExecutorZT.required_command_line_options(parser)
+  config_group, dir_group, file_group, sub_dir_group, other_group, skip_group = ToolChainExecutorBBF.required_command_line_options(parser)
   
   sub_dir_group.add_argument('--models-directories', type = str, metavar = 'DIR', nargs = 2, dest='models_dirs',
       default = ['models', 'tmodels'],
@@ -397,7 +396,7 @@ def speaker_verify(args, external_dependencies = [], external_fake_job_id = 0):
   
   
   # generate tool chain executor
-  executor = ToolChainExecutorZT(args)
+  executor = ToolChainExecutorBBF(args)
   # as the main entry point, check whether the grid option was given
   if not args.grid:
     # not in a grid, use default tool chain sequentially

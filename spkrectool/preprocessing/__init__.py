@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Manuel Guenther <Manuel.Guenther@idiap.ch>
+# Elie Khoury <Elie.Khoury@idiap.ch>
 
 """Image preprocessing tools"""
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
+# Elie Khoury <Elie.Khoury@idiap.ch>
 
 """Features for speaker recognition"""
 

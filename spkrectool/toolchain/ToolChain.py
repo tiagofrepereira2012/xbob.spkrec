@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
-# Elie Khoury<elie.khoury@idiap.ch>
+# Manuel Guenther <Manuel.Guenther@idiap.ch>
+# Elie Khoury <Elie.Khoury@idiap.ch>
 
 import os
 import numpy

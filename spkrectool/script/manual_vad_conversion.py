@@ -1,4 +1,5 @@
 #!bin/python
+# vim: set fileencoding=utf-8 :
 
 import bob
 import time, imp
