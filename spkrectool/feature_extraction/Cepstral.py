@@ -80,6 +80,10 @@ class Cepstral:
       normalized_features = self.normalize_features(filtered_features)
     else:
       normalized_features = filtered_features
+    if normalized_features.shape[0] == 0:
+      print "Warning: no speech found in:", input_file
+      # But do not keep it empty!!! This avoids errors in next steps
+      normalized_features=numpy.array([numpy.zeros(len(features_mask))])
     return normalized_features
 
 
