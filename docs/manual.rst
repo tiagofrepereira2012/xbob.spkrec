@@ -207,7 +207,7 @@ This is a clean database. The results are already very good with a simple baseli
 
 .. code-block:: sh
 
-  $ bin/spkverif_zt.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm_regular_scoring.py  -p config/preprocessing/mfcc_60.py -z
+  $ bin/spkverif_isv.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm_regular_scoring.py  -p config/preprocessing/mfcc_60.py -z
   
 
 * ``DEV: EER = 1.282%``
@@ -220,7 +220,7 @@ This is a more challenging database. The noise and the short duration of the seg
 
 .. code-block:: sh
 
-  $ ./bin/spkverif_zt.py -d config/database/mobio_male_twothirds_wav.py -t config/tools/isv.py -p config/preprocessing/mfcc_60.py 
+  $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -t config/tools/isv.py -p config/preprocessing/mfcc_60.py 
   
   
 * ``DEV: EER = 19.881%``
