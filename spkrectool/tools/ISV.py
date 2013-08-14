@@ -107,7 +107,7 @@ class ISVTool (UBMGMMTool):
     return bob.machine.GMMStats(bob.io.HDF5File(str(feature_file))) 
     
   
-  def enrol(self, enrol_features):
+  def enroll(self, enrol_features):
     """Performs ISV enrolment"""
     self.m_trainer.enrol(self.m_machine, enrol_features, self.m_config.n_iter_enrol)
     # return the resulting gmm    

@@ -30,7 +30,7 @@ class IVecTool (UBMGMMTool):
     """Initializes the local UBM-GMM tool with the given file selector object"""
     # call base class constructor
     UBMGMMTool.__init__(self, setup)
-    
+    print "self.m_config.COSINE_SCORING = ", self.m_config.COSINE_SCORING
     del self.use_unprojected_features_for_model_enrol
 
 
@@ -360,6 +360,8 @@ class IVecTool (UBMGMMTool):
     data = self.lda_read_data(training_files)
     print "  -> Training LinearMachine using LDA"
     t = bob.trainer.FisherLDATrainer()
+    # In case of trouble, use the pseudo-inverse computation flag to true
+    #t = bob.trainer.FisherLDATrainer(use_pinv=True)
     self.lda_machine, __eig_vals = t.train(data)
     # resize the machine if desired
     if self.m_config.LDA_SUBSPACE_DIMENSION:
