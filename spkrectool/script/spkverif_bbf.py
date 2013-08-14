@@ -17,7 +17,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     ToolChainExecutor.ToolChainExecutor.__init__(self, args)
 
     # specify the file selector and tool chain objects to be used by this class (and its base class) 
-    self.m_file_selector = toolchain.FileSelectorZT(self.m_configuration, self.m_database_config)
+    self.m_file_selector = toolchain.FileSelectorISV(self.m_configuration, self.m_database_config)
     self.m_tool_chain = toolchain.ToolChainBBF(self.m_file_selector)
     
     
@@ -101,7 +101,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       deps.append(job_ids['projector_training'])
     
     # feature UBM projection
-    if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_ubm'):
+    if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_gmm'):
       job_ids['feature_projection_ubm'] = self.submit_grid_job(
               '--feature-projection-ubm', 
               list_to_split = self.m_file_selector.feature_list(),
@@ -242,7 +242,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       
     # project the features ubm
     if self.m_args.projection_ubm:
-      self.m_tool_chain.project_ubm_features(
+      self.m_tool_chain.project_gmm_features(
           self.m_tool, 
           indices = self.indices(self.m_file_selector.feature_list(), self.m_grid_config.number_of_projections_per_job), 
           force = self.m_args.force,
