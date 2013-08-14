@@ -185,7 +185,7 @@ class ToolChainBBF:
    
     
     # use projected or unprojected features for model enrollment?
-    use_projected_features = hasattr(tool, 'project_ubm') and not hasattr(tool, 'use_unprojected_features_for_model_enrol')
+    use_projected_features = hasattr(tool, 'project_gmm') and not hasattr(tool, 'use_unprojected_features_for_model_enrol')
     # which tool to use to read the features...
     self.m_tool = tool if use_projected_features else extractor
     
@@ -479,7 +479,7 @@ class ToolChainBBF:
     self.m_use_projected_isv_dir = hasattr(tool, 'project_isv')
     print self.m_use_projected_isv_dir
     
-    self.m_use_projected_ubm_dir = hasattr(tool, 'project_ubm')
+    self.m_use_projected_ubm_dir = hasattr(tool, 'project_gmm')
     print self.m_use_projected_ubm_dir
     
     # load the projector, if needed
@@ -633,7 +633,7 @@ class ToolChainBBF:
       self.m_use_projected_isv_dir = hasattr(tool, 'project_isv')
       print self.m_use_projected_isv_dir
     
-      self.m_use_projected_ubm_dir = hasattr(tool, 'project_ubm')
+      self.m_use_projected_ubm_dir = hasattr(tool, 'project_gmm')
       print self.m_use_projected_ubm_dir
       
       # list of models
