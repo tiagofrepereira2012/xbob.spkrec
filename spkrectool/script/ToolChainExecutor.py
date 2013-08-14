@@ -104,7 +104,7 @@ class ToolChainExecutor:
     sub_dir_group.add_argument('--wccn-projected-ivector-directory', type = str, metavar = 'DIR', default = 'wccn_projected_ivector', dest = 'wccn_projected_ivector_dir',
         help = 'Name of the directory where the projected data should be stored')
     other_group = parser.add_argument_group('\nFlags that change the behaviour of the experiment')
-    other_group.add_argument('-q', '--dry-run', action='store_true', dest='dry_run',
+    other_group.add_argument('-r', '--dry-run', action='store_true', dest='dry_run',
         help = 'Only report the grid commands that will be executed, but do not execute them')
 
     #######################################################################################
