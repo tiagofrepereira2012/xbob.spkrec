@@ -24,3 +24,4 @@ class NullPreprocessor:
 
 from MOD_4HZ import MOD_4HZ
 from Energy import Energy
+from Manual import Manual

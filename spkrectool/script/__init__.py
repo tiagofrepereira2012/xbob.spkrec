@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
-# Manuel Guenther <Manuel.Guenther@idiap.ch>
+# Elie Khoury <Elie.Khoury@idiap.ch>
 
 """Tool chain for computing verification scores"""
 
-import spkverif_zt
-import spkverif_ivector_chain_1
-import spkverif_ivector_cosine
-
+import spkverif_isv
+import spkverif_ivector
+import spkverif_bbf
+import para_ubm_spkverif_isv
+import manual_vad_conversion

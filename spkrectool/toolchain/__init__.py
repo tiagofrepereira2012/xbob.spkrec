@@ -3,10 +3,10 @@
 # Laurent El Shafey <Laurent.El-Shafey@idiap.ch>
 
 """Tool chain for computing verification scores"""
-
-from FileSelectorZT import FileSelectorZT
-from ToolChainZT import ToolChainZT
+from ToolChain import ToolChain
+from FileSelector import FileSelector
+from FileSelectorISV import FileSelectorISV
+from ToolChainISV import ToolChainISV
 from ToolChainBBF import ToolChainBBF
 from FileSelectorIvector import FileSelectorIvector
 from ToolChainIvector import ToolChainIvector
-
