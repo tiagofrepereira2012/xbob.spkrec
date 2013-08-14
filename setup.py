@@ -15,9 +15,11 @@ setup(
 
     entry_points={
       'console_scripts': [
-        'spkverif_zt.py = spkrectool.script.spkverif_zt:main',
+        'spkverif_isv.py = spkrectool.script.spkverif_isv:main',
         'spkverif_ivector.py = spkrectool.script.spkverif_ivector:main',
-        'spkverif_ivector_cosine.py = spkrectool.script.spkverif_ivector_cosine:main',
+        'para_ubm_spkverif_isv.py = spkrectool.script.para_ubm_spkverif_isv:main',
+        'para_ubm_spkverif_ivector.py = spkrectool.script.para_ubm_spkverif_ivector:main',
+        'manual_vad_conversion.py = spkrectool.script.manual_vad_conversion:main',
         ],
       },
 
