@@ -93,8 +93,8 @@ class FileSelector:
   ### Original images and preprocessing
   def original_image_list(self, tool_type):
     """Returns the list of original images that can be used for image preprocessing"""
-    directory=self.m_config.img_input_dir
-    extension=self.m_config.img_input_ext
+    directory=self.m_config.wav_input_dir
+    extension=self.m_config.wav_input_ext
     return self.select_all_files(directory, extension, tool_type)
     
   def annotation_list(self, tool_type):
