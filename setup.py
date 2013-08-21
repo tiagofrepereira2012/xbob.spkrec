@@ -31,7 +31,6 @@ setup(
         "bob >= 1.2.0",      # base signal proc./machine learning library
         # databases
         "xbob.db.verification.filelist",
-        "xbob.db.mobio",
         "pysox",
     ],
 )
