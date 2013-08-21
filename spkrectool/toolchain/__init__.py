@@ -20,8 +20,6 @@
 """Tool chain for computing verification scores"""
 from ToolChain import ToolChain
 from FileSelector import FileSelector
-from FileSelectorISV import FileSelectorISV
 from ToolChainISV import ToolChainISV
 from ToolChainBBF import ToolChainBBF
-from FileSelectorIvector import FileSelectorIvector
 from ToolChainIvector import ToolChainIvector
