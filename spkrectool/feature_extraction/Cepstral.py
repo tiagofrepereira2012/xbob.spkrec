@@ -49,9 +49,10 @@ class Cepstral:
  
 
 
-  def __call__(self, input_file, vad_file):
+  def __call__(self, input_file, vad_file=None):
     """Computes and returns normalized cepstral features for the given input wave file and its corresponding VAD file"""
     
+    print vad_file
     print "Input file : ", input_file
     rate_wavsample = utils.read(input_file)
     
@@ -75,9 +76,13 @@ class Cepstral:
     ceps.with_delta_delta = self.m_config.withDeltaDelta
        
     cepstral_features = ceps(rate_wavsample[1] )
- 
+
+    print cepstral_features.shape 
     # Voice activity detection
-    labels=bob.io.load(str(vad_file))
+    if vad_file is None:
+      labels=label = numpy.array(numpy.ones(cepstral_features.shape[0]), dtype=numpy.int16)
+    else:
+      labels=bob.io.load(str(vad_file))
 
     features_mask = self.m_config.features_mask
     filtered_features = numpy.ndarray(shape=((labels == 1).sum(),len(features_mask)), dtype=numpy.float64)

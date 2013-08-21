@@ -55,19 +55,20 @@ class MOD_4HZ:
       if ( energy[i] > threshold and mod_4hz[i] > 0.9 ):
         label[i]=1
               
-    if  float(numpy.sum(label)) / float(len(label)) < 0.5:
+    # If speech part less then 10 seconds and less than the half of the segment duration, try to find speech with more risk 
+    if  numpy.sum(label) < 2000 and float(numpy.sum(label)) / float(len(label)) < 0.5:
       #print "TRY WITH MORE RISK 1..."
       for i in range(n_samples):
         if ( energy[i] > threshold and mod_4hz[i] > 0.5 ):
           label[i]=1
 
-    if  float(numpy.sum(label)) / float(len(label)) < 0.5:
+    if  numpy.sum(label) < 2000 and float(numpy.sum(label)) / float(len(label)) < 0.5:
       #print "TRY WITH MORE RISK 2..."
       for i in range(n_samples):
         if ( energy[i] > threshold and mod_4hz[i] > 0.2 ):
           label[i]=1
 
-    if  float(numpy.sum(label)) / float(len(label)) < 0.5: # This is special for short segments (less than 2s)...
+    if  numpy.sum(label) < 2000 and float(numpy.sum(label)) / float(len(label)) < 0.5: # This is special for short segments (less than 2s)...
       #print "TRY WITH MORE RISK 3..."
       if (len(energy) < 200 ) or (numpy.sum(label) == 0) or (numpy.mean(label)<0.025):
         for i in range(n_samples):
@@ -174,6 +175,7 @@ class MOD_4HZ:
     """labels speech (1) and non-speech (0) parts for the given input wave file using 4Hz modulation energy and energy"""
     
     labels = self.mod_4hz(input_file)
+    print numpy.sum(labels)
     
     bob.io.save(labels, output_file)
     

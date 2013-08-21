@@ -54,7 +54,11 @@ class Energy:
     
     [variances, weights] = kmeans.get_variances_and_weights_for_each_cluster(normalized_energy)
     means = kmeans.means
-    
+    print "HERE"
+    print numpy.isnan(means[0]),  numpy.isnan(means[1])
+    if numpy.isnan(means[0]) or numpy.isnan(means[1]):
+      print "Warning: skip this file"
+      return numpy.array(numpy.zeros(n_samples), dtype=numpy.int16)
     # Initializes the GMM
     m_ubm.means = means
     
