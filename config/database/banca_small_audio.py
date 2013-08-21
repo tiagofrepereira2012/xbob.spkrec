@@ -7,7 +7,7 @@ name = 'banca_small_audio'
 db = xbob.db.verification.filelist.Database('/idiap/user/ekhoury/LOBI/work/databases/banca/banca_small_audio/')
 protocol = 'P'
 
-img_input_dir = "/idiap/temp/ekhoury/databases/banca/wav_from_johnny/"
-img_input_ext = ".wav"
+wav_input_dir = "/idiap/temp/ekhoury/databases/banca/wav_from_johnny/"
+wav_input_ext = ".wav"
 
 

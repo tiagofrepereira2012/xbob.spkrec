@@ -7,8 +7,8 @@ name = 'mobio_2_3'
 db = xbob.db.mobio.Database()
 protocol = 'female'
 
-img_input_dir = "/idiap/temp/ekhoury/databases/MOBIO/denoisedDATA_16k/"
-img_input_ext = ".sph"
+wav_input_dir = "/idiap/temp/ekhoury/databases/MOBIO/denoisedDATA_16k/"
+wav_input_ext = ".sph"
 
 world_projector_options = { 'subworld': "twothirds" }
 
