@@ -95,7 +95,7 @@ def read(filename):
   fileName, fileExtension = os.path.splitext(filename)
   wav_filename = filename
   sph = False
-  if fileExtension == '.wav':
+  if fileExtension == '.sph':
     sph = True
     infile = pysox.CSoxStream(filename)
     wav_filename = tempfile.mkstemp('.wav')[1]
@@ -107,9 +107,7 @@ def read(filename):
   rate, data = scipy.io.wavfile.read(str(wav_filename)) # the data is read in its native format
   if data.dtype =='int16':
     data = numpy.cast['float'](data)
-  if sph: 
-    #os.unlink(wav_filename)
-    os.remove(wav_filename)
+  if sph: os.unlink(wav_filename)
   return [rate,data]
 
 
