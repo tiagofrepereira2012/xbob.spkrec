@@ -220,7 +220,26 @@ For the moment, there are 3 databases that are tested in `xbob.speaker_recogniti
 
 .. code-block:: sh
 
-  $ bin/bob_compute_perf.py -d scores-dev -t scores-eval -x
+  $ bin/bob_compute_perf.py -d scores-dev -t scores-eval 
+
+The script will also generate the DET curve in a PDF file. 
+
+
+Voxforge database
+~~~~~~~~~~~~~~~~~
+Voxforge is a free database used in free speech recognition engines. More details about the subset used in our experiments can be found here::
+  
+  https://pypi.python.org/pypi/xbob.db.subvoxforge
+  
+In the following example, we apply the UBM-GMM system. 
+
+.. code-block:: sh
+
+  $ ./bin/spkverif_gmm.py -d config/database/subvoxforge.py -t config/tools/ubm_gmm_200G.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
+  
+
+* ``DEV: EER = 1.741%``
+* ``EVAL: HTER = 1.981%``
 
 
 BANCA database
@@ -263,3 +282,4 @@ We first invite you to read the paper describing our system submitted to the NIS
 .. _pysox: https://pypi.python.org/pypi/pysox
 .. _xbob.speaker_recognition: https://github.com/bioidiap/xbob.speaker_recognition
 .. _pypi: https://pypi.python.org/pypi
+.. _Voxforge: http://www.voxforge.org/
