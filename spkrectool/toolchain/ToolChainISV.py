@@ -209,7 +209,13 @@ class ToolChainISV(ToolChain):
   def __scores_a__(self, model_ids, group, compute_zt_norm, force, preload_probes):
     """Computes A scores"""
     # preload the probe files for a faster access (and fewer network load)
-    dir_type = 'projected_isv' if self.m_use_projected_isv_dir else 'projected_ubm'
+    if self.m_use_projected_isv_dir:
+      dir_type = 'projected_isv'
+    elif self.m_use_projected_ubm_dir:
+      dir_type = 'projected_ubm'
+    else:
+      dir_type = 'features'
+    
     if preload_probes:
       print "Preloading probe files"
       all_probe_files = self.m_file_selector.probe_files(group, dir_type)
@@ -228,7 +234,13 @@ class ToolChainISV(ToolChain):
       else:
         # get the probe split
         probe_objects = self.m_file_selector.probe_objects_for_model(model_id, group)
-        dir_type = 'projected_isv' if self.m_use_projected_isv_dir else 'projected_ubm'
+
+        if self.m_use_projected_isv_dir:
+          dir_type = 'projected_isv'
+        elif self.m_use_projected_ubm_dir:
+          dir_type = 'projected_ubm'
+        else:
+          dir_type = 'features'
         probe_files = self.m_file_selector.probe_files_for_model(model_id, group, dir_type)
         model = self.__read_model__(self.m_file_selector.model_file(model_id, group))
         if preload_probes:
@@ -250,7 +262,12 @@ class ToolChainISV(ToolChain):
   def __scores_b__(self, model_ids, group, force, preload_probes):
     """Computes B scores"""
     # probe files:
-    dir_type = 'projected_isv' if self.m_use_projected_isv_dir else 'projected_ubm'
+    if self.m_use_projected_isv_dir:
+      dir_type = 'projected_isv'
+    elif self.m_use_projected_ubm_dir:
+      dir_type = 'projected_ubm'
+    else:
+      dir_type = 'features'
     zprobe_objects = self.m_file_selector.zprobe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
@@ -278,7 +295,12 @@ class ToolChainISV(ToolChain):
   def __scores_c__(self, tmodel_ids, group, force, preload_probes):
     """Computed C scores"""
     # probe files:
-    dir_type = 'projected_isv' if self.m_use_projected_isv_dir else 'projected_ubm'
+    if self.m_use_projected_isv_dir:
+      dir_type = 'projected_isv'
+    elif self.m_use_projected_ubm_dir:
+      dir_type = 'projected_ubm'
+    else:
+      dir_type = 'features'
     probe_files = self.m_file_selector.probe_files(group, dir_type)
 
     # preload the probe files for a faster access (and fewer network load)
@@ -307,7 +329,12 @@ class ToolChainISV(ToolChain):
       
   def __scores_d__(self, tmodel_ids, group, force, preload_probes):
     # probe files:
-    dir_type = 'projected_isv' if self.m_use_projected_isv_dir else 'projected_ubm'
+    if self.m_use_projected_isv_dir:
+      dir_type = 'projected_isv'
+    elif self.m_use_projected_ubm_dir:
+      dir_type = 'projected_ubm'
+    else:
+      dir_type = 'features'
     zprobe_objects = self.m_file_selector.zprobe_objects(group)
     zprobe_files = self.m_file_selector.zprobe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
