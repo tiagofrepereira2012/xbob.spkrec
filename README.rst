@@ -2,7 +2,7 @@ Speaker Recognition Toolkit
 ===========================
 
 This is the speaker recognition toolkit, designed to run speaker verification/recognition
-experiments with the SGE grid infrastructure at Idiap. It's originally based on facereclib tool:
+experiments . It's originally based on facereclib tool:
 https://github.com/bioidiap/facereclib
 
 `xbob.speaker_recognition`_ is designed in a way that it should be easily possible to execute experiments combining different mixtures of:
@@ -65,20 +65,15 @@ experiments::
 This also requires that bob (>= 1.2.0) is installed.
 
 
-
 Running experiments
 -------------------
 
-These two commands will automatically download all desired packages (`gridtk`_, `pysox`_ and `xbob.db.verification.filelist`_ ) from GitHub or pypi_ and generate some scripts in the bin directory, including the following scripts::
-  Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-   docs/spkverif_isv
-   docs/spkverif_ivector
-   docs/para_ubm_spkverif_isv
-   docs/para_ubm_spkverif_ivector
+These two commands will automatically download all desired packages (`gridtk`_, `pysox`_ and `xbob.db.verification.filelist`_ ) from GitHub or `pypi`_ and generate some scripts in the bin directory, including the following scripts::
+  
+   $ bin/spkverif_isv.py
+   $ bin/spkverif_ivector.py
+   $ bin/para_ubm_spkverif_isv.py
+   $ bin/para_ubm_spkverif_ivector.py
 
   
 These scripts can be used to employ different 
@@ -89,6 +84,11 @@ To use them you have to specify at least four command line parameters (see also 
 * ``--feature-extraction``: The configuration file for feature extraction
 * ``--tool-chain``: The configuration file for the face verification tool chain
 
+If you are not at Idiap, please precise the TEMP and USER directories:
+
+* ``--temp-directory``: This typically contains the features, the UBM model, the client models, etc.
+* ``--user-directory``: This will contain the output scores (in text format)
+
 If you want to run the experiments in the GRID at Idiap or any equivalent SGE, you can simply specify:
 
 * ``--grid``: The configuration file for the grid setup.
@@ -98,45 +98,32 @@ For several databases, feature types, recognition algorithms, and grid requireme
 They are located in the *config/...* directories.
 It is also safe to design one experiment and re-use one configuration file for all options as long as the configuration file includes all desired information:
 
-* The database: ``name, db, protocol; wav_input_dir, wav_input_ext``; optional: all_files_option, world_extractor_options, world_projector_options, world_enroler_options, features_by_clients_options``
+* The database: ``name, db, protocol; wav_input_dir, wav_input_ext``;
 * The preprocessing: ``preprocessor = spkrec.preprocessing.<PREPROCESSOR>``;
 * The feature extraction: ``extractor = spkrec.feature_extraction.<EXTRACTOR>``;
 * The tool: ``tool = spkrec.tools.<TOOL>``; plus configurations of the tool itself
-* Grid parameters: ``training_queue; number_of_images_per_job, preprocessing_queue; number_of_features_per_job, extraction_queue, number_of_projections_per_job, projection_queue; number_of_models_per_enrol_job, enrol_queue; number_of_models_per_score_job, score_queue``
-
-None of the parameters in the configurations are fixed, so please feel free to test different settings.
-Please note that not all combinations of features and tools make sense since the tools expect different kinds of features (e.g. UBM/GMM needs 2D features, whereas PCA expects 1D features).
+* Grid parameters: They help to fix which queues are used for each of the steps, how much files per job, etc. 
 
 
-By default, the verification result will be written to directory */idiap/user/$USER/<DATABASE>/<EXPERIMENT>/<SUBDIR>/<PROTOCOL>*, where
+By default, the ZT score normalization is activated. To deactivate it, please add the ``-z`` to the command line.
 
-* DATABASE: the name of the database. It is read from the database configuration file
-* EXPERIMENT: a user-specified experiment name (``--sub-dir`` option), by default it is ``default``
-* SUBDIR: another user-specified name (``--score-sub-dir`` option), e.g. to specify different options of the experiment
-* PROTOCOL: the protocol which is read from the database configuration file
-
-After running a  ZT-Norm based experiment, the output directory contains two sub-directories *nonorm*, *ztnorm*, each of which contain the files *scores-dev* and *scores-eval*.
 One way to compute the final result is to use the *bob_compute_perf.py* script from your Bob installation, e.g., by calling:
 
 .. code-block:: sh
 
-  $ cd /idiap/user/$USER/<DATABASE>/<EXPERIMENT>/<SUBDIR>/<PROTOCOL>
-  $ bob_compute_perf.py -d nonorm/scores-dev -t nonorm/scores-eval
-
-
-Temporary files will by default be put to */scratch/$USER/<DATABASE>/<EXPERIMENT>* or */idiap/temp/$USER/<DATABASE>/<EXPERIMENT>* when run locally or in the grid, respectively.
+  $ bin/bob_compute_perf.py -d PATH/TO/USER/DIRECTORY/scores-dev -t PATH/TO/USER/DIRECTORY/scores-eval
 
 
 Experiment design
 -----------------
 
-To be very flexible, the tool chain in the `xbob.speaker_recognition`_ is designed in several stages:
+To be very flexible, the tool chain in the `xbob.speaker_recognition`_ is designed in several stages::
 
-1. Signal Preprocessing
-2  Feature Extraction
-3. Feature Projection
-4. Model Enrollment
-5. Scoring
+  1. Signal Preprocessing
+  2  Feature Extraction
+  3. Feature Projection
+  4. Model Enrollment
+  5. Scoring
 
 Note that not all tools implement all of the stages.
 
@@ -242,11 +229,11 @@ This is a clean database. The results are already very good with a simple baseli
 
 .. code-block:: sh
 
-  $ bin/spkverif_isv.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm_regular_scoring.py  -p config/preprocessing/mfcc_60.py -z
+  $ bin/spkverif_isv.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm_regular_scoring.py  -p config/preprocessing/energy.py -f config/features/mfcc_60.py -z
   
 
-* ``DEV: EER = 1.282%``
-* ``EVAL: EER = 0.908%``
+* ``DEV: EER = 1.656%``
+* ``EVAL: EER = 0.694%``
 
 
 MOBIO database
@@ -275,4 +262,4 @@ We first invite you to read the paper describing our system submitted to the NIS
 .. _xbob.db.verification.filelist: https://pypi.python.org/pypi/xbob.db.verification.filelist
 .. _pysox: https://pypi.python.org/pypi/pysox
 .. _xbob.speaker_recognition: https://github.com/bioidiap/xbob.speaker_recognition
-
+.. _pypi: https://pypi.python.org/pypi
