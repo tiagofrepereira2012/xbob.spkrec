@@ -72,8 +72,10 @@ These two commands will automatically download all desired packages (`gridtk`_, 
   
    $ bin/spkverif_isv.py
    $ bin/spkverif_ivector.py
+   $ bin/spkverif_gmm.py
    $ bin/para_ubm_spkverif_isv.py
    $ bin/para_ubm_spkverif_ivector.py
+   $ bin/para_ubm_spkverif_gmm.py
 
   
 These scripts can be used to employ different 
@@ -133,7 +135,7 @@ Voice Activity Detection
 This step aims to filter out the non speech part. Depending on the configuration file, several routines can be enabled or disabled.
 
 * Energy-based VAD
-* 4Hz Modulation energy VAD
+* 4Hz Modulation energy based VAD
 
 Feature Extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -163,7 +165,6 @@ Scoring
 ~~~~~~~
 In the final scoring stage, the models are compared to probe features and a similarity score is computed for each pair of model and probe.
 Some of the models (the so-called T-Norm-Model) and some of the probe features (so-called Z-Norm-probe-features) are split up, so they can be used to normalize the scores later on.
-
 
 
 Command line options
@@ -222,55 +223,78 @@ For the moment, there are 3 databases that are tested in `xbob.speaker_recogniti
 
   $ bin/bob_compute_perf.py -d scores-dev -t scores-eval 
 
-The script will also generate the DET curve in a PDF file. 
+By default, this script will also generate the DET curve in a PDF file. 
 
+In this README, we give examples of different toolchains applied on different databases: Voxforge, BANCA, TIMIT, MOBIO, and NIST SRE 2012.
 
 Voxforge database
 ~~~~~~~~~~~~~~~~~
-Voxforge is a free database used in free speech recognition engines. More details about the subset used in our experiments can be found here::
+`Voxforge`_ is a free database used in free speech recognition engines. We randomly selected a little part of the english corpus (< 1GB).  It is used as a toy example for our speaker recognition tool since experiment can be easily run on a local machine, and the results can be obtained in a reasonnable amount of time (< 2h).
+
+Unlike TIMIT and BANCA, this database is completely free of charge.
+
+More details about how to download the audio files used in our experiments, and how the data is splitted into Training, Development and Evaluation set can be found here::
   
   https://pypi.python.org/pypi/xbob.db.subvoxforge
   
-In the following example, we apply the UBM-GMM system. 
+One example of command line is:
 
 .. code-block:: sh
 
-  $ ./bin/spkverif_gmm.py -d config/database/subvoxforge.py -t config/tools/ubm_gmm_200G.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
+  $ ./bin/spkverif_gmm.py -d config/database/subvoxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm_200G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
   
+In this example, we used the following configuration:
 
-* ``DEV: EER = 1.741%``
-* ``EVAL: HTER = 1.981%``
+* Energy-based VAD,  
+* (19 MFCC features + Energy) + First and second derivatives,
+* UBM-GMM Modelling (with 256 Gaussians), the scoring is done using the linear approximation of the LLR.
+
+The performance of the system on DEV and EVAL are:
+
+* ``DEV: EER = 1.74%``
+* ``EVAL: HTER = 1.98%``
+ 
+
+TIMIT database
+~~~~~~~~~~~~~~
 
 
 BANCA database
 ~~~~~~~~~~~~~~
-This is a clean database. The results are already very good with a simple baseline system. In the following example, we apply the UBM-GMM system.
+`BANCA`_ is a simple bimodal database with relatively clean data. The results are already very good with a simple baseline UBM-GMM system. An example of use can be:
 
 .. code-block:: sh
 
-  $ bin/spkverif_isv.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm_regular_scoring.py  -p config/preprocessing/energy.py -f config/features/mfcc_60.py -z
+  $ bin/spkverif_gmm.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm_regular_scoring.py  -p config/preprocessing/energy.py -f config/features/mfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
   
 
-* ``DEV: EER = 1.656%``
-* ``EVAL: EER = 0.694%``
+The configuration in this example is similar to the previous one with the only difference of using the regular LLR instead of its linear approximation.
+
+Here is the performance of this system:
+
+* ``DEV: EER = 1.66%``
+* ``EVAL: EER = 0.69%``
 
 
 MOBIO database
 ~~~~~~~~~~~~~~
-This is a more challenging database. The noise and the short duration of the segments make the task of speaker recognition very difficult. The following experiment on male group uses the ISV modelling technique.
+This is a more challenging database. The noise and the short duration of the segments make the task of speaker recognition relatively difficult. The following experiment on male group uses the 4Hz modulation energy based VAD, and the ISV (with dimU=50) modelling technique.
 
 .. code-block:: sh
 
-  $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -t config/tools/isv.py -p config/preprocessing/mfcc_60.py 
+  $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -p config/preprocessing/mod_4hz.py -f config/features/mfcc_60.py -t config/tools/isv_u50.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
   
+Here is the performance of this system:
   
-* ``DEV: EER = 19.881%``
-* ``EVAL: EER = 15.508%``
+* ``DEV: EER = 10.40%``
+* ``EVAL: EER = 10.36%``
+
 
 NIST-SRE2012 database
 ~~~~~~~~~~~~~~~~~~~~~
-We first invite you to read the paper describing our system submitted to the NIST-SRE2012 Evaluation, and the paper describing I4U system (joint submission with I2R, RUN, UEF, VLD, LIA, UTD, UWS). The protocols on the development set are the results of a joint work by the I4U group (check if we can make them publicly available).
+We first invite you to read the paper describing our system submitted to the NIST-SRE2012 Evaluation. The protocols on the development set are the results of a joint work by the I4U group. To reproduce the results, please check this dedicated package::
 
+  https://github.com/bioidiap/xbob.nist_sre_2012
 
 
 .. _Bob: http://idiap.github.com/bob/
@@ -283,3 +307,5 @@ We first invite you to read the paper describing our system submitted to the NIS
 .. _xbob.speaker_recognition: https://github.com/bioidiap/xbob.speaker_recognition
 .. _pypi: https://pypi.python.org/pypi
 .. _Voxforge: http://www.voxforge.org/
+.. _BANCA: http://www.ee.surrey.ac.uk/CVSSP/banca/
+.. _TIMIT: http://www.ldc.upenn.edu/Catalog/catalogEntry.jsp?catalogId=LDC93S1
