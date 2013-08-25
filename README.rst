@@ -50,7 +50,7 @@ publications:
 Installation
 ------------
 
-Just download this package and uncompressed it locally::
+Just download this package and decompress it locally::
 
   $ wget http://pypi.python.org/packages/source/x/xbob.nist_sre_2012/xbob.speaker_recognition.zip
   $ unzip xbob.speaker_recognition.zip
@@ -255,10 +255,6 @@ The performance of the system on DEV and EVAL are:
 * ``EVAL: HTER = 1.98%``
  
 
-TIMIT database
-~~~~~~~~~~~~~~
-
-
 BANCA database
 ~~~~~~~~~~~~~~
 `BANCA`_ is a simple bimodal database with relatively clean data. The results are already very good with a simple baseline UBM-GMM system. An example of use can be:
@@ -275,6 +271,18 @@ Here is the performance of this system:
 * ``DEV: EER = 1.66%``
 * ``EVAL: EER = 0.69%``
 
+
+TIMIT database
+~~~~~~~~~~~~~~
+`TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, we use LFCC features:
+
+.. code-block:: sh
+  
+  ./bin/spkverif_gmm.py -d config/database/timit.py -t config/tools/ubm_gmm_256G.py -p config/preprocessing/energy.py -f config/features/lfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -b lfcc -z --groups dev
+  
+Here is the performance of the system on the Development set:
+
+* ``DEV: EER = 2.679%``
 
 MOBIO database
 ~~~~~~~~~~~~~~
