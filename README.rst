@@ -274,7 +274,7 @@ Here is the performance of this system:
 
 TIMIT database
 ~~~~~~~~~~~~~~
-`TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, we use LFCC features:
+`TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, the processing is done on the development set, and LFCC features are used:
 
 .. code-block:: sh
   
@@ -282,7 +282,7 @@ TIMIT database
   
 Here is the performance of the system on the Development set:
 
-* ``DEV: EER = 2.679%``
+* ``DEV: EER = 2.68%``
 
 MOBIO database
 ~~~~~~~~~~~~~~
