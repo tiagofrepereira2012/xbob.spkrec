@@ -22,11 +22,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='speaker_recognition',
-    version='0.1',
+    version='0.0.1a0',
     description='Speaker recognition and speaker recognition toolchain',
-
-    #url='http://pypi.python.org/pypi/TowelStuff/',
-    #license='LICENSE.txt',
 
     author='Elie Khoury',
     author_email='Elie.Khoury@idiap.ch',
@@ -41,11 +38,9 @@ setup(
         'para_ubm_spkverif_isv.py = spkrectool.script.para_ubm_spkverif_isv:main',
         'para_ubm_spkverif_gmm.py = spkrectool.script.para_ubm_spkverif_isv:main',
         'para_ubm_spkverif_ivector.py = spkrectool.script.para_ubm_spkverif_ivector:main',
-        'manual_vad_conversion.py = spkrectool.script.manual_vad_conversion:main',
+#        'manual_vad_conversion.py = spkrectool.script.manual_vad_conversion:main',
         ],
       },
-
-    #long_description=open('doc/install.rst').read(),
 
     install_requires=[
         "setuptools", # for whatever
@@ -55,6 +50,7 @@ setup(
         "pysox",
         # databases
         "xbob.db.verification.filelist",
+        "xbob.db.voxforge"
         
         
     ],

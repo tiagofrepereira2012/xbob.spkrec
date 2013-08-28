@@ -235,13 +235,13 @@ Unlike TIMIT and BANCA, this database is completely free of charge.
 
 More details about how to download the audio files used in our experiments, and how the data is splitted into Training, Development and Evaluation set can be found here::
   
-  https://pypi.python.org/pypi/xbob.db.subvoxforge
+  https://pypi.python.org/pypi/xbob.db.voxforge
   
 One example of command line is:
 
 .. code-block:: sh
 
-  $ ./bin/spkverif_gmm.py -d config/database/subvoxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm_200G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
+  $ ./bin/spkverif_gmm.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm_200G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
   
 In this example, we used the following configuration:
 
