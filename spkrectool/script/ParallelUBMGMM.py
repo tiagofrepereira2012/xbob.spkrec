@@ -259,7 +259,7 @@ class ParallelUBMGMM():
       if os.path.exists(self.m_configuration.gmm_stats_file % (self.m_args.iteration, 0, len(training_list))):
         stats_file = self.m_configuration.gmm_stats_file % (self.m_args.iteration, 0, len(training_list))
         # load stats file
-        zeroeth, first, nsamples, dist = self.read_stats(stats_file)
+        gmm_stats = bob.machine.GMMStats(bob.io.HDF5File(stats_file))
       else:
         # load several files
         job_ids = range(self.__generate_job_array__(training_list, counts)[1])
