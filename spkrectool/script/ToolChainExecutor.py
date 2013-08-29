@@ -88,14 +88,6 @@ class ToolChainExecutor:
         help = 'Name of the file to write the feature projector into')
     file_group.add_argument('--enroler-file' , type = str, metavar = 'FILE', default = 'Enroler.hdf5',
         help = 'Name of the file to write the model enroler into')
-    file_group.add_argument('--whitening-enroler-file' , type = str, metavar = 'FILE', default = 'WhiteEnroler.hdf5',
-        help = 'Name of the file to write the model of whitening enroler into')
-    file_group.add_argument('--lda-projector-file' , type = str, metavar = 'FILE', default = 'LDAProjector.hdf5',
-        help = 'Name of the file to write the model of LDA projector into')
-    file_group.add_argument('--wccn-projector-file' , type = str, metavar = 'FILE', default = 'WCCNProjector.hdf5',
-        help = 'Name of the file to write the model of WCCN projector into')
-    file_group.add_argument('--plda-enroler-file' , type = str, metavar = 'FILE', default = 'PLDAEnroler.hdf5',
-        help = 'Name of the file to write the model of PLDA enroler into')
     file_group.add_argument('-G', '--submit-db-file', type = str, metavar = 'FILE', default = 'submitted.db', dest = 'gridtk_db',
         help = 'The db file in which the submitted jobs will be written (only valid with the --grid option)')
 
@@ -106,18 +98,8 @@ class ToolChainExecutor:
         help = 'Name of the directory of the features')
     sub_dir_group.add_argument('--projected-directory', type = str, metavar = 'DIR', default = 'projected_ubm', dest = 'projected_ubm_dir',
         help = 'Name of the directory where the projected data should be stored')
-    sub_dir_group.add_argument('--projected-isv-directory', type = str, metavar = 'DIR', default = 'projected_isv', dest = 'projected_isv_dir',
-        help = 'Name of the directory where the projected data should be stored')
-    sub_dir_group.add_argument('--projected-ivector-directory', type = str, metavar = 'DIR', default = 'projected_ivector', dest = 'projected_ivector_dir',
-        help = 'Name of the directory where the projected data should be stored')
-    sub_dir_group.add_argument('--whitened-ivector-directory', type = str, metavar = 'DIR', default = 'whitened_ivector', dest = 'whitened_ivector_dir',
-        help = 'Name of the directory where the projected data should be stored')
-    sub_dir_group.add_argument('--lnorm-ivector-directory', type = str, metavar = 'DIR', default = 'lnorm_ivector', dest = 'lnorm_ivector_dir',
-        help = 'Name of the directory where the projected data should be stored')
-    sub_dir_group.add_argument('--lda-projected-ivector-directory', type = str, metavar = 'DIR', default = 'lda_projected_ivector', dest = 'lda_projected_ivector_dir',
-        help = 'Name of the directory where the projected data should be stored')
-    sub_dir_group.add_argument('--wccn-projected-ivector-directory', type = str, metavar = 'DIR', default = 'wccn_projected_ivector', dest = 'wccn_projected_ivector_dir',
-        help = 'Name of the directory where the projected data should be stored')
+
+
     other_group = parser.add_argument_group('\nFlags that change the behaviour of the experiment')
     other_group.add_argument('-r', '--dry-run', action='store_true', dest='dry_run',
         help = 'Only report the grid commands that will be executed, but do not execute them')
@@ -135,28 +117,8 @@ class ToolChainExecutor:
         help = 'Skip the feature extraction training')
     skip_group.add_argument('--skip-projection-ubm', '--noproubm', action='store_true', dest='skip_projection_ubm',
         help = 'Skip the feature UBM projection')
-    skip_group.add_argument('--skip-projection-isv', '--noproisv', action='store_true', dest='skip_projection_isv',
-        help = 'Skip the feature ISV projection')
-    skip_group.add_argument('--skip-projection-ivector', '--noproivec', action='store_true', dest='skip_projection_ivector',
-        help = 'Skip the feature IVector projection')
     skip_group.add_argument('--skip-enroler-training', '--noenrt', action='store_true', dest='skip_enroler_training',
         help = 'Skip the training of the model enrolment')
-    skip_group.add_argument('--skip-whitening-enroler-training', '--nowenrt', action='store_true', dest='skip_whitening_enroler_training',
-        help = 'Skip the training of the model whitening enrolment')
-    skip_group.add_argument('--skip-whitening-ivector', '--nowivec', action='store_true', dest='skip_whitening_ivector',
-        help = 'Skip whitening i-vectors')
-    skip_group.add_argument('--skip-lnorm-ivector', '--nolnivec', action='store_true', dest='skip_lnorm_ivector',
-        help = 'Skip lnorm i-vectors')
-    skip_group.add_argument('--skip-lda-train-projector', '--noldaprojt', action='store_true', dest='skip_lda_train_projector',
-        help = 'Skip the training of the LDA projector')
-    skip_group.add_argument('--skip-lda-projection', '--noldaproj', action='store_true', dest='skip_lda_projection',
-        help = 'Skip projecting i-vectors on LDA')
-    skip_group.add_argument('--skip-wccn-train-projector', '--nowccnprojt', action='store_true', dest='skip_wccn_train_projector',
-        help = 'Skip the training of the WCCN projector')
-    skip_group.add_argument('--skip-wccn-projection', '--nowccnproj', action='store_true', dest='skip_wccn_projection',
-        help = 'Skip projecting i-vectors on WCCN')
-    skip_group.add_argument('--skip-train-plda-enroler', '--nopldaenrt', action='store_true', dest='skip_train_plda_enroler',
-        help = 'Skip the training of the plda model enrolment')
     skip_group.add_argument('--skip-model-enrolment', '--noenr', action='store_true', dest='skip_model_enrolment',
         help = 'Skip the model enrolment step')
     skip_group.add_argument('--skip-score-computation', '--nosc', action='store_true', dest='skip_score_computation',
@@ -222,20 +184,10 @@ class ToolChainExecutor:
     self.m_configuration.extractor_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.extractor_file)
     self.m_configuration.projector_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.projector_file)
     self.m_configuration.enroler_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.enroler_file)
-    self.m_configuration.whitening_enroler_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.whitening_enroler_file)
-    self.m_configuration.lda_projector_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.lda_projector_file)
-    self.m_configuration.wccn_projector_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.wccn_projector_file)
-    self.m_configuration.plda_enroler_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.plda_enroler_file)
     self.m_configuration.preprocessed_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.preprocessed_dir)
     self.m_configuration.features_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.features_dir)
     self.m_configuration.projected_ubm_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.projected_ubm_dir)
-    self.m_configuration.projected_isv_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.projected_isv_dir)
-    self.m_configuration.projected_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.projected_ivector_dir)
-    self.m_configuration.whitened_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.whitened_ivector_dir)
-    self.m_configuration.lnorm_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.lnorm_ivector_dir)
-    self.m_configuration.lda_projected_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.lda_projected_ivector_dir)
-    self.m_configuration.wccn_projected_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.wccn_projected_ivector_dir)
-
+    
 
     # call configurations for the specific protocol
     self.protocol_specific_configuration()

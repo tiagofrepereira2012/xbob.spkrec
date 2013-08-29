@@ -52,7 +52,16 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
   def parallel_ivec_training_configuration(self):  
     self.m_configuration.ivector_intermediate_file = os.path.join(self.m_configuration.base_output_TEMP_dir, 'tv_temp', 'i_%05d', 'ivec.hdf5')
     self.m_configuration.ivector_stats_file = os.path.join(self.m_configuration.base_output_TEMP_dir, 'tv_temp', 'i_%05d', 'stats_%05d-%05d.hdf5')
-    
+    self.m_configuration.whitening_enroler_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.whitening_enroler_file)
+    self.m_configuration.lda_projector_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.lda_projector_file)
+    self.m_configuration.wccn_projector_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.wccn_projector_file)
+    self.m_configuration.plda_enroler_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.plda_enroler_file)
+    self.m_configuration.projected_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.projected_ivector_dir)
+    self.m_configuration.whitened_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.whitened_ivector_dir)
+    self.m_configuration.lnorm_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.lnorm_ivector_dir)
+    self.m_configuration.lda_projected_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.lda_projected_ivector_dir)
+    self.m_configuration.wccn_projected_ivector_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.wccn_projected_ivector_dir)
+        
   def zt_norm_configuration(self):
     """Special configuration specific for ZT-Norm computation"""
     if self.m_database_config.protocol is not None:
@@ -871,6 +880,26 @@ def parse_args(command_line_arguments = sys.argv[1:]):
   # add the arguments required for all tool chains
   config_group, dir_group, file_group, sub_dir_group, other_group, skip_group = ToolChainExecutorParallelIVector.required_command_line_options(parser)
   
+  file_group.add_argument('--whitening-enroler-file' , type = str, metavar = 'FILE', default = 'WhiteEnroler.hdf5',
+      help = 'Name of the file to write the model of whitening enroler into')
+  file_group.add_argument('--lda-projector-file' , type = str, metavar = 'FILE', default = 'LDAProjector.hdf5',
+      help = 'Name of the file to write the model of LDA projector into')
+  file_group.add_argument('--wccn-projector-file' , type = str, metavar = 'FILE', default = 'WCCNProjector.hdf5',
+      help = 'Name of the file to write the model of WCCN projector into')
+  file_group.add_argument('--plda-enroler-file' , type = str, metavar = 'FILE', default = 'PLDAEnroler.hdf5',
+      help = 'Name of the file to write the model of PLDA enroler into')
+  
+  sub_dir_group.add_argument('--projected-ivector-directory', type = str, metavar = 'DIR', default = 'projected_ivector', dest = 'projected_ivector_dir',
+      help = 'Name of the directory where the projected data should be stored')
+  sub_dir_group.add_argument('--whitened-ivector-directory', type = str, metavar = 'DIR', default = 'whitened_ivector', dest = 'whitened_ivector_dir',
+      help = 'Name of the directory where the projected data should be stored')
+  sub_dir_group.add_argument('--lnorm-ivector-directory', type = str, metavar = 'DIR', default = 'lnorm_ivector', dest = 'lnorm_ivector_dir',
+      help = 'Name of the directory where the projected data should be stored')
+  sub_dir_group.add_argument('--lda-projected-ivector-directory', type = str, metavar = 'DIR', default = 'lda_projected_ivector', dest = 'lda_projected_ivector_dir',
+      help = 'Name of the directory where the projected data should be stored')
+  sub_dir_group.add_argument('--wccn-projected-ivector-directory', type = str, metavar = 'DIR', default = 'wccn_projected_ivector', dest = 'wccn_projected_ivector_dir',
+      help = 'Name of the directory where the projected data should be stored')
+  
   sub_dir_group.add_argument('--models-directories', type = str, metavar = 'DIR', nargs = 2, dest='models_dirs',
       default = ['models', 'tmodels'],
       help = 'Subdirectories (of temp directory) where the models should be stored')
@@ -881,6 +910,25 @@ def parse_args(command_line_arguments = sys.argv[1:]):
       default = ['nonorm', 'ztnorm'],
       help = 'Subdirectories (of --user-dir) where to write the results to')
   
+  skip_group.add_argument('--skip-projection-ivector', '--noproivec', action='store_true', dest='skip_projection_ivector',
+      help = 'Skip the feature IVector projection')
+  skip_group.add_argument('--skip-whitening-enroler-training', '--nowenrt', action='store_true', dest='skip_whitening_enroler_training',
+      help = 'Skip the training of the model whitening enrolment')
+  skip_group.add_argument('--skip-whitening-ivector', '--nowivec', action='store_true', dest='skip_whitening_ivector',
+      help = 'Skip whitening i-vectors')
+  skip_group.add_argument('--skip-lnorm-ivector', '--nolnivec', action='store_true', dest='skip_lnorm_ivector',
+      help = 'Skip lnorm i-vectors')
+  skip_group.add_argument('--skip-lda-train-projector', '--noldaprojt', action='store_true', dest='skip_lda_train_projector',
+      help = 'Skip the training of the LDA projector')
+  skip_group.add_argument('--skip-lda-projection', '--noldaproj', action='store_true', dest='skip_lda_projection',
+      help = 'Skip projecting i-vectors on LDA')
+  skip_group.add_argument('--skip-wccn-train-projector', '--nowccnprojt', action='store_true', dest='skip_wccn_train_projector',
+      help = 'Skip the training of the WCCN projector')
+  skip_group.add_argument('--skip-wccn-projection', '--nowccnproj', action='store_true', dest='skip_wccn_projection',
+      help = 'Skip projecting i-vectors on WCCN')
+  skip_group.add_argument('--skip-train-plda-enroler', '--nopldaenrt', action='store_true', dest='skip_train_plda_enroler',
+      help = 'Skip the training of the plda model enrolment')
+
   #######################################################################################
   ############################ other options ############################################
   other_group.add_argument('-z', '--no-zt-norm', action='store_true', dest = 'no_zt_norm',
@@ -920,12 +968,12 @@ def parse_args(command_line_arguments = sys.argv[1:]):
       help = "Skip the KMeans step")
   skip_group.add_argument('--skip-gmm', '--nog', action='store_true',
       help = "Skip the GMM step")
-  skip_group.add_argument('--skip-gmm-projection', '--nogp', action='store_true',
-      help = "Skip the GMM projection step")
-  skip_group.add_argument('--skip-isv', '--noi', action='store_true',
-      help = "Skip the ISV step")
-  skip_group.add_argument('--skip-isv-projection', '--noip', action='store_true',
-      help = "Skip the GMM isv projection")
+#  skip_group.add_argument('--skip-gmm-projection', '--nogp', action='store_true',
+#      help = "Skip the GMM projection step")
+#  skip_group.add_argument('--skip-isv', '--noi', action='store_true',
+#      help = "Skip the ISV step")
+#  skip_group.add_argument('--skip-isv-projection', '--noip', action='store_true',
+#      help = "Skip the GMM isv projection")
 
 
 

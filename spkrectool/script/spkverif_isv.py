@@ -35,7 +35,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     self.m_tool_chain = toolchain.ToolChainISV(self.m_file_selector)
     
     
-  def protocol_specific_configuration(self):
+  def zt_norm_configuration(self):
     """Special configuration for ZT-Norm computation"""
     if self.m_database_config.protocol is not None:
       self.m_configuration.models_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.models_dirs[0], self.m_database_config.protocol)
@@ -60,7 +60,13 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
        
     self.m_configuration.default_extension = ".hdf5"
     
+  def isv_specific_configuration(self):
+    self.m_configuration.projected_isv_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.projected_isv_dir)
     
+  def protocol_specific_configuration(self):
+    """Special configuration specific for this toolchain"""
+    self.zt_norm_configuration()  
+    self.isv_specific_configuration()  
     
   def execute_tool_chain(self):
     """Executes the ZT tool chain on the local machine"""
@@ -375,6 +381,11 @@ def parse_args(command_line_arguments = sys.argv[1:]):
   # add the arguments required for all tool chains
   config_group, dir_group, file_group, sub_dir_group, other_group, skip_group = ToolChainExecutorZT.required_command_line_options(parser)
   
+  skip_group.add_argument('--skip-projection-isv', '--noproisv', action='store_true', dest='skip_projection_isv',
+        help = 'If using ISV Tool, skip the feature ISV projection')  
+
+  sub_dir_group.add_argument('--projected-isv-directory', type = str, metavar = 'DIR', default = 'projected_isv', dest = 'projected_isv_dir',
+      help = 'Name of the directory where the projected data should be stored')
   sub_dir_group.add_argument('--models-directories', type = str, metavar = 'DIR', nargs = 2, dest='models_dirs',
       default = ['models', 'tmodels'],
       help = 'Subdirectories (of temp directory) where the models should be stored')
@@ -384,6 +395,7 @@ def parse_args(command_line_arguments = sys.argv[1:]):
   sub_dir_group.add_argument('--score-dirs', type = str, metavar = 'DIR', nargs = 2, dest='score_dirs',
       default = ['nonorm', 'ztnorm'],
       help = 'Subdirectories (of --user-dir) where to write the results to')
+  
   
   #######################################################################################
   ############################ other options ############################################

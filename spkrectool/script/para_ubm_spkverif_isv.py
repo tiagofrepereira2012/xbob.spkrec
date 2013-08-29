@@ -69,11 +69,16 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
       self.m_configuration.zt_norm_D_sameValue_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.score_sub_dir, self.m_args.zt_dirs[4])
       self.m_configuration.scores_nonorm_dir = os.path.join(self.m_configuration.base_output_USER_dir, self.m_args.score_sub_dir, self.m_args.score_dirs[0]) 
       self.m_configuration.scores_ztnorm_dir = os.path.join(self.m_configuration.base_output_USER_dir, self.m_args.score_sub_dir, self.m_args.score_dirs[1])  
+  
+  def isv_specific_configuration(self):
+    self.m_configuration.projected_isv_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.projected_isv_dir)
     
   def protocol_specific_configuration(self):
     """Special configuration specific for this toolchain"""
     self.parallel_gmm_training_configuration()
     self.zt_norm_configuration()  
+    self.isv_specific_configuration()
+    
         
   def execute_tool_chain(self):
     """Executes the ZT tool chain on the local machine"""
@@ -500,7 +505,12 @@ def parse_args(command_line_arguments = sys.argv[1:]):
 
   # add the arguments required for all tool chains
   config_group, dir_group, file_group, sub_dir_group, other_group, skip_group = ToolChainExecutorParallelISV.required_command_line_options(parser)
-  
+
+  skip_group.add_argument('--skip-projection-isv', '--noproisv', action='store_true', dest='skip_projection_isv',
+        help = 'If using ISV Tool, skip the feature ISV projection')  
+
+  sub_dir_group.add_argument('--projected-isv-directory', type = str, metavar = 'DIR', default = 'projected_isv', dest = 'projected_isv_dir',
+      help = 'Name of the directory where the projected data should be stored')
   sub_dir_group.add_argument('--models-directories', type = str, metavar = 'DIR', nargs = 2, dest='models_dirs',
       default = ['models', 'tmodels'],
       help = 'Subdirectories (of temp directory) where the models should be stored')
@@ -510,7 +520,7 @@ def parse_args(command_line_arguments = sys.argv[1:]):
   sub_dir_group.add_argument('--score-dirs', type = str, metavar = 'DIR', nargs = 2, dest='score_dirs',
       default = ['nonorm', 'ztnorm'],
       help = 'Subdirectories (of --user-dir) where to write the results to')
-  
+    
   #######################################################################################
   ############################ other options ############################################
   other_group.add_argument('-z', '--no-zt-norm', action='store_true', dest = 'no_zt_norm',
@@ -544,12 +554,12 @@ def parse_args(command_line_arguments = sys.argv[1:]):
       help = "Skip the KMeans step")
   skip_group.add_argument('--skip-gmm', '--nog', action='store_true',
       help = "Skip the GMM step")
-  skip_group.add_argument('--skip-gmm-projection', '--nogp', action='store_true',
-      help = "Skip the GMM projection step")
-  skip_group.add_argument('--skip-isv', '--noi', action='store_true',
-      help = "Skip the ISV step")
-  skip_group.add_argument('--skip-isv-projection', '--noip', action='store_true',
-      help = "Skip the GMM isv projection")
+#  skip_group.add_argument('--skip-gmm-projection', '--nogp', action='store_true',
+#      help = "Skip the GMM projection step")
+#  skip_group.add_argument('--skip-isv', '--noi', action='store_true',
+#      help = "Skip the ISV step")
+#  skip_group.add_argument('--skip-isv-projection', '--noip', action='store_true',
+#      help = "Skip the GMM isv projection")
 
 
 
