@@ -88,7 +88,6 @@ class ToolChainExecutorIVector (ToolChainExecutor.ToolChainExecutor):
     if not self.m_args.skip_projection_training and hasattr(self.m_tool, 'train_projector'):
       self.m_tool_chain.train_projector(self.m_tool, force = self.m_args.force)
     
-    print self.m_args.skip_projection_ubm, hasattr(self.m_tool, 'project_gmm')
     if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_gmm'):
       self.m_tool_chain.project_gmm_features(self.m_tool, force = self.m_args.force, extractor = self.m_feature_extractor)
        
@@ -97,12 +96,10 @@ class ToolChainExecutorIVector (ToolChainExecutor.ToolChainExecutor):
       self.m_tool_chain.train_enroler(self.m_tool, force = self.m_args.force)
 
     # IVector projection
-    print self.m_args.skip_projection_ivector, hasattr(self.m_tool, 'project_ivector')
     if not self.m_args.skip_projection_ivector and hasattr(self.m_tool, 'project_ivector'):
       self.m_tool_chain.project_ivector_features(self.m_tool, force = self.m_args.force, extractor = self.m_feature_extractor)
     
     # train whitening enroler
-    print "Train whitening enroler"
     if not self.m_args.skip_whitening_enroler_training and hasattr(self.m_tool, 'train_whitening_enroler'):
       self.m_tool_chain.train_whitening_enroler(self.m_tool, dir_type='projected_ivector', force = self.m_args.force)
     
@@ -115,34 +112,28 @@ class ToolChainExecutorIVector (ToolChainExecutor.ToolChainExecutor):
       self.m_tool_chain.lnorm_ivector(self.m_tool, dir_type='whitened_ivector', force = self.m_args.force)
     
     # train LDA projector
-    print "Train LDA projector"
     if not self.m_args.skip_lda_train_projector and hasattr(self.m_tool, 'lda_train_projector'):
       self.m_tool_chain.lda_train_projector(self.m_tool, dir_type='lnorm_ivector', force = self.m_args.force)
       
     # project i-vectors using LDA
-    print "Project i-vectors using LDA"
     if not self.m_args.skip_lda_projection and hasattr(self.m_tool, 'lda_project_ivector'):
       self.m_tool_chain.lda_project_ivector(self.m_tool, dir_type='lnorm_ivector', force = self.m_args.force)  
           
     # train WCCN projector
-    print "Train WCCN projector"
     if not self.m_args.skip_wccn_train_projector and hasattr(self.m_tool, 'wccn_train_projector'):
       self.m_tool_chain.wccn_train_projector(self.m_tool, dir_type='lda_projected_ivector', force = self.m_args.force)
       
     # project i-vectors using WCCN
-    print "Project i-vectors using WCCN"
     if not self.m_args.skip_wccn_projection and hasattr(self.m_tool, 'wccn_project_ivector'):
       self.m_tool_chain.wccn_project_ivector(self.m_tool, dir_type='lda_projected_ivector', force = self.m_args.force)  
     
     cur_type = 'wccn_projected_ivector'
           
     # train plda enroler
-    print "Train plda enroler"
     if not self.m_args.skip_train_plda_enroler and hasattr(self.m_tool, 'train_plda_enroler'):
       self.m_tool_chain.train_plda_enroler(self.m_tool, dir_type=cur_type, force = self.m_args.force)
     
     # PLDA enrollment of the models
-    print "Enrol models with PLDA"
     if not self.m_args.skip_model_enrolment:
       self.m_tool_chain.enrol_models(self.m_tool, self.m_feature_extractor, not self.m_args.no_zt_norm, dir_type=cur_type, groups = self.m_args.groups, force = self.m_args.force)
     
@@ -312,8 +303,6 @@ class ToolChainExecutorIVector (ToolChainExecutor.ToolChainExecutor):
       enrol_deps_n[group] = deps[:]
       enrol_deps_t[group] = deps[:]
       list_to_split = self.m_file_selector.model_ids(group)
-      print group
-      print list_to_split
       if not self.m_args.skip_model_enrolment:
         job_ids['enrol_%s_N'%group] = self.submit_grid_job(
                 '--enrol-models --group=%s --model-type=N'%group, 
@@ -495,7 +484,6 @@ class ToolChainExecutorIVector (ToolChainExecutor.ToolChainExecutor):
     cur_type = 'wccn_projected_ivector'
     
     # train plda enroler
-    print "Train plda enroler"
     if self.m_args.train_plda_enroler:
       self.m_tool_chain.train_plda_enroler(
           self.m_tool,

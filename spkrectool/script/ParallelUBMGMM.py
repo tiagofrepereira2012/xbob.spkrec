@@ -195,7 +195,6 @@ class ParallelUBMGMM():
       kmeans_machine = bob.machine.KMeansMachine(bob.io.HDF5File(self.m_configuration.kmeans_file))
 
       # read features
-      print "self.m_args.limit_training_examples = ", self.m_args.limit_training_examples
       data = numpy.vstack([bob.io.load(str(training_list[index])) for index in utils.quasi_random_indices(len(training_list), self.m_args.limit_training_examples)])
 
       # Create initial GMM Machine

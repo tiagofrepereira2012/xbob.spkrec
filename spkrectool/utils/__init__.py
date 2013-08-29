@@ -42,7 +42,6 @@ def convertScoreToList(scores, probes):
   ret = []
   i = 0
   for k in sorted(probes):
-    print k
     ret.append((probes[k][1], probes[k][2], probes[k][3], probes[k][4], scores[i]))
     i+=1
   return ret

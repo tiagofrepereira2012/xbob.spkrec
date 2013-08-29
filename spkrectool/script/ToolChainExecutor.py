@@ -257,12 +257,13 @@ class ToolChainExecutor:
           stdout=logdir, stderr=logdir, name=name, array=array,
           **kwargs)
 
-      print 'submitted:', job
+      print("submitted: %d" %job)
       return job.id()
     else:
       self.m_fake_job_id += 1
-      print 'would have submitted job', name, 'with id', self.m_fake_job_id, 'as:'
-      print ' '.join(use_cmd[2:]), '\nwith dependencies', dependencies
+      print('would have submitted job %s with id %d as' %(name, self.m_fake_job_id)),
+      print(str(' '.join(use_cmd[2:])))
+      print ("with dependencies %s" % str(dependencies))
       return self.m_fake_job_id
 
 

@@ -32,7 +32,6 @@ class ToolChainISV(ToolChain):
     """Extract the features for all files of the database"""
     self.m_tool = tool
     tool_type = self.select_tool_type(tool)
-    print "tool_type = ", tool_type
 
     # load the projector file
     if hasattr(tool, 'project_isv'):
@@ -48,11 +47,11 @@ class ToolChainISV(ToolChain):
       # extract the features
       if indices != None:
         index_range = range(indices[0], indices[1])
-        print "- Projection: splitting of index range %s" % str(indices)
+        print("- Projection: splitting of index range %s" % str(indices))
       else:
         index_range = range(len(feature_files))
 
-      print "project", len(index_range), "features from directory", os.path.dirname(feature_files[0]), "to directory", os.path.dirname(projected_isv_files[0]), "using ISV Projector"
+      print("project %d features from directory %s to directory %s using ISV Enroler" %(len(index_range), self.m_file_selector.m_config.projected_ubm_dir, self.m_file_selector.m_config.projected_isv_dir))
       for k in index_range:
         feature_file = feature_files[k]
         projected_ubm_file = projected_ubm_files[k]
@@ -60,18 +59,15 @@ class ToolChainISV(ToolChain):
         
         if not self.__check_file__(projected_isv_file, force):
           # load feature
-          #feature = bob.io.load(str(feature_file))
           feature = self.__read_feature__(feature_file, extractor)
           
           # load projected_ubm file
-          print str(projected_ubm_file)
           projected_ubm = bob.machine.GMMStats(bob.io.HDF5File(str(projected_ubm_file)))
           
           # project isv feature
           projected_isv = tool.project_isv(feature, projected_ubm)
           # write it
           utils.ensure_dir(os.path.dirname(projected_isv_file))
-          #print str(projected_isv_file)
           self.__save_feature__(projected_isv, str(projected_isv_file))
   
 
@@ -102,9 +98,9 @@ class ToolChainISV(ToolChain):
 
         if indices != None: 
           model_ids = model_ids[indices[0]:indices[1]]
-          print "Splitting of index range", indices, "to",
+          print("Splitting of index range", indices, "to",)
   
-        print "enrol models of group", group
+        print("enrol models of group %s" %group)
         for model_id in model_ids:
           # Path to the model
           model_file = self.m_file_selector.model_file(model_id, group)
@@ -118,12 +114,11 @@ class ToolChainISV(ToolChain):
             enrol_features = []
             for k in enrol_files:
               # processes one file
-              print k
               if os.path.exists(str(k)):
                 feature = self.__read_feature__(str(k))
                 enrol_features.append(feature)
               else:
-                print "Warning: something is wrong with this file: ", str(k)
+                print("Warning: something is wrong with this file: ", str(k))
             
             model = tool.enroll(enrol_features)
             # save the model
@@ -133,17 +128,15 @@ class ToolChainISV(ToolChain):
     if 'T' in types and compute_zt_norm:
       for group in groups:
         model_ids = self.m_file_selector.tmodel_ids(group)
-        print model_ids
 
         if indices != None: 
           model_ids = model_ids[indices[0]:indices[1]]
-          print "Splitting of index range", indices, "to",
+          print("Splitting of index range", indices, "to",)
   
-        print "enrol T-models of group", group
+        print("enrol T-models of group %s" %group)
         for model_id in model_ids:
           # Path to the model
           model_file = self.m_file_selector.tmodel_file(model_id, group)
-          print model_file
 
           # Removes old file if required
           if not self.__check_file__(model_file, force):
@@ -153,7 +146,6 @@ class ToolChainISV(ToolChain):
             # load all files into memory
             enrol_features = []
             for k in enrol_files:
-              print k
               # processes one file
               
               feature = self.__read_feature__(str(k))
@@ -217,20 +209,20 @@ class ToolChainISV(ToolChain):
       dir_type = 'features'
     
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       all_probe_files = self.m_file_selector.probe_files(group, dir_type)
       all_probes = {}
       # read all probe files into memory
       for k in all_probe_files:
         all_probes[k] = self.__read_probe__(str(all_probe_files[k][0]))
-      print "Computing A matrix"
+      print("Computing A matrix")
 
     # Computes the raw scores for each model
     for model_id in model_ids:
       # test if the file is already there
       score_file = self.m_file_selector.a_file(model_id, group) if compute_zt_norm else self.m_file_selector.no_norm_file(model_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         # get the probe split
         probe_objects = self.m_file_selector.probe_objects_for_model(model_id, group)
@@ -271,19 +263,19 @@ class ToolChainISV(ToolChain):
     zprobe_objects = self.m_file_selector.zprobe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       zprobes = {}
       # read all probe files into memory
       for k in zprobe_objects:
         zprobes[k] = self.__read_probe__(str(zprobe_objects[k][0]))
-      print "Computing B matrix"
+      print("Computing B matrix")
 
     # Loads the models
     for model_id in model_ids:
       # test if the file is already there
       score_file = self.m_file_selector.b_file(model_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         model = self.__read_model__(self.m_file_selector.model_file(model_id, group))
         if preload_probes:
@@ -305,20 +297,19 @@ class ToolChainISV(ToolChain):
 
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       probes = {}
       # read all probe files into memory
       for k in probe_files:
-        #print str(k)
         probes[k] = self.__read_probe__(str(k))
-      print "Computing C matrix"
+      print("Computing C matrix")
 
     # Computes the raw scores for the T-Norm model
     for tmodel_id in tmodel_ids:
       # test if the file is already there
       score_file = self.m_file_selector.c_file(tmodel_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         tmodel = self.__read_model__(self.m_file_selector.tmodel_file(tmodel_id, group))
         if preload_probes:
@@ -339,12 +330,12 @@ class ToolChainISV(ToolChain):
     zprobe_files = self.m_file_selector.zprobe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       zprobes = {}
       # read all probe files into memory
       for k in zprobe_files:
         zprobes[k] = self.__read_probe__(str(k))
-      print "Computing D matrix"
+      print("Computing D matrix")
 
     # Gets the Z-Norm impostor samples
     zprobe_ids = []
@@ -357,7 +348,7 @@ class ToolChainISV(ToolChain):
       # test if the file is already there
       score_file = self.m_file_selector.d_same_value_file(tmodel_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         tmodel = self.__read_model__(self.m_file_selector.tmodel_file(tmodel_id, group))
         if preload_probes:
@@ -376,10 +367,8 @@ class ToolChainISV(ToolChain):
     # save tool for internal use
     self.m_tool = tool
     self.m_use_projected_isv_dir = hasattr(tool, 'project_isv')
-    #print self.m_use_projected_isv_dir
-    
+
     self.m_use_projected_ubm_dir = hasattr(tool, 'project_gmm')
-    #print self.m_use_projected_ubm_dir
     
     # load the projector, if needed
     if hasattr(tool,'load_projector'):
@@ -388,7 +377,7 @@ class ToolChainISV(ToolChain):
       tool.load_enroler(self.m_file_selector.enroler_file())
 
     for group in groups:
-      print "----- computing scores for group '%s' -----" % group
+      print("----- computing scores for group '%s' -----" % group)
       # get model ids
       model_ids = self.m_file_selector.model_ids(group)
       if compute_zt_norm:
@@ -400,7 +389,7 @@ class ToolChainISV(ToolChain):
           model_ids_short = model_ids[indices[0]:indices[1]]
         else:
           model_ids_short = model_ids
-        print "computing A scores"
+        print("computing A scores")
         self.__scores_a__(model_ids_short, group, compute_zt_norm, force, preload_probes)
       
       if compute_zt_norm:
@@ -410,7 +399,7 @@ class ToolChainISV(ToolChain):
             model_ids_short = model_ids[indices[0]:indices[1]]
           else:
             model_ids_short = model_ids
-          print "computing B scores"
+          print("computing B scores")
           self.__scores_b__(model_ids_short, group, force, preload_probes)
         
         # compute C scores
@@ -419,7 +408,7 @@ class ToolChainISV(ToolChain):
             tmodel_ids_short = tmodel_ids[indices[0]:indices[1]]
           else:
             tmodel_ids_short = tmodel_ids
-          print "computing C scores"
+          print("computing C scores")
           self.__scores_c__(tmodel_ids_short, group, force, preload_probes)
         
         # compute D scores
@@ -428,7 +417,7 @@ class ToolChainISV(ToolChain):
             tmodel_ids_short = tmodel_ids[indices[0]:indices[1]]
           else:
             tmodel_ids_short = tmodel_ids
-          print "computing D scores"
+          print("computing D scores")
           self.__scores_d__(tmodel_ids_short, group, force, preload_probes)
       
 
@@ -440,10 +429,7 @@ class ToolChainISV(ToolChain):
     """Computes ZT-Norm using the previously generated files"""
     for group in groups:
       self.m_use_projected_isv_dir = hasattr(tool, 'project_isv')
-      #print self.m_use_projected_isv_dir
-    
       self.m_use_projected_ubm_dir = hasattr(tool, 'project_gmm')
-      #print self.m_use_projected_ubm_dir
       
       # list of models
       model_ids = self.m_file_selector.model_ids(group)

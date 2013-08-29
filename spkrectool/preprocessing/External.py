@@ -54,7 +54,7 @@ class External:
   def _conversion(self, input_file, vad_file):
     """Computes and returns normalized cepstral features for the given input wave file"""
     
-    print "Input file : ", input_file
+    print("Input file: %s" %input_file)
     rate_wavsample = utils.read(input_file)
     
     

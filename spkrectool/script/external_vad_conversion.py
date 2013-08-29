@@ -52,7 +52,7 @@ def main():
       
       preprocessor(audio_file, out_file, vad_file)
     else:
-      print "Warning: file does not exist:", audio_file
+      print("Warning: file does not exist: %s" %audio_file)
   
 if __name__ == "__main__":
   main()  

@@ -55,7 +55,6 @@ class ISVTool (UBMGMMTool):
     gmm_stats = [] 
     for k in sorted(ld_files.keys()): 
       # Loads the list of GMMStats for the given client
-      #print "k = ", k, "ld_files[k] =", ld_files[k] 
       gmm_stats_c = self.__load_gmm_stats__(ld_files[k])
       # Appends to the main list 
       gmm_stats.append(gmm_stats_c)
@@ -96,9 +95,7 @@ class ISVTool (UBMGMMTool):
     
   def project_isv(self, feature_array, projected_ubm):
     #""Computes GMM statistics against a UBM, given an input 2D numpy.ndarray of feature vectors""
-    #print "projecting ISV features"
     projected_isv = numpy.ndarray(shape=(self.m_ubm.dim_c*self.m_ubm.dim_d,), dtype=numpy.float64)
-    #print projected_isv.shape
     
     model = bob.machine.ISVMachine(self.m_isvbase)
     model.estimate_ux(projected_ubm, projected_isv)
@@ -106,7 +103,6 @@ class ISVTool (UBMGMMTool):
     return [projected_ubm, projected_isv]
   
   def save_feature(self, data, feature_file):
-    #print "Saving features (ISV projected)"
     hdf5file = bob.io.HDF5File(feature_file, "w")
     gmmstats = data[0]
     Ux = data[1]
@@ -132,14 +128,13 @@ class ISVTool (UBMGMMTool):
   ################ Feature comparison ##################
   def read_model(self, model_file):
     """Reads the ISV Machine that holds the model"""
-    print model_file
+    print("model: %s" %model_file)
     machine = bob.machine.ISVMachine(bob.io.HDF5File(model_file))
     machine.isv_base = self.m_isvbase
     return machine
 
   def read_probe(self, probe_file):
     """Read the type of features that we require, namely GMMStats"""
-    #print probe_file
     hdf5file = bob.io.HDF5File(probe_file)
     hdf5file.cd('gmmstats')
     gmmstats = bob.machine.GMMStats(hdf5file)

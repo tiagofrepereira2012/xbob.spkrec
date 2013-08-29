@@ -54,10 +54,8 @@ class Energy:
     
     [variances, weights] = kmeans.get_variances_and_weights_for_each_cluster(normalized_energy)
     means = kmeans.means
-    print "HERE"
-    print numpy.isnan(means[0]),  numpy.isnan(means[1])
     if numpy.isnan(means[0]) or numpy.isnan(means[1]):
-      print "Warning: skip this file"
+      print("Warning: skip this file")
       return numpy.array(numpy.zeros(n_samples), dtype=numpy.int16)
     # Initializes the GMM
     m_ubm.means = means
@@ -91,7 +89,7 @@ class Energy:
         label[i]=0
       else:
         label[i]=label[i] * 1
-    print "After Energy-based VAD there are ", numpy.sum(label), " frames remaining over ", len(label)
+    print("After Energy-based VAD there are %d frames remaining over %d" %(numpy.sum(label), len(label)))
     
     return label
 
@@ -101,7 +99,7 @@ class Energy:
   def _compute_energy(self, input_file):
     """Computes and returns normalized cepstral features for the given input wave file"""
     
-    print "Input file : ", input_file
+    print("Input wave file: %s" %input_file)
     rate_wavsample = utils.read(input_file)
     
     

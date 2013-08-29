@@ -152,8 +152,6 @@ class ToolChainExecutorBBF (ToolChainExecutor.ToolChainExecutor):
       enrol_deps_n[group] = deps[:]
       enrol_deps_t[group] = deps[:]
       list_to_split = self.m_file_selector.model_ids(group)
-      print group
-      print list_to_split
       if not self.m_args.skip_model_enrolment:
         job_ids['enrol_%s_N'%group] = self.submit_grid_job(
                 '--enrol-models --group=%s --model-type=N'%group, 

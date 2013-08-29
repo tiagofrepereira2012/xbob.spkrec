@@ -23,7 +23,7 @@ import bob
 import os
 import time
 from .. import utils
-
+from facereclib.utils.logger import debug, info, warn, error
 class Cepstral:
   """Extracts Cepstral coefficents"""
   def __init__(self, config):
@@ -51,9 +51,8 @@ class Cepstral:
 
   def __call__(self, input_file, vad_file=None):
     """Computes and returns normalized cepstral features for the given input wave file and its corresponding VAD file"""
-    
-    print vad_file
-    print "Input file : ", input_file
+   
+    print("Input wav file : %s" % input_file)
     rate_wavsample = utils.read(input_file)
     
     # Feature extraction
@@ -77,7 +76,6 @@ class Cepstral:
        
     cepstral_features = ceps(rate_wavsample[1] )
 
-    print cepstral_features.shape 
     # Voice activity detection
     if vad_file is None:
       labels=label = numpy.array(numpy.ones(cepstral_features.shape[0]), dtype=numpy.int16)
@@ -101,7 +99,7 @@ class Cepstral:
     else:
       normalized_features = filtered_features
     if normalized_features.shape[0] == 0:
-      print "Warning: no speech found in:", input_file
+      print("Warning: no speech found in: %s" % input_file)
       # But do not keep it empty!!! This avoids errors in next steps
       normalized_features=numpy.array([numpy.zeros(len(features_mask))])
     return normalized_features

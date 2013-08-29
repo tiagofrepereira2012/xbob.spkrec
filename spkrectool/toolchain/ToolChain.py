@@ -48,7 +48,7 @@ class ToolChain:
     """This function reads the feature from file. It uses the self.m_tool.read_feature() function, if available, otherwise it uses bob.io.load()"""
     if not tool:
       tool = self.m_tool
-    #print str(feature_file)
+    
     if hasattr(tool, 'read_feature'):
       return tool.read_feature(str(feature_file))
     else:
@@ -83,7 +83,7 @@ class ToolChain:
     This function returns true is the file is there, otherwise false"""
     if os.path.exists(filename):
       if force or os.path.getsize(filename) < expected_file_size:
-        print "Removing old file '%s'." % filename
+        print("Removing old file '%s'." % filename)
         os.remove(filename)
         return False
       else:
@@ -97,7 +97,6 @@ class ToolChain:
     import math
     n_samples = features.shape[0]
     length = features.shape[1]
-    print "nsamples = ", n_samples, "length = ", length
     mean = numpy.ndarray((length,), 'float64')
     var = numpy.ndarray((length,), 'float64')
 
@@ -145,11 +144,11 @@ class ToolChain:
     #keys = sorted(image_files.keys())
     if indices != None:
       index_range = range(indices[0], indices[1])
-      print "- Preprocessing: splitting of index range %s" % str(indices)
+      print("- Preprocessing: splitting of index range %s" % str(indices))
     else:
       index_range = range(len(image_files))
 
-    print "preprocess", len(index_range), "images from directory", os.path.dirname(image_files[0]), "to directory", os.path.dirname(preprocessed_image_files[0])
+    print("preprocess %d wave from directory %s to directory %s" %(len(index_range), self.m_file_selector.m_config.wav_input_dir, self.m_file_selector.m_config.preprocessed_dir))
     # iterate through the images and perform normalization
 
     # read eye files
@@ -157,21 +156,11 @@ class ToolChain:
     annotation_list = self.m_file_selector.annotation_list(tool_type)
 
     for k in index_range:
-      #print k
+      
       image_file = image_files[k]
       
       if os.path.exists(image_file):
         preprocessed_image_file = preprocessed_image_files[k]
-        
-        #print image_file + "    " + preprocessed_image_file
-        
-        """
-        if os.path.isfile(preprocessed_image_file):
-          featuresTmp = bob.io.load(str(preprocessed_image_file));
-          if self.check_features(featuresTmp)==0: 
-            print "FILE TO CHECK: something's wrong with the features: ", str(preprocessed_image_file)
-        """
-
         if not self.__check_file__(preprocessed_image_file, force):
           annotations = None
           if annotation_list != None:
@@ -182,7 +171,7 @@ class ToolChain:
           utils.ensure_dir(os.path.dirname(preprocessed_image_file))
           preprocessed_image = preprocessor(str(image_file), str(preprocessed_image_file), annotations)
       else:
-        print "WARNING: FILE DOES NOT EXIST: ", image_file
+        print("WARNING: FILE DOES NOT EXIST: ", image_file)
 
 
   
@@ -192,15 +181,15 @@ class ToolChain:
     if hasattr(extractor,'train'):
       extractor_file = self.m_file_selector.extractor_file()
       if self.__check_file__(extractor_file, force, 1000):
-        print "Extractor '%s' already exists." % extractor_file
+        print("Extractor '%s' already exists." % extractor_file)
       else:
         # train model
         if hasattr(extractor, 'use_training_images_sorted_by_identity'):
           train_files = self.m_file_selector.training_feature_list_by_clients('preprocessed', 'train_extractor')
-          print "Training Extractor '%s' using %d identities: " %(extractor_file, len(train_files))
+          print("Training Extractor '%s' using %d identities: " %(extractor_file, len(train_files)))
         else:
           train_files = self.m_file_selector.training_image_list() 
-          print "Training Extractor '%s' using %d training files: " %(extractor_file, len(train_files))
+          print("Training Extractor '%s' using %d training files: " %(extractor_file, len(train_files)))
         extractor.train(train_files, extractor_file)
 
     
@@ -220,23 +209,20 @@ class ToolChain:
     # extract the features
     if indices != None:
       index_range = range(indices[0], indices[1])
-      print "- Extraction: splitting of index range %s" % str(indices)
+      print("- Extraction: splitting of index range %s" % str(indices))
     else:
       index_range = range(len(vad_files))
 
-    print "extract", len(index_range), "features from image directory", os.path.dirname(vad_files[0]), "to directory", os.path.dirname(feature_files[0])
+    print("extract %d features from image directory %s to directory %s" %(len(index_range), self.m_file_selector.m_config.wav_input_dir, self.m_file_selector.m_config.features_dir))
     for k in index_range:
       vad_file = vad_files[k]
       feature_file = feature_files[k]
       wav_file = wav_files[k]
-      #print vad_file + "   " + wav_file
-      
       if not self.__check_file__(feature_file, force):
-        
         # extract feature
         feature = extractor(wav_file, vad_file)
         if self.check_features(feature)==0: 
-            print "Warning: something's wrong with the features: ", str(feature_file)
+            print("Warning: something's wrong with the features: ", str(feature_file))
         # Save feature
         self.__save_feature__(feature, str(feature_file))
 
@@ -252,15 +238,15 @@ class ToolChain:
       projector_file = self.m_file_selector.projector_file()
       
       if self.__check_file__(projector_file, force, 1000):
-        print "Projector '%s' already exists." % projector_file
+        print("Projector '%s' already exists." % projector_file)
       else:
         # train projector
         if hasattr(tool, 'use_training_features_sorted_by_identity'):
           train_files = self.m_file_selector.training_feature_list_by_clients('features', 'train_projector')
-          print "Training Projector '%s' using %d identities: " %(projector_file, len(train_files))
+          print("Training Projector '%s' using %d identities: " %(projector_file, len(train_files)))
         else:
           train_files = self.m_file_selector.training_feature_list() 
-          print "Training Projector '%s' using %d training files: " %(projector_file, len(train_files))  
+          print("Training Projector '%s' using %d training files: " %(projector_file, len(train_files)))
         # perform training
         train_features = []
         for k in range(len(train_files)):
@@ -272,22 +258,20 @@ class ToolChain:
   def project_gmm_features(self, tool, extractor, indices = None, force=False):
     """Extract the features for all files of the database"""
     self.m_tool = tool
-    print tool
     tool_type = self.select_tool_type(tool)
     # load the projector file
     if hasattr(tool, 'project_gmm'):
       if hasattr(tool, 'load_projector'):
         tool.load_projector(self.m_file_selector.projector_file())
       feature_files = self.m_file_selector.feature_list(tool_type)
-      print " here: tool_type = ", tool_type
       projected_ubm_files = self.m_file_selector.projected_ubm_list(tool_type)
       # extract the features
       if indices != None:
         index_range = range(indices[0], indices[1])
-        print "- Projection: splitting of index range %s" % str(indices)
+        print("- Projection: splitting of index range %s" % str(indices))
       else:
         index_range = range(len(feature_files))
-      print "project ", len(index_range), "features from directory", os.path.dirname(feature_files[0]), "to directory", os.path.dirname(projected_ubm_files[0]), "using UBM Projector"
+      print("project %d features from directory %s to directory %s using UBM Projector" %(len(index_range), self.m_file_selector.m_config.features_dir, self.m_file_selector.m_config.projected_ubm_dir))
       for k in index_range:
         feature_file = feature_files[k]
         projected_ubm_file = projected_ubm_files[k]
@@ -297,7 +281,6 @@ class ToolChain:
           #feature = bob.io.load(str(feature_file))
           feature = self.__read_feature__(feature_file, extractor)
           # project feature
-          print str(feature_file)
           projected_ubm = tool.project_gmm(feature)
           # write it
           utils.ensure_dir(os.path.dirname(projected_ubm_file))
@@ -316,7 +299,7 @@ class ToolChain:
     if hasattr(tool, 'train_enroler'):
       enroler_file = self.m_file_selector.enroler_file()
       if self.__check_file__(enroler_file, force, 1000):
-        print "Enroler '%s' already exists." % enroler_file
+        print("Enroler '%s' already exists." % enroler_file)
       else:
         if hasattr(tool, 'load_projector'):
           tool.load_projector(self.m_file_selector.projector_file())
@@ -324,13 +307,12 @@ class ToolChain:
         train_files = self.m_file_selector.training_feature_list_by_clients('projected_ubm' if use_projected_features else 'features', 'train_enroler')
   
         # perform training
-        print "Training Enroler '%s' using %d identities: " %(enroler_file, len(train_files))
+        print("Training Enroler '%s' using %d identities: " %(enroler_file, len(train_files)))
         tool.train_enroler(train_files, str(enroler_file))
   
  
   # Function 4/  
   def __read_probe__(self, probe_file):
-    #print str(probe_file)
     """This function reads the probe from file. Overload this function if your probe is no numpy.ndarray."""
     if hasattr(self.m_tool, 'read_probe'):
       return self.m_tool.read_probe(str(probe_file))
@@ -408,7 +390,7 @@ class ToolChain:
   def concatenate(self, compute_zt_norm, groups = ['dev', 'eval']):
     """Concatenates all results into one (or two) score files per group."""
     for group in groups:
-      print "- Scoring: concatenating score files for group '%s'" % group
+      print("- Scoring: concatenating score files for group '%s'" % group)
       # (sorted) list of models
       model_ids = self.m_file_selector.model_ids(group)
       with open(self.m_file_selector.no_norm_result_file(group), 'w') as f:

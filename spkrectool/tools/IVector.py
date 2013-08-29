@@ -44,7 +44,6 @@ class IVecTool (UBMGMMTool):
     """Initializes the local UBM-GMM tool with the given file selector object"""
     # call base class constructor
     UBMGMMTool.__init__(self, setup)
-    print "self.m_config.COSINE_SCORING = ", self.m_config.COSINE_SCORING
     del self.use_unprojected_features_for_model_enrol
 
 
@@ -68,7 +67,6 @@ class IVecTool (UBMGMMTool):
   
     # load GMM stats from training files
     gmm_stats = self.__load_gmm_stats_list__(train_files)
-    print len(gmm_stats)
     
     # create a IVectorMachine with the UBM from the base class
     self.m_ivector = bob.machine.IVectorMachine(self.m_ubm, self.m_config.rt) #This is the dimension of the T matrix. It is tipically equal to 400. 
@@ -78,8 +76,6 @@ class IVecTool (UBMGMMTool):
     sigma = self.m_ubm.variance_supervector
     self.m_ivector.t = t 
     self.m_ivector.sigma = sigma
-    print self.m_config.convergence_threshold
-    print self.m_config.max_iterations
 
     # Initialization of the IVectorTrainer
     trainer = bob.trainer.IVectorTrainer(update_sigma=True, convergence_threshold= self.m_config.convergence_threshold, max_iterations=self.m_config.max_iterations)
@@ -99,17 +95,14 @@ class IVecTool (UBMGMMTool):
   def train_whitening_enroler(self, train_files, whitening_enroler_file):
   
     # load GMM stats from training files
-    print "number of files = ", len(train_files)
 
     ivectors_matrix  = []
     for k in sorted(train_files.keys()):
       for f in train_files[k]:
         ivec = (bob.io.HDF5File(f)).read('ivec')
         ivectors_matrix.append(ivec)
-    print "number of ivectors = ", len(ivectors_matrix)
     ivectors_matrix = numpy.vstack(ivectors_matrix)
     
-    print "ivectors_matrix.shape = ", ivectors_matrix.shape
     # create a Linear Machine     # Runs whitening (first method)
     self.whitening_machine = bob.machine.LinearMachine(ivectors_matrix.shape[1],ivectors_matrix.shape[1])
     
@@ -119,7 +112,7 @@ class IVecTool (UBMGMMTool):
     t.train(self.whitening_machine, ivectors_matrix)
     
     # Save the whitening linear machine
-    print "Saving the whitening machine.."
+    print("Saving the whitening machine..")
     self.whitening_machine.save(bob.io.HDF5File(whitening_enroler_file, "w"))
    
 
@@ -135,7 +128,7 @@ class IVecTool (UBMGMMTool):
         data_list.append(feature)
     data = numpy.vstack(data_list)
 
-    utils.info("  -> Training LinearMachine using PCA (SVD)")
+    print("  -> Training LinearMachine using PCA (SVD)")
     t = bob.trainer.SVDPCATrainer()
     machine, __eig_vals = t.train(data)
     # limit number of pcs
@@ -166,8 +159,6 @@ class IVecTool (UBMGMMTool):
   def train_plda_enroler(self, train_files, plda_enroler_file):
   
     # load GMM stats from training files
-    print "number of files = ", len(train_files)
-    #print train_files
     training_features = self.load_ivectors_by_client(train_files)
     
     
@@ -178,7 +169,7 @@ class IVecTool (UBMGMMTool):
     
     input_dimension = training_features[0].shape[1]
 
-    print "  -> Training PLDA base machine"
+    print("  -> Training PLDA base machine")
     # create trainer
     t = bob.trainer.PLDATrainer(self.m_config.PLDA_TRAINING_ITERATIONS)
     
@@ -258,12 +249,11 @@ class IVecTool (UBMGMMTool):
   def read_plda_model(self, model_file):
     """Reads the model, which in this case is a PLDA-Machine"""
     # read machine and attach base machine
-    print model_file
+    print ("model: %s" %model_file)
     plda_machine = bob.machine.PLDAMachine(bob.io.HDF5File(str(model_file)), self.m_plda_base)
     return plda_machine
   
   def plda_score(self, model, probe):
-    #print "score = ", model.forward(probe)
     return model.forward(probe)
     
   def project_ivector(self, feature_array, projected_ubm):
@@ -272,7 +262,6 @@ class IVecTool (UBMGMMTool):
     return projected_ivector
   
   def save_feature(self, data, feature_file):
-    #print "Saving features (ISV projected)"
     hdf5file = bob.io.HDF5File(feature_file, "w")
     hdf5file.set('ivec', data)
 
@@ -282,7 +271,6 @@ class IVecTool (UBMGMMTool):
     
   def read_ivector(self, ivector_file):
     """Reads the ivectors that correspond to the model, and put them in a list"""
-    print str(ivector_file)
     return (bob.io.HDF5File(str(ivector_file))).read('ivec')
 
 
@@ -301,14 +289,12 @@ class IVecTool (UBMGMMTool):
         ivec = self.read_ivector(f)
         ivec_client.append(ivec)
       ivec_client = numpy.vstack(ivec_client)
-      #print ivec_client
       ivectors.append(ivec_client)
     return ivectors
     
       
   def read_probe(self, probe_file):
     """Read the type of features that we require, namely GMMStats"""
-    #print probe_file
     hdf5file = bob.io.HDF5File(probe_file)
     ivec = hdf5file.read('ivec')
     return ivec
@@ -317,7 +303,6 @@ class IVecTool (UBMGMMTool):
   ######################################################
   ################ Feature comparison ##################
   def read_ivectors(self, client_files):
-    #print clients_files
     return numpy.vstack([self.read_ivector(f) for f in client_files])
     
   def cosine_score(self, client_ivectors, probe_ivector):
@@ -336,8 +321,6 @@ class IVecTool (UBMGMMTool):
     return ivector/numpy.linalg.norm(ivector)
     
   def score_with_whitening(self, model, probe):
-    #print "model:", model
-    #print "probe=", probe, abs(probe)
     m = self.whitening_machine
     probe_w = m.forward(probe)
     """Computes the score for the given model and the given probe using the scoring function from the config file"""
@@ -345,8 +328,6 @@ class IVecTool (UBMGMMTool):
     for ivec in model:
       ivec_w = m.forward(ivec)
       scores.append(cosine_distance(ivec_w, probe_w))
-    #print scores
-    #print numpy.max(scores)
     return numpy.max(scores)
     
 
@@ -355,13 +336,12 @@ class IVecTool (UBMGMMTool):
    ################## LDA projection #####################
   
   def lda_read_data(self, training_files):
-    #print training_files
     data = []
     for c in training_files:
       # at least two files per client are required!
       client_files=training_files[c]
       if len(client_files) < 2:
-        print "Skipping one client since the number of client files is only", len(client_files)
+        print("Skipping one client since the number of client files is only %d" % len(client_files))
         continue
       data.append(numpy.vstack([self.read_ivector(f) for f in client_files]))
 
@@ -372,7 +352,7 @@ class IVecTool (UBMGMMTool):
     """Generates the LDA projection matrix from the given features (that are sorted by identity)"""
     # Initializes an array for the data
     data = self.lda_read_data(training_files)
-    print "  -> Training LinearMachine using LDA"
+    print("  -> Training LinearMachine using LDA")
     t = bob.trainer.FisherLDATrainer()
     # In case of trouble, use the pseudo-inverse computation flag to true
     #t = bob.trainer.FisherLDATrainer(use_pinv=True)
@@ -403,9 +383,8 @@ class IVecTool (UBMGMMTool):
     """Generates the WCCN projection matrix from the given features (that are sorted by identity)"""
     # Initializes an array for the data
     data = self.lda_read_data(training_files) # reading the data is the same as for LDA training
-    print "  -> Training LinearMachine using WCCN"
+    print("  -> Training LinearMachine using WCCN")
     t = bob.trainer.WCCNTrainer()
-    print len(data), data[0].shape
     self.wccn_machine = t.train(data)
     self.wccn_machine.save(bob.io.HDF5File(wccn_projector_file, "w"))
 

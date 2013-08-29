@@ -30,10 +30,10 @@ class ToolChainIvector(ToolChain):
       # extract the features
       if indices != None:
         index_range = range(indices[0], indices[1])
-        print "- Projection: splitting of index range %s" % str(indices)
+        print("- Projection: splitting of index range %s" % str(indices))
       else:
         index_range = range(len(feature_files))
-      print "project", len(index_range), "features from directory", os.path.dirname(feature_files[0]), "to directory", os.path.dirname(projected_ivector_files[0]), "using iVector Projector"
+      print("project %d features from directory %s to directory %s" % (len(index_range), self.m_file_selector.m_config.projected_ubm_dir, self.m_file_selector.m_config.projected_ivector_dir))
       for k in index_range:
         feature_file = feature_files[k]
         projected_ubm_file = projected_ubm_files[k]
@@ -44,13 +44,11 @@ class ToolChainIvector(ToolChain):
           #feature = bob.io.load(str(feature_file))
           feature = self.__read_feature__(feature_file, extractor)
           # load projected_ubm file
-          print str(projected_ubm_file)
           projected_ubm = bob.machine.GMMStats(bob.io.HDF5File(str(projected_ubm_file)))
           # project ivector feature
           projected_ivector = tool.project_ivector(feature, projected_ubm)
           # write it
           utils.ensure_dir(os.path.dirname(projected_ivector_file))
-          #print str(projected_ivector_file)
           self.__save_feature__(projected_ivector, str(projected_ivector_file))
 
 
@@ -64,14 +62,13 @@ class ToolChainIvector(ToolChain):
     self.m_tool = tool
     if hasattr(tool, 'train_whitening_enroler'):
       enroler_file = self.m_file_selector.whitening_enroler_file()
-      print enroler_file
       if self.__check_file__(enroler_file, force, 1000):
-        print "Enroler '%s' already exists." % enroler_file
+        print("Enroler '%s' already exists." % enroler_file)
       else:
         # training models
         train_files = self.m_file_selector.training_feature_list_by_clients(dir_type, 'train_whitening_enroler')
         # perform training
-        print "Training Enroler '%s' using %d identities: " %(enroler_file, len(train_files))
+        print("Training Enroler '%s' using %d identities: " %(enroler_file, len(train_files)))
         tool.train_whitening_enroler(train_files, str(enroler_file))
 
   # Function 2/
@@ -88,10 +85,10 @@ class ToolChainIvector(ToolChain):
       # extract the features
       if indices != None:
         index_range = range(indices[0], indices[1])
-        print "- Projection: splitting of index range %s" % str(indices)
+        print("- Projection: splitting of index range %s" % str(indices))
       else:
         index_range = range(len(input_ivector_files))
-      print "project", len(index_range), "i-vectors from directory", os.path.dirname(input_ivector_files[0]), "to directory", os.path.dirname(whitened_ivector_files[0]), "using Whitening Enroler"
+      print("project %d %s i-vectors to directory %s using Whitening Enroler" %(len(index_range), dir_type, self.m_file_selector.m_config.projected_whitened_ivector_dir))
       for k in index_range:
         ivector_file = input_ivector_files[k]
         whitened_ivector_file = whitened_ivector_files[k] 
@@ -101,7 +98,6 @@ class ToolChainIvector(ToolChain):
           whitened_ivector = tool.whitening_ivector(ivector)
           # write it
           utils.ensure_dir(os.path.dirname(whitened_ivector_file))
-          #print str(input_ivector_file)
           self.__save_feature__(whitened_ivector, str(whitened_ivector_file))
   
   
@@ -122,10 +118,10 @@ class ToolChainIvector(ToolChain):
       # extract the features
       if indices != None:
         index_range = range(indices[0], indices[1])
-        print "- Projection: splitting of index range %s" % str(indices)
+        print("- Projection: splitting of index range %s" % str(indices))
       else:
         index_range = range(len(input_ivector_files))
-      print "project", len(index_range), "i-vectors from directory", os.path.dirname(input_ivector_files[0]), "to directory", os.path.dirname(lnorm_ivector_files[0])
+      print("project %d %s i-vectors to directory %s" %(len(index_range), dir_type, self.m_file_selector.m_config.lnorm_ivector_dir))
       for k in index_range:
         ivector_file = input_ivector_files[k]
         lnorm_ivector_file = lnorm_ivector_files[k] 
@@ -135,7 +131,6 @@ class ToolChainIvector(ToolChain):
           lnorm_ivector = tool.lnorm_ivector(ivector)
           # write it
           utils.ensure_dir(os.path.dirname(lnorm_ivector_file))
-          #print str(input_ivector_file)
           self.__save_feature__(lnorm_ivector, str(lnorm_ivector_file))
 
   ##############################################
@@ -150,11 +145,11 @@ class ToolChainIvector(ToolChain):
       lda_projector_file = self.m_file_selector.lda_projector_file()
       
       if self.__check_file__(lda_projector_file, force, 1000):
-        print "Projector '%s' already exists." % lda_projector_file
+        print("Projector '%s' already exists." % lda_projector_file)
       else:
         train_files = self.m_file_selector.training_feature_list_by_clients(dir_type, 'lda_train_projector')
         # perform LDA training
-        print "Training LDA Projector '%s' using %d identities: " %(lda_projector_file, len(train_files))
+        print("Training LDA Projector '%s' using %d identities: " %(lda_projector_file, len(train_files)))
         tool.lda_train_projector(train_files, str(lda_projector_file))
         
   # Function 2/
@@ -171,14 +166,12 @@ class ToolChainIvector(ToolChain):
       # extract the features
       if indices != None:
         index_range = range(indices[0], indices[1])
-        print "- Projection: splitting of index range %s" % str(indices)
+        print("- Projection: splitting of index range %s" % str(indices))
       else:
         index_range = range(len(input_ivector_files))
-        print input_ivector_files
-      print "project", len(index_range), "i-vectors from directory", os.path.dirname(input_ivector_files[0]), "to directory", os.path.dirname(lda_projected_ivector_files[0]), "using LDA Projector"
+      print("project %d %s to directory %s using LDA Projector" %(len(index_range), dir_type, self.m_file_selector.m_config.lda_projected_ivector_dir))
       for k in index_range:
         input_ivector_file = input_ivector_files[k]
-        print input_ivector_file
         lda_projected_ivector_file = lda_projected_ivector_files[k]
         if not self.__check_file__(lda_projected_ivector_file, force):
           input_ivector = self.m_tool.read_ivector(input_ivector_file)
@@ -186,7 +179,6 @@ class ToolChainIvector(ToolChain):
           lda_projected_ivector = tool.lda_project_ivector(input_ivector)
           # write it
           utils.ensure_dir(os.path.dirname(lda_projected_ivector_file))
-          #print str(lda_projected_ivector_file)
           self.__save_feature__(lda_projected_ivector, str(lda_projected_ivector_file))
 
 
@@ -201,11 +193,11 @@ class ToolChainIvector(ToolChain):
     if hasattr(tool, 'wccn_train_projector'):
       wccn_projector_file = self.m_file_selector.wccn_projector_file()
       if self.__check_file__(wccn_projector_file, force, 1000):
-        print "Projector '%s' already exists." % wccn_projector_file
+        print("Projector '%s' already exists." % wccn_projector_file)
       else:
         train_files = self.m_file_selector.training_feature_list_by_clients(dir_type, 'wccn_train_projector')
         # perform WCCN training
-        print "Training WCCN Projector '%s' using %d identities: " %(wccn_projector_file, len(train_files))
+        print("Training WCCN Projector '%s' using %d identities: " %(wccn_projector_file, len(train_files)))
         tool.wccn_train_projector(train_files, str(wccn_projector_file))
         
   # Function 2/
@@ -222,10 +214,10 @@ class ToolChainIvector(ToolChain):
       # extract the features
       if indices != None:
         index_range = range(indices[0], indices[1])
-        print "- Projection: splitting of index range %s" % str(indices)
+        print("- Projection: splitting of index range %s" % str(indices))
       else:
         index_range = range(len(input_ivector_files))
-      print "project", len(index_range), "i-vectors from directory", os.path.dirname(input_ivector_files[0]), "to directory", os.path.dirname(wccn_projected_ivector_files[0]), "using WCCN Projector"
+      print("project %d %s i-vectors to directory %s using WCCN Projector" %(len(index_range), dir_type, self.m_file_selector.m_config.wccn_projected_ivector_dir))
       for k in index_range:
         lda_projected_ivector_file = input_ivector_files[k]
         wccn_projected_ivector_file = wccn_projected_ivector_files[k]
@@ -235,7 +227,6 @@ class ToolChainIvector(ToolChain):
           wccn_projected_ivector = tool.wccn_project_ivector(lda_projected_ivector)
           # write it
           utils.ensure_dir(os.path.dirname(wccn_projected_ivector_file))
-          #print str(wccn_projected_ivector_file)
           self.__save_feature__(wccn_projected_ivector, str(wccn_projected_ivector_file))
           
   ###################################################
@@ -250,11 +241,11 @@ class ToolChainIvector(ToolChain):
       enroler_file = self.m_file_selector.plda_enroler_file()
       
       if self.__check_file__(enroler_file, force, 1000):
-        print "Enroler '%s' already exists." % enroler_file
+        print("Enroler '%s' already exists." % enroler_file)
       else:
         train_files = self.m_file_selector.training_feature_list_by_clients(dir_type, 'train_plda_enroler')
         # perform PLDA training
-        print "Training PLDA Enroler '%s' using %d identities: " %(enroler_file, len(train_files))
+        print("Training PLDA Enroler '%s' using %d identities: " %(enroler_file, len(train_files)))
         tool.train_plda_enroler(train_files, str(enroler_file))
   
   # Function 2/      
@@ -273,12 +264,12 @@ class ToolChainIvector(ToolChain):
         model_ids = self.m_file_selector.model_ids(group)
         if indices != None: 
           model_ids = model_ids[indices[0]:indices[1]]
-          print "Splitting of index range", indices, "to",
-        print "enrol models of group", group
+          print("Splitting of index range %d to" %indices),
+        print("enrol models of group %s" %group)
         for model_id in model_ids:
           # Path to the model
           model_file = self.m_file_selector.model_file(model_id, group)
-          print model_file
+          print("model: %s" %model_file)
           # Removes old file if required
           if not self.__check_file__(model_file, force):
             enrol_files = self.m_file_selector.enrol_files(model_id, group, dir_type)
@@ -290,9 +281,8 @@ class ToolChainIvector(ToolChain):
                 feature = tool.read_ivector(str(k))
                 enrol_features.append(feature)
               else:
-                print "Warning: something is wrong with this file: ", str(k)
+                print("Warning: something is wrong with this file: %s" %str(k))
             model = tool.plda_enrol(enrol_features)
-            print model
             # save the model
             model.save(bob.io.HDF5File(str(model_file), "w"))
 
@@ -302,12 +292,11 @@ class ToolChainIvector(ToolChain):
         model_ids = self.m_file_selector.tmodel_ids(group)
         if indices != None: 
           model_ids = model_ids[indices[0]:indices[1]]
-          print "Splitting of index range", indices, "to",
-        print "enrol T-models of group", group
+          print("Splitting of index range %d to" %indices),
+        print("enrol T-models of group %s" %group)
         for model_id in model_ids:
           # Path to the model
           model_file = self.m_file_selector.tmodel_file(model_id, group)
-          #print model_file
           # Removes old file if required
           if not self.__check_file__(model_file, force):
             enrol_files = self.m_file_selector.tenrol_files(model_id, group, dir_type)
@@ -315,7 +304,6 @@ class ToolChainIvector(ToolChain):
             enrol_features = []
             for k in enrol_files:
               # processes one file
-              print k
               feature = tool.read_ivector(str(k))
               enrol_features.append(feature)
             model = tool.plda_enrol(enrol_features)
@@ -366,19 +354,19 @@ class ToolChainIvector(ToolChain):
     """Computes A scores"""
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       all_probe_files = self.m_file_selector.probe_files(group, dir_type)
       all_probes = {}
       # read all probe files into memory
       for k in all_probe_files:
         all_probes[k] = self.__read_probe__(str(all_probe_files[k][0]))
-      print "Computing A matrix"
+      print("Computing A matrix")
     # Computes the raw scores for each model
     for model_id in model_ids:
       # test if the file is already there
       score_file = self.m_file_selector.a_file(model_id, group) if compute_zt_norm else self.m_file_selector.no_norm_file(model_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         # get the probe split
         probe_objects = self.m_file_selector.probe_objects_for_model(model_id, group)
@@ -403,13 +391,7 @@ class ToolChainIvector(ToolChain):
   
         # Saves to text file
         self.__save_scores__(self.m_file_selector.no_norm_file(model_id, group), a, probe_objects, self.m_file_selector.client_id(model_id))
-        """
-        scores_list = utils.convertScoreToList(numpy.reshape(a,a.size), probe_objects)
-        f_nonorm = open(self.m_file_selector.no_norm_file(model_id, group), 'w')
-        for x in scores_list:
-          f_nonorm.write(str(x[2]) + " " + str(x[1]) + " " + str(x[3]) + " " + str(x[4]) + "\n")
-        f_nonorm.close()
-        """
+
 
   # Function 9/
   def __scores_b__(self, model_ids, group, dir_type, force, preload_probes, scoring_type='plda'):
@@ -418,18 +400,18 @@ class ToolChainIvector(ToolChain):
     zprobe_objects = self.m_file_selector.zprobe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       zprobes = {}
       # read all probe files into memory
       for k in zprobe_objects:
         zprobes[k] = self.__read_probe__(str(zprobe_objects[k][0]))
-      print "Computing B matrix"
+      print("Computing B matrix")
     # Loads the models
     for model_id in model_ids:
       # test if the file is already there
       score_file = self.m_file_selector.b_file(model_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         if scoring_type=='cosine':
           model=self.m_tool.read_ivectors(self.m_file_selector.model_files(model_id, group, dir_type))
@@ -451,21 +433,20 @@ class ToolChainIvector(ToolChain):
     probe_files = self.m_file_selector.probe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       probes = {}
       # read all probe files into memory
       for k in probe_files:
-        #print str(k)
         probes[k] = self.__read_probe__(str(k))
-      print "Computing C matrix"
+      print("Computing C matrix")
     # Computes the raw scores for the T-Norm model
     for tmodel_id in tmodel_ids:
       # test if the file is already there
       score_file = self.m_file_selector.c_file(tmodel_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
-        print tmodel_id
+        print("T-model: %s" %tmodel_id)
         if scoring_type=='cosine':
           tmodel=self.m_tool.read_ivectors(self.m_file_selector.tmodel_files(tmodel_id, group, dir_type))
         else:  
@@ -486,12 +467,12 @@ class ToolChainIvector(ToolChain):
     zprobe_files = self.m_file_selector.zprobe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       zprobes = {}
       # read all probe files into memory
       for k in zprobe_files:
         zprobes[k] = self.__read_probe__(str(k))
-      print "Computing D matrix"
+      print("Computing D matrix")
     # Gets the Z-Norm impostor samples
     zprobe_ids = []
     for k in zprobe_objects:
@@ -501,7 +482,7 @@ class ToolChainIvector(ToolChain):
       # test if the file is already there
       score_file = self.m_file_selector.d_same_value_file(tmodel_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         if scoring_type=='cosine':
           tmodel=self.m_tool.read_ivectors(self.m_file_selector.tmodel_files(tmodel_id, group, dir_type))
@@ -523,7 +504,7 @@ class ToolChainIvector(ToolChain):
   def compute_scores(self, tool, compute_zt_norm, dir_type, force = False, indices = None, groups = ['dev', 'eval'], types = ['A', 'B', 'C', 'D'], preload_probes = False, scoring_type = 'plda'):
     """Computes the scores for 'dev' and 'eval' groups"""
     if tool.m_config.COSINE_SCORING: scoring_type = 'cosine' 
-    print "scoring_type = ", scoring_type
+    print("Scoring type = ", scoring_type)
     if scoring_type == 'plda' and hasattr(tool, 'load_plda_enroler'):
       # read the model enrolment file
       tool.load_plda_enroler(self.m_file_selector.plda_enroler_file())
@@ -533,7 +514,7 @@ class ToolChainIvector(ToolChain):
     self.m_use_projected_ivector_dir = hasattr(tool, 'project_ivector')
     self.m_use_projected_ubm_dir = hasattr(tool, 'project_gmm')
     for group in groups:
-      print "----- computing scores for group '%s' -----" % group
+      print("----- computing scores for group '%s' -----" % group)
       # get model ids
       model_ids = self.m_file_selector.model_ids(group)
       if compute_zt_norm:
@@ -544,7 +525,7 @@ class ToolChainIvector(ToolChain):
           model_ids_short = model_ids[indices[0]:indices[1]]
         else:
           model_ids_short = model_ids
-        print "computing A scores"
+        print("computing A scores")
         self.__scores_a__(model_ids_short, group, compute_zt_norm, dir_type, force, preload_probes, scoring_type)
       if compute_zt_norm:
         # compute B scores
@@ -553,7 +534,7 @@ class ToolChainIvector(ToolChain):
             model_ids_short = model_ids[indices[0]:indices[1]]
           else:
             model_ids_short = model_ids
-          print "computing B scores"
+          print("computing B scores")
           self.__scores_b__(model_ids_short, group, dir_type, force, preload_probes, scoring_type)
         # compute C scores
         if 'C' in types:
@@ -561,7 +542,7 @@ class ToolChainIvector(ToolChain):
             tmodel_ids_short = tmodel_ids[indices[0]:indices[1]]
           else:
             tmodel_ids_short = tmodel_ids
-          print "computing C scores"
+          print("computing C scores")
           self.__scores_c__(tmodel_ids_short, group, dir_type, force, preload_probes, scoring_type)
         # compute D scores
         if 'D' in types:
@@ -569,11 +550,9 @@ class ToolChainIvector(ToolChain):
             tmodel_ids_short = tmodel_ids[indices[0]:indices[1]]
           else:
             tmodel_ids_short = tmodel_ids
-          print "computing D scores"
+          print("computing D scores")
           self.__scores_d__(tmodel_ids_short, group, dir_type, force, preload_probes, scoring_type)
       
-
-    
 
 
 
@@ -621,4 +600,4 @@ class ToolChainIvector(ToolChain):
       scores[0,i] = self.m_tool.cosine_score(client_ivectors, probe)
       i += 1
     # Returns the scores
-    return scores              
+    return scores

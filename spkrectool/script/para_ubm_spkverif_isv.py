@@ -96,7 +96,6 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
       self.m_tool_chain.train_projector(self.m_tool, force = self.m_args.force)
     
     # feature projection    
-    print self.m_args.skip_projection_ubm, hasattr(self.m_tool, 'project_gmm')
     if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_gmm'):
       self.m_tool_chain.project_gmm_features(self.m_tool, force = self.m_args.force, extractor = self.m_feature_extractor)
     
@@ -110,7 +109,6 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
       self.m_tool_chain.enrol_models(self.m_tool, self.m_feature_extractor, not self.m_args.no_zt_norm, groups = self.m_args.groups, force = self.m_args.force)
     
     # ISV projection
-    print self.m_args.skip_projection_isv, hasattr(self.m_tool, 'project_isv')
     if not self.m_args.skip_projection_isv and hasattr(self.m_tool, 'project_isv'):
       self.m_tool_chain.project_isv_features(self.m_tool, force = self.m_args.force, extractor = self.m_feature_extractor)
     
@@ -278,8 +276,7 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
       enrol_deps_n[group] = deps[:]
       enrol_deps_t[group] = deps[:]
       list_to_split = self.m_file_selector.model_ids(group)
-      print group
-      print list_to_split
+
       if not self.m_args.skip_model_enrolment:
         job_ids['enrol_%s_N'%group] = self.submit_grid_job(
                 'enrol_models --group=%s --model-type=N'%group, 

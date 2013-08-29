@@ -51,7 +51,7 @@ class BBFTool:
 
 
   def save_model(self, model, model_file):
-    print "Saving BBF Model"
+    print("Saving BBF Model")
     hdf5file = bob.io.HDF5File(model_file, "w")
     
     hdf5file.cd('/')
@@ -76,22 +76,22 @@ class BBFTool:
     enrol_features = numpy.vstack([enrol_features, ones_array])
     train_features = numpy.vstack([train_features, zeros_array])
     features_to_boost = numpy.hstack([enrol_features, train_features])
-    print "features_to_boost.shape = ", features_to_boost.shape
+    print("features_to_boost.shape = %" %features_to_boost.shape)
     machine = bob.ap.Boost(min(self.m_config.max_number_samples, int(0.20*features_to_boost.shape[1])), self.m_config.boosting_iterations)
     machine(features_to_boost)
     
     model = BBFModel()
     
-    print "model.get_feature_index1 = ", machine.get_feature_index1()
-    print "model.get_feature_index2 = ", machine.get_feature_index2()
-    print "model.get_beta = ", machine.get_beta()
-    print "model.get_dirn = ", machine.get_dirn()
-    print "model.get_threshold = ", machine.get_threshold()
-    print "model.get_cum_weight = ", machine.get_cum_weight()
-    print "model.get_epsi = ", machine.get_epsi()
-    print "model.get_weight = ", machine.get_weight()
-    print "model.nsamples = ", machine.nsamples
-    print "model.iterations = ", machine.iterations
+    print("model.get_feature_index1 = %d" %machine.get_feature_index1())
+    print("model.get_feature_index2 = %d" %machine.get_feature_index2())
+    print("model.get_beta = %d" %machine.get_beta())
+    print("model.get_dirn = %d" %machine.get_dirn())
+    print("model.get_threshold = %d" %machine.get_threshold())
+    print("model.get_cum_weight = %d" %machine.get_cum_weight())
+    print("model.get_epsi = %d" %machine.get_epsi())
+    print("model.get_weight = %d" %machine.get_weight())
+    print("model.nsamples = %d" %machine.nsamples)
+    print("model.iterations = %d" %machine.iterations)
     
     model.feature_index1= machine.get_feature_index1()
     model.feature_index2= machine.get_feature_index2()
@@ -146,7 +146,6 @@ class BBFTool:
     anorm = numpy.zeros(iterations)
      
     for iter in numpy.arange(iterations):
-      #print int(feature_index1[iter]), int(feature_index2[iter])
       row_feature_index1 = probe_feature[int(feature_index1[iter]-1),:]
       row_feature_index2 = probe_feature[int(feature_index2[iter]-1),:]
 

@@ -70,7 +70,7 @@ class ToolChainBBF:
     This function returns true is the file is there, otherwise false"""
     if os.path.exists(filename):
       if force or os.path.getsize(filename) < expected_file_size:
-        print "Removing old file '%s'." % filename
+        print("Removing old file '%s'." % filename)
         os.remove(filename)
         return False
       else:
@@ -101,7 +101,6 @@ class ToolChainBBF:
     indicator = 1
     for i in range(len(var)):
       if var[i]<0.0001 or math.isnan(var[i]) or n_samples<100:
-        print var
         indicator = 0 # probably bad features
 
     return indicator
@@ -116,11 +115,11 @@ class ToolChainBBF:
     #keys = sorted(image_files.keys())
     if indices != None:
       index_range = range(indices[0], indices[1])
-      print "- Preprocessing: splitting of index range %s" % str(indices)
+      print("- Preprocessing: splitting of index range %s" % str(indices))
     else:
       index_range = range(len(image_files))
 
-    print "preprocess", len(index_range), "images from directory", os.path.dirname(image_files[0]), "to directory", os.path.dirname(preprocessed_image_files[0])
+    print("preprocess %d images from directory %s to directory %s" %(len(index_range), os.path.dirname(image_files[0]), os.path.dirname(preprocessed_image_files[0])))
     # iterate through the images and perform normalization
 
     # read eye files
@@ -128,9 +127,7 @@ class ToolChainBBF:
     annotation_list = self.m_file_selector.annotation_list()
 
     for k in index_range:
-      #print k
       image_file = image_files[k]
-      
       if os.path.exists(image_file):
         preprocessed_image_file = preprocessed_image_files[k]
         
@@ -144,7 +141,7 @@ class ToolChainBBF:
           utils.ensure_dir(os.path.dirname(preprocessed_image_file))
           preprocessed_image = preprocessor(str(image_file), str(preprocessed_image_file), annotations)
       else:
-        print "WARNING: FILE DOES NOT EXIST: ", image_file
+        print("WARNING: FILE DOES NOT EXIST: %s" %image_file)
   
   def extract_features(self, extractor, indices = None, force=False):
     """Extracts the features using the given extractor"""
@@ -158,16 +155,15 @@ class ToolChainBBF:
     # extract the features
     if indices != None:
       index_range = range(indices[0], indices[1])
-      print "- Extraction: splitting of index range %s" % str(indices)
+      print("- Extraction: splitting of index range %s" % str(indices))
     else:
       index_range = range(len(vad_files))
 
-    print "extract", len(index_range), "features from image directory", os.path.dirname(vad_files[0]), "to directory", os.path.dirname(feature_files[0])
+    print("extract %d features from image directory %s to directory" %(len(index_range), os.path.dirname(vad_files[0]), os.path.dirname(feature_files[0])))
     for k in index_range:
       vad_file = vad_files[k]
       feature_file = feature_files[k]
       wav_file = wav_files[k]
-      print vad_file + "   " + wav_file
       
       if not self.__check_file__(feature_file, force):
 
@@ -182,7 +178,6 @@ class ToolChainBBF:
     """This function reads the feature from file. It uses the self.m_tool.read_feature() function, if available, otherwise it uses bob.io.load()"""
     if not tool:
       tool = self.m_tool
-    print str(feature_file)
     if hasattr(tool, 'read_feature'):
       return tool.read_feature(str(feature_file))
     else:
@@ -205,21 +200,16 @@ class ToolChainBBF:
     
     train_files = self.m_file_selector.training_feature_list() 
     train_features = []
-    print "len(train_files) =", len(train_files)
     counter = 0
     for k in train_files:
-      print k
       if counter > 250:
         break
       # processes one file
       if os.path.exists(str(k)):
         feature = self.__read_feature__(str(k))
-        print str(k), feature.shape
         train_features.append(feature)
       counter = counter + 1
-    #print train_features
     train_features = numpy.vstack(train_features)
-    print "train_features.shape = ", train_features.shape
         
 
     # Create Models
@@ -229,9 +219,9 @@ class ToolChainBBF:
 
         if indices != None: 
           model_ids = model_ids[indices[0]:indices[1]]
-          print "Splitting of index range", indices, "to",
+          print("Splitting of index range %d to" %indices),
   
-        print "enrol models of group", group
+        print("enrol models of group %s" %group)
         
         for model_id in model_ids:
           # Path to the model
@@ -249,9 +239,8 @@ class ToolChainBBF:
                 feature = self.__read_feature__(str(k))
                 enrol_features.append(feature)
               else:
-                print "Warning: something is wrong with this file: ", str(k)
+                print("Warning: something is wrong with this file: %s" % str(k))
             enrol_features = numpy.vstack(enrol_features)
-            print "enrol_features.shape = ", enrol_features.shape
             model = tool.enrol(enrol_features, train_features)
             # save the model
             self.__save_model__(model, model_file, tool)
@@ -263,9 +252,9 @@ class ToolChainBBF:
 
         if indices != None: 
           model_ids = model_ids[indices[0]:indices[1]]
-          print "Splitting of index range", indices, "to",
+          print("Splitting of index range %d to" % indices),
   
-        print "enrol T-models of group", group
+        print("enrol T-models of group %s" %group)
         for model_id in model_ids:
           # Path to the model
           model_file = self.m_file_selector.tmodel_file(model_id, group)
@@ -297,7 +286,6 @@ class ToolChainBBF:
       return bob.io.load(str(model_file))
     
   def __read_probe__(self, probe_file):
-    print str(probe_file)
     """This function reads the probe from file. Overload this function if your probe is no numpy.ndarray."""
     if hasattr(self.m_tool, 'read_probe'):
       return self.m_tool.read_probe(str(probe_file))
@@ -351,20 +339,20 @@ class ToolChainBBF:
     """Computes A scores"""
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       all_probe_files = self.m_file_selector.probe_files(group, self.m_use_projected_ubm_dir, self.m_use_projected_isv_dir)
       all_probes = {}
       # read all probe files into memory
       for k in all_probe_files:
         all_probes[k] = self.__read_probe__(str(all_probe_files[k][0]))
-      print "Computing A matrix"
+      print("Computing A matrix")
 
     # Computes the raw scores for each model
     for model_id in model_ids:
       # test if the file is already there
       score_file = self.m_file_selector.a_file(model_id, group) if compute_zt_norm else self.m_file_selector.no_norm_file(model_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         # get the probe split
         probe_objects = self.m_file_selector.probe_objects_for_model(model_id, group)
@@ -398,19 +386,19 @@ class ToolChainBBF:
     zprobe_objects = self.m_file_selector.zprobe_files(group, self.m_use_projected_ubm_dir, self.m_use_projected_isv_dir)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       zprobes = {}
       # read all probe files into memory
       for k in zprobe_objects:
         zprobes[k] = self.__read_probe__(str(zprobe_objects[k][0]))
-      print "Computing B matrix"
+      print("Computing B matrix")
 
     # Loads the models
     for model_id in model_ids:
       # test if the file is already there
       score_file = self.m_file_selector.b_file(model_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         model = self.__read_model__(self.m_file_selector.model_file(model_id, group))
         if preload_probes:
@@ -426,20 +414,19 @@ class ToolChainBBF:
 
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       probes = {}
       # read all probe files into memory
       for k in probe_files:
-        #print str(k)
         probes[k] = self.__read_probe__(str(k))
-      print "Computing C matrix"
+      print("Computing C matrix")
 
     # Computes the raw scores for the T-Norm model
     for tmodel_id in tmodel_ids:
       # test if the file is already there
       score_file = self.m_file_selector.c_file(tmodel_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         tmodel = self.__read_model__(self.m_file_selector.tmodel_file(tmodel_id, group))
         if preload_probes:
@@ -454,12 +441,12 @@ class ToolChainBBF:
     zprobe_files = self.m_file_selector.zprobe_files(group, self.m_use_projected_ubm_dir, self.m_use_projected_isv_dir)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
-      print "Preloading probe files"
+      print("Preloading probe files")
       zprobes = {}
       # read all probe files into memory
       for k in zprobe_files:
         zprobes[k] = self.__read_probe__(str(k))
-      print "Computing D matrix"
+      print("Computing D matrix")
 
     # Gets the Z-Norm impostor samples
     zprobe_ids = []
@@ -472,7 +459,7 @@ class ToolChainBBF:
       # test if the file is already there
       score_file = self.m_file_selector.d_same_value_file(tmodel_id, group)
       if self.__check_file__(score_file, force):
-        print "Score file '%s' already exists." % (score_file)
+        print("Score file '%s' already exists." % (score_file))
       else:
         tmodel = self.__read_model__(self.m_file_selector.tmodel_file(tmodel_id, group))
         if preload_probes:
@@ -491,10 +478,8 @@ class ToolChainBBF:
     # save tool for internal use
     self.m_tool = tool
     self.m_use_projected_isv_dir = hasattr(tool, 'project_isv')
-    print self.m_use_projected_isv_dir
     
     self.m_use_projected_ubm_dir = hasattr(tool, 'project_gmm')
-    print self.m_use_projected_ubm_dir
     
     # load the projector, if needed
     if hasattr(tool,'load_projector'):
@@ -503,7 +488,7 @@ class ToolChainBBF:
       tool.load_enroler(self.m_file_selector.enroler_file())
 
     for group in groups:
-      print "----- computing scores for group '%s' -----" % group
+      print("----- computing scores for group '%s' -----" % group)
       # get model ids
       model_ids = self.m_file_selector.model_ids(group)
       if compute_zt_norm:
@@ -515,7 +500,7 @@ class ToolChainBBF:
           model_ids_short = model_ids[indices[0]:indices[1]]
         else:
           model_ids_short = model_ids
-        print "computing A scores"
+        print("computing A scores")
         self.__scores_a__(model_ids_short, group, compute_zt_norm, force, preload_probes)
       
       if compute_zt_norm:
@@ -525,7 +510,7 @@ class ToolChainBBF:
             model_ids_short = model_ids[indices[0]:indices[1]]
           else:
             model_ids_short = model_ids
-          print "computing B scores"
+          print("computing B scores")
           self.__scores_b__(model_ids_short, group, force, preload_probes)
         
         # compute C scores
@@ -534,7 +519,7 @@ class ToolChainBBF:
             tmodel_ids_short = tmodel_ids[indices[0]:indices[1]]
           else:
             tmodel_ids_short = tmodel_ids
-          print "computing C scores"
+          print("computing C scores")
           self.__scores_c__(tmodel_ids_short, group, force, preload_probes)
         
         # compute D scores
@@ -543,30 +528,10 @@ class ToolChainBBF:
             tmodel_ids_short = tmodel_ids[indices[0]:indices[1]]
           else:
             tmodel_ids_short = tmodel_ids
-          print "computing D scores"
+          print("computing D scores")
           self.__scores_d__(tmodel_ids_short, group, force, preload_probes)
       
-      
-  """
-  def __scores_c_normalize__(self, model_ids, tmodel_ids, group):
-    # read all tmodel scores
-    c_for_all = None
-    for tmodel_id in tmodel_ids:
-      tmp = bob.io.load(self.m_file_selector.c_file(tmodel_id, group))
-      if c_for_all == None:
-        c_for_all = tmp
-      else:
-        c_for_all = numpy.vstack((c_for_all, tmp))
-    # iterate over all models and generate C matrices for that specific model
-    probe_objects = self.m_file_selector.probe_files(group, self.m_use_projected_ubm_dir, self.m_use_projected_isv_dir)
-    for model_id in model_ids:
-      # select the correct probe files for the current model
-      model_probes = self.m_file_selector.probe_files_for_model(model_id, group, self.m_use_projected_ubm_dir, self.m_use_projected_isv_dir)
-      probes_used = utils.probes_used_generate_vector(probe_objects, model_probes)
-      c_for_model = utils.probes_used_extract_scores(c_for_all, probes_used)
-      # Save C matrix to file
-      bob.io.save(c_for_model, self.m_file_selector.c_file_for_model(model_id, group))
-  """
+ 
   def __c_matrix_split_for_model__(self, selected_probe_objects, all_probe_objects, all_c_scores):
     """Helper function to sub-select the c-scores in case not all probe files were used to compute A scores."""
     c_scores_for_model = numpy.ndarray((all_c_scores.shape[0], len(selected_probe_objects)), numpy.float64)
@@ -603,27 +568,6 @@ class ToolChainBBF:
     # initialize D and D_same_value matrices
     d_for_all = None
     d_same_value = None
-    """
-    n_nonempty_tmodels = 0
-    n_scores_per_model = 0
-    for tmodel_id in tmodel_ids:
-      tmp = bob.io.load(self.m_file_selector.d_file(tmodel_id, group))
-      tmp2 = bob.io.load(self.m_file_selector.d_same_value_file(tmodel_id, group))
-      if not (d_for_all == None and d_same_value == None):
-        n_nonempty_tmodels += 1
-        if n_scores_per_model == 0:
-            n_scores_per_model = tmp.shape[1]
-    d_for_all = numpy.array(shape=(n_nonempty_tmodels,n_scores_per_model), dtype=numpy.float64)
-    d_same_value = numpy.array(shape=(n_nonempty_tmodels,n_scores_per_model), dtype=numpy.uint8)
-    row=0
-    for tmodel_id in tmodel_ids:
-      tmp = bob.io.load(self.m_file_selector.d_file(tmodel_id, group))
-      tmp2 = bob.io.load(self.m_file_selector.d_same_value_file(tmodel_id, group))
-      if not (d_for_all == None and d_same_value == None):
-        d_for_all[row,:] = tmp
-        d_same_value[row,:] = tmp2
-        row+=1
-    """
     
     for tmodel_id in tmodel_ids:
       tmp = bob.io.load(self.m_file_selector.d_file(tmodel_id, group))
@@ -645,10 +589,8 @@ class ToolChainBBF:
     """Computes ZT-Norm using the previously generated files"""
     for group in groups:
       self.m_use_projected_isv_dir = hasattr(tool, 'project_isv')
-      print self.m_use_projected_isv_dir
     
       self.m_use_projected_ubm_dir = hasattr(tool, 'project_gmm')
-      print self.m_use_projected_ubm_dir
       
       # list of models
       model_ids = self.m_file_selector.model_ids(group)
@@ -680,45 +622,12 @@ class ToolChainBBF:
         # Saves to text file
         self.__save_scores__(self.m_file_selector.zt_norm_file(model_id, group), zt_scores, probe_objects, self.m_file_selector.client_id(model_id))
         
-        """
-        ztscores_list = utils.convertScoreToList(numpy.reshape(ztscores_m, ztscores_m.size), probe_objects)
-        sc_ztnorm_filename = self.m_file_selector.zt_norm_file(model_id, group)
-        f_ztnorm = open(sc_ztnorm_filename, 'w')
-        for x in ztscores_list:
-          f_ztnorm.write(str(x[2]) + " " + str(x[1]) + " " + str(x[3]) + " " + str(x[4]) + "\n")
-        f_ztnorm.close()
-        """
 
-
-
-  """
-  def concatenate(self, compute_zt_norm, groups = ['dev', 'eval']):
-    for group in groups:
-      # (sorted) list of models
-      model_ids = self.m_file_selector.model_ids(group)
-
-      f = open(self.m_file_selector.no_norm_result_file(group), 'w')
-      # Concatenates the scores
-      for model_id in model_ids:
-        model_file = self.m_file_selector.no_norm_file(model_id, group)
-        assert os.path.exists(model_file)
-        res_file = open(model_file, 'r')
-        f.write(res_file.read())
-      f.close()
-
-      if compute_zt_norm:
-        f = open(self.m_file_selector.zt_norm_result_file(group), 'w')
-        # Concatenates the scores
-        for model_id in model_ids:
-          res_file = open(self.m_file_selector.zt_norm_file(model_id, group), 'r')
-          f.write(res_file.read())
-        f.close()
-  """
         
   def concatenate(self, compute_zt_norm, groups = ['dev', 'eval']):
     """Concatenates all results into one (or two) score files per group."""
     for group in groups:
-      print "- Scoring: concatenating score files for group '%s'" % group
+      print("- Scoring: concatenating score files for group '%s'" % group)
       # (sorted) list of models
       model_ids = self.m_file_selector.model_ids(group)
 

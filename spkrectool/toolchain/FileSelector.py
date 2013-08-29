@@ -38,7 +38,6 @@ class FileSelector:
       return {}
   
   def select_dir(self, dir_type):
-    print dir_type
     if dir_type == 'preprocessed':
       used_dir = self.m_config.preprocessed_dir 
     elif dir_type == 'features':
@@ -60,7 +59,6 @@ class FileSelector:
     return used_dir  
   
   def select_all_files(self, directory, extension, tool_type):
-    print "tool_type = ", tool_type
     # default are the basic world model training files
     files = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     if tool_type == 'ISV' or tool_type == 'IVector':
@@ -69,7 +67,6 @@ class FileSelector:
       files = files + self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))    
     # sort files and remove duplicated files  
     files = self.sort(files)
-    print len(files)
     known = set()
     return [file.make_path(directory, extension) for file in files if file.path not in known and not known.add(file.path)]
   
@@ -220,7 +217,6 @@ class FileSelector:
     utils.ensure_dir(self.m_config.projected_ubm_dir)
     directory=self.m_config.projected_ubm_dir
     extension=self.m_config.default_extension
-    print "tool_type = ", tool_type
     return self.select_all_files(directory, extension, tool_type)
 
   def projected_isv_list(self, tool_type='ISV'):
