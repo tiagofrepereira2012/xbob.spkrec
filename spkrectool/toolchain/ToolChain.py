@@ -131,25 +131,25 @@ class ToolChain:
       tool_type = ''
     return tool_type
   
-  def preprocess_images(self, preprocessor, tool, indices=None, force=False):
-    """Preprocesses the images with the given preprocessing tool"""
+  def preprocess_audio_files(self, preprocessor, tool, indices=None, force=False):
+    """Preprocesses the audio files with the given preprocessing tool"""
     # get the type of the tool used
     tool_type = self.select_tool_type(tool)
     
     # get the file lists      
-    image_files = self.m_file_selector.original_image_list(tool_type)
-    preprocessed_image_files = self.m_file_selector.preprocessed_image_list(tool_type)
+    wav_files = self.m_file_selector.original_wav_list(tool_type)
+    preprocessed_wav_files = self.m_file_selector.preprocessed_wav_list(tool_type)
 
     # select a subset of keys to iterate  
-    #keys = sorted(image_files.keys())
+    #keys = sorted(wav_files.keys())
     if indices != None:
       index_range = range(indices[0], indices[1])
       print("- Preprocessing: splitting of index range %s" % str(indices))
     else:
-      index_range = range(len(image_files))
+      index_range = range(len(wav_files))
 
     print("preprocess %d wave from directory %s to directory %s" %(len(index_range), self.m_file_selector.m_config.wav_input_dir, self.m_file_selector.m_config.preprocessed_dir))
-    # iterate through the images and perform normalization
+    # iterate through the audio files and perform normalization
 
     # read eye files
     # - note: the resulting value of eye_files may be None
@@ -157,21 +157,21 @@ class ToolChain:
 
     for k in index_range:
       
-      image_file = image_files[k]
+      wav_file = wav_files[k]
       
-      if os.path.exists(image_file):
-        preprocessed_image_file = preprocessed_image_files[k]
-        if not self.__check_file__(preprocessed_image_file, force):
+      if os.path.exists(wav_file):
+        preprocessed_wav_file = preprocessed_wav_files[k]
+        if not self.__check_file__(preprocessed_wav_file, force):
           annotations = None
           if annotation_list != None:
             # read eyes position file
             annotations = utils.read_annotations(annotation_list[k], self.m_file_selector.m_db_options.annotation_type)
 
-          # call the image preprocessor
-          utils.ensure_dir(os.path.dirname(preprocessed_image_file))
-          preprocessed_image = preprocessor(str(image_file), str(preprocessed_image_file), annotations)
+          # call the wav preprocessor
+          utils.ensure_dir(os.path.dirname(preprocessed_wav_file))
+          preprocessed_wav = preprocessor(str(wav_file), str(preprocessed_wav_file), annotations)
       else:
-        print("WARNING: FILE DOES NOT EXIST: ", image_file)
+        print("WARNING: FILE DOES NOT EXIST: ", wav_file)
 
 
   
@@ -184,11 +184,11 @@ class ToolChain:
         print("Extractor '%s' already exists." % extractor_file)
       else:
         # train model
-        if hasattr(extractor, 'use_training_images_sorted_by_identity'):
+        if hasattr(extractor, 'use_training_audio_files_sorted_by_identity'):
           train_files = self.m_file_selector.training_feature_list_by_clients('preprocessed', 'train_extractor')
           print("Training Extractor '%s' using %d identities: " %(extractor_file, len(train_files)))
         else:
-          train_files = self.m_file_selector.training_image_list() 
+          train_files = self.m_file_selector.training_wav_list() 
           print("Training Extractor '%s' using %d training files: " %(extractor_file, len(train_files)))
         extractor.train(train_files, extractor_file)
 
@@ -202,9 +202,9 @@ class ToolChain:
     self.m_tool = extractor
     if hasattr(extractor, 'load'):
       extractor.load(self.m_file_selector.extractor_file())
-    vad_files = self.m_file_selector.preprocessed_image_list(tool_type)
+    vad_files = self.m_file_selector.preprocessed_wav_list(tool_type)
     feature_files = self.m_file_selector.feature_list(tool_type)
-    wav_files = self.m_file_selector.original_image_list(tool_type)
+    wav_files = self.m_file_selector.original_wav_list(tool_type)
 
     # extract the features
     if indices != None:
@@ -213,7 +213,7 @@ class ToolChain:
     else:
       index_range = range(len(vad_files))
 
-    print("extract %d features from image directory %s to directory %s" %(len(index_range), self.m_file_selector.m_config.wav_input_dir, self.m_file_selector.m_config.features_dir))
+    print("extract %d features from wav directory %s to directory %s" %(len(index_range), self.m_file_selector.m_config.wav_input_dir, self.m_file_selector.m_config.features_dir))
     for k in index_range:
       vad_file = vad_files[k]
       feature_file = feature_files[k]
@@ -233,7 +233,7 @@ class ToolChain:
   
   # Function 1/
   def train_projector(self, tool, force=False):
-    """Train the feature extraction process with the preprocessed images of the world group"""
+    """Train the feature extraction process with the preprocessed audio files of the world group"""
     if hasattr(tool,'train_projector'):
       projector_file = self.m_file_selector.projector_file()
       

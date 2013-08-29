@@ -24,6 +24,7 @@ from . import UBMGMMTool
 import logging
 logger = logging.getLogger("bob.c++")
 logger.setLevel(logging.INFO)
+logger.propagate = True
 
 class ISVTool (UBMGMMTool):
   """Tool chain for computing Unified Background Models and Gaussian Mixture Models of the features"""

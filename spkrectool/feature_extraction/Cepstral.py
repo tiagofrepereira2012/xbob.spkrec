@@ -52,7 +52,7 @@ class Cepstral:
   def __call__(self, input_file, vad_file=None):
     """Computes and returns normalized cepstral features for the given input wave file and its corresponding VAD file"""
    
-    print("Input wav file : %s" % input_file)
+    print("Input wave file : %s" % input_file)
     rate_wavsample = utils.read(input_file)
     
     # Feature extraction

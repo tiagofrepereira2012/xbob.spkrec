@@ -63,7 +63,7 @@ class ToolChainExecutor:
     config_group.add_argument('-t', '--tool-chain', type = str, dest = 'tool', required = True, metavar = 'FILE',
         help = 'The tool chain configuration file')
     config_group.add_argument('-p', '--preprocessing', metavar = 'FILE', type = str, dest = 'preprocessor', required = True,
-        help = 'Configuration script for image preprocessing')
+        help = 'Configuration script for Voice Activity Detection')
     config_group.add_argument('-f', '--features', metavar = 'FILE', type = str, required = True,
         help = 'Configuration script for extracting the features')
     config_group.add_argument('-g', '--grid', metavar = 'FILE', type = str,
@@ -93,7 +93,7 @@ class ToolChainExecutor:
 
     sub_dir_group = parser.add_argument_group('\nSubdirectories of certain parts of the toolchain. You can specify directories in case you want to reuse parts of the experiments (e.g. extracted features) in other experiments. Please note that these directories are relative to the --temp-dir')
     sub_dir_group.add_argument('--preprocessed-features-directory', type = str, metavar = 'DIR', default = 'preprocessed', dest = 'preprocessed_dir',
-        help = 'Name of the directory of the preprocessed images')
+        help = 'Name of the directory of the VAD files')
     sub_dir_group.add_argument('--features-directory', type = str, metavar = 'DIR', default = 'features', dest = 'features_dir',
         help = 'Name of the directory of the features')
     sub_dir_group.add_argument('--projected-directory', type = str, metavar = 'DIR', default = 'projected_ubm', dest = 'projected_ubm_dir',
@@ -108,7 +108,7 @@ class ToolChainExecutor:
     ################# options for skipping parts of the toolchain #########################
     skip_group = parser.add_argument_group('\nFlags that allow to skip certain parts of the experiments. This does only make sense when the generated files are already there (e.g. when reusing parts of other experiments)')
     skip_group.add_argument('--skip-preprocessing', '--nopre', action='store_true', dest='skip_preprocessing',
-        help = 'Skip the image preprocessing step')
+        help = 'Skip the VAD step')
     skip_group.add_argument('--skip-feature-extraction-training', '--nofet', action='store_true', dest='skip_feature_extraction_training',
         help = 'Skip the feature extraction training step')
     skip_group.add_argument('--skip-feature-extraction', '--nofe', action='store_true', dest='skip_feature_extraction',

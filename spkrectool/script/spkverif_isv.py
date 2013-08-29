@@ -72,7 +72,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     """Executes the ZT tool chain on the local machine"""
     # preprocessing
     if not self.m_args.skip_preprocessing:
-      self.m_tool_chain.preprocess_images(self.m_preprocessor, self.m_tool, force = self.m_args.force)
+      self.m_tool_chain.preprocess_audio_files(self.m_preprocessor, self.m_tool, force = self.m_args.force)
     # feature extraction
     #if not self.m_args.skip_feature_extraction_training and hasattr(self.m_feature_extractor, 'train'):
     #  self.m_tool_chain.train_extractor(self.m_feature_extractor, force = self.m_args.force)
@@ -119,12 +119,12 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     # if there are any external dependencies, we need to respect them
     deps = external_dependencies[:]
     
-    # image preprocessing; never has any dependencies.
+    # VAD preprocessing; never has any dependencies.
     if not self.m_args.skip_preprocessing:
       job_ids['preprocessing'] = self.submit_grid_job(
               '--preprocess', 
-              list_to_split = self.m_file_selector.original_image_list('ISV'), 
-              number_of_files_per_job = self.m_grid_config.number_of_images_per_job, 
+              list_to_split = self.m_file_selector.original_wav_list('ISV'), 
+              number_of_files_per_job = self.m_grid_config.number_of_audio_files_per_job, 
               dependencies = [], 
               **self.m_grid_config.preprocessing_queue)
       deps.append(job_ids['preprocessing'])
@@ -134,7 +134,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       job_ids['feature_extraction'] = self.submit_grid_job(
               '--feature-extraction', 
               list_to_split = self.m_file_selector.feature_list('ISV'), 
-              number_of_files_per_job = self.m_grid_config.number_of_images_per_job, 
+              number_of_files_per_job = self.m_grid_config.number_of_audio_files_per_job, 
               dependencies = deps, 
               **self.m_grid_config.preprocessing_queue)
       deps.append(job_ids['feature_extraction'])      
@@ -268,10 +268,10 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
     """Run the desired job of the ZT tool chain that is specified on command line""" 
     # preprocess
     if self.m_args.preprocess:
-      self.m_tool_chain.preprocess_images(
+      self.m_tool_chain.preprocess_audio_files(
           self.m_preprocessor, 
           self.m_tool,
-          indices = self.indices(self.m_file_selector.original_image_list('ISV'), self.m_grid_config.number_of_images_per_job), 
+          indices = self.indices(self.m_file_selector.original_wav_list('ISV'), self.m_grid_config.number_of_audio_files_per_job), 
           force = self.m_args.force)
     
     # feature extraction
@@ -279,7 +279,7 @@ class ToolChainExecutorZT (ToolChainExecutor.ToolChainExecutor):
       self.m_tool_chain.extract_features(
           self.m_feature_extractor, 
           self.m_tool,
-          indices = self.indices(self.m_file_selector.feature_list('ISV'), self.m_grid_config.number_of_images_per_job), 
+          indices = self.indices(self.m_file_selector.feature_list('ISV'), self.m_grid_config.number_of_audio_files_per_job), 
           force = self.m_args.force)
       
     # train the feature projector
@@ -409,11 +409,11 @@ def parse_args(command_line_arguments = sys.argv[1:]):
   parser.add_argument('--execute-sub-task', action='store_true', dest = 'execute_sub_task',
       help = argparse.SUPPRESS) #'Executes a subtask (FOR INTERNAL USE ONLY!!!)'
   parser.add_argument('--preprocess', action='store_true', dest = 'preprocess',
-      help = argparse.SUPPRESS) #'Perform image preprocessing on the given range of images'
+      help = argparse.SUPPRESS) #'Perform VAD on the given range of audio files'
   parser.add_argument('--feature-extraction-training', action='store_true', dest = 'feature_extraction_training',
-      help = argparse.SUPPRESS) #'Perform feature extraction for the given range of preprocessed images'
+      help = argparse.SUPPRESS) #'Perform feature extraction for the given range of preprocessed audio files'
   parser.add_argument('--feature-extraction', action='store_true', dest = 'feature_extraction',
-      help = argparse.SUPPRESS) #'Perform feature extraction for the given range of preprocessed images'
+      help = argparse.SUPPRESS) #'Perform feature extraction for the given range of preprocessed audio files'
   parser.add_argument('--train-projector', action='store_true', dest = 'train_projector',
       help = argparse.SUPPRESS) #'Perform feature extraction training'
   parser.add_argument('--feature-projection-ubm', action='store_true', dest = 'projection_ubm',
@@ -439,10 +439,11 @@ def parse_args(command_line_arguments = sys.argv[1:]):
 
 
 def speaker_verify(args, external_dependencies = [], external_fake_job_id = 0):
-  """This is the main entry point for computing face verification experiments.
+  """This is the main entry point for computing speaker verification experiments.
   You just have to specify configuration scripts for any of the steps of the toolchain, which are:
   -- the database
-  -- feature extraction (including image preprocessing)
+  -- preprocessing (VAD)
+  -- feature extraction
   -- the score computation tool
   -- and the grid configuration (in case, the function should be executed in the grid).
   Additionally, you can skip parts of the toolchain by selecting proper --skip-... parameters.

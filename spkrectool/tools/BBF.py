@@ -20,10 +20,6 @@ import bob
 import numpy
 import types
 
-import logging
-logger = logging.getLogger("bob.c++")
-logger.setLevel(logging.INFO)
-
 class BBFModel:
   """Machine for BBF boosting"""
   def __init__(self):

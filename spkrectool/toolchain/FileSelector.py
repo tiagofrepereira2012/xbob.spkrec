@@ -87,9 +87,9 @@ class FileSelector:
     return [f for i,f in enumerate(sorted_files) if not i or sorted_files[i-1].id != f.id]  
     
     
-  ### Original images and preprocessing
-  def original_image_list(self, tool_type):
-    """Returns the list of original images that can be used for image preprocessing"""
+  ### Original audio files and preprocessing
+  def original_wav_list(self, tool_type):
+    """Returns the list of original audio files that can be used for wav preprocessing"""
     directory=self.m_config.wav_input_dir
     extension=self.m_config.wav_input_ext
     return self.select_all_files(directory, extension, tool_type)
@@ -103,8 +103,8 @@ class FileSelector:
     return self.select_all_files(directory, extension, tool_type)
     
     
-  def preprocessed_image_list(self, tool_type):
-    """Returns the list of preprocessed images and assures that the normalized image path is existing"""
+  def preprocessed_wav_list(self, tool_type):
+    """Returns the list of preprocessed audio files and assures that the normalized wav path is existing"""
     utils.ensure_dir(self.m_config.preprocessed_dir)
     directory=self.m_config.preprocessed_dir
     extension=self.m_config.default_extension
@@ -119,8 +119,8 @@ class FileSelector:
     return self.select_all_files(directory, extension, tool_type)
 
   ### Training and projecting features
-  def training_image_list(self):
-    """Returns the list of images that should be used for extractor training"""
+  def training_wav_list(self):
+    """Returns the list of audio files that should be used for extractor training"""
     directory=self.m_config.preprocessed_dir
     extension=self.m_config.default_extension
     return self.select_training_files('world', directory, extension)

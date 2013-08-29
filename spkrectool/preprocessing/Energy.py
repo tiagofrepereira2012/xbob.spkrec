@@ -24,6 +24,9 @@ import os
 import time
 from .. import utils
 
+import logging
+logger = logging.getLogger("bob.c++")
+
 
 class Energy:
   """Extracts the Energy"""
@@ -42,6 +45,11 @@ class Energy:
     normalized_energy = utils.normalize_std_array(energy_array)
     
     kmeans = bob.machine.KMeansMachine(2, 1)
+    
+    logger_propagate = logger.propagate
+    # Mute logger propagation
+    if logger_propagate:
+      logger.propagate = False    
     m_ubm = bob.machine.GMMMachine(2, 1)
       
     kmeans_trainer = bob.trainer.KMeansTrainer()
@@ -51,6 +59,7 @@ class Energy:
   
     # Trains using the KMeansTrainer
     kmeans_trainer.train(kmeans, normalized_energy)
+    
     
     [variances, weights] = kmeans.get_variances_and_weights_for_each_cluster(normalized_energy)
     means = kmeans.means
@@ -71,6 +80,10 @@ class Energy:
     means = m_ubm.means
     weights = m_ubm.weights
     
+    # Enable logger propagation again
+    if logger_propagate:
+      logger.propagate = True
+      
     if means[0] < means[1]:
       higher = 1
       lower = 0
@@ -109,9 +122,8 @@ class Energy:
     
     e = bob.ap.Energy(rate_wavsample[0], wl, ws)
     energy_array = e(rate_wavsample[1])
-    
     labels = self._voice_activity_detection(energy_array)
-
+      
     labels = utils.smoothing(labels,10) # discard isolated speech less than 100ms
 
     

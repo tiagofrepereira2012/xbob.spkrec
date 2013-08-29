@@ -22,6 +22,10 @@ import types
 from . import UBMGMMTool
 from itertools import izip
 from math import sqrt
+import logging
+logger = logging.getLogger("bob.c++")
+logger.setLevel(logging.INFO)
+logger.propagate = True
 
 def cosine_distance(a, b):
     if len(a) != len(b):
@@ -32,9 +36,6 @@ def cosine_distance(a, b):
     result = numerator / (sqrt(denoma)*sqrt(denomb))
     return result
     
-import logging
-logger = logging.getLogger("bob.c++")
-logger.setLevel(logging.INFO)
 
 class IVecTool (UBMGMMTool):
   """Tool chain for computing Unified Background Models and Gaussian Mixture Models of the features"""

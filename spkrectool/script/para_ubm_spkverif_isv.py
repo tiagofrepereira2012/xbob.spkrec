@@ -84,7 +84,7 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
     """Executes the ZT tool chain on the local machine"""
     # preprocessing
     if not self.m_args.skip_preprocessing:
-      self.m_tool_chain.preprocess_images(self.m_preprocessor, self.m_tool, force = self.m_args.force)
+      self.m_tool_chain.preprocess_audio_files(self.m_preprocessor, self.m_tool, force = self.m_args.force)
     # feature extraction
     #if not self.m_args.skip_feature_extraction_training and hasattr(self.m_feature_extractor, 'train'):
     #  self.m_tool_chain.train_extractor(self.m_feature_extractor, force = self.m_args.force)
@@ -131,12 +131,12 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
     # if there are any external dependencies, we need to respect them
     deps = external_dependencies[:]
     
-    # image preprocessing; never has any dependencies.
+    # VAD; never has any dependencies.
     if not self.m_args.skip_preprocessing:
       job_ids['preprocessing'] = self.submit_grid_job(
               'preprocess', 
-              list_to_split = self.m_file_selector.original_image_list('ISV'), 
-              number_of_files_per_job = self.m_grid_config.number_of_images_per_job, 
+              list_to_split = self.m_file_selector.original_wav_list('ISV'), 
+              number_of_files_per_job = self.m_grid_config.number_of_audio_files_per_job, 
               dependencies = [], 
               **self.m_grid_config.preprocessing_queue)
       deps.append(job_ids['preprocessing'])
@@ -146,7 +146,7 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
       job_ids['feature-extraction'] = self.submit_grid_job(
               'feature-extraction', 
               list_to_split = self.m_file_selector.feature_list('ISV'), 
-              number_of_files_per_job = self.m_grid_config.number_of_images_per_job, 
+              number_of_files_per_job = self.m_grid_config.number_of_audio_files_per_job, 
               dependencies = deps, 
               **self.m_grid_config.preprocessing_queue)
       deps.append(job_ids['feature-extraction'])      
@@ -358,10 +358,10 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
     """Run the desired job of the ZT tool chain that is specified on command line""" 
     # preprocess
     if self.m_args.execute_sub_task == 'preprocess':
-      self.m_tool_chain.preprocess_images(
+      self.m_tool_chain.preprocess_audio_files(
           self.m_preprocessor, 
           self.m_tool,
-          indices = self.indices(self.m_file_selector.original_image_list('ISV'), self.m_grid_config.number_of_images_per_job), 
+          indices = self.indices(self.m_file_selector.original_wav_list('ISV'), self.m_grid_config.number_of_audio_files_per_job), 
           force = self.m_args.force)
     
     # feature extraction
@@ -369,7 +369,7 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
       self.m_tool_chain.extract_features(
           self.m_feature_extractor, 
           self.m_tool,
-          indices = self.indices(self.m_file_selector.feature_list('ISV'), self.m_grid_config.number_of_images_per_job), 
+          indices = self.indices(self.m_file_selector.feature_list('ISV'), self.m_grid_config.number_of_audio_files_per_job), 
           force = self.m_args.force)
       
    
@@ -581,10 +581,11 @@ def parse_args(command_line_arguments = sys.argv[1:]):
 
 
 def speaker_verify(args, external_dependencies = [], external_fake_job_id = 0):
-  """This is the main entry point for computing face verification experiments.
+  """This is the main entry point for computing speaker verification experiments.
   You just have to specify configuration scripts for any of the steps of the toolchain, which are:
   -- the database
-  -- feature extraction (including image preprocessing)
+  -- preprocessing (VAD)
+  -- feature extraction
   -- the score computation tool
   -- and the grid configuration (in case, the function should be executed in the grid).
   Additionally, you can skip parts of the toolchain by selecting proper --skip-... parameters.

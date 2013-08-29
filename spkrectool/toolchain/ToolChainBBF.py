@@ -105,52 +105,52 @@ class ToolChainBBF:
 
     return indicator
   
-  def preprocess_images(self, preprocessor, indices=None, force=False):
-    """Preprocesses the images with the given preprocessing tool"""
+  def preprocess_audio_files(self, preprocessor, indices=None, force=False):
+    """Preprocesses the audio files with the given preprocessing tool"""
     # get the file lists      
-    image_files = self.m_file_selector.original_image_list()
-    preprocessed_image_files = self.m_file_selector.preprocessed_image_list()
+    wav_files = self.m_file_selector.original_wav_list()
+    preprocessed_wav_files = self.m_file_selector.preprocessed_wav_list()
 
     # select a subset of keys to iterate  
-    #keys = sorted(image_files.keys())
+    #keys = sorted(wav_files.keys())
     if indices != None:
       index_range = range(indices[0], indices[1])
       print("- Preprocessing: splitting of index range %s" % str(indices))
     else:
-      index_range = range(len(image_files))
+      index_range = range(len(wav_files))
 
-    print("preprocess %d images from directory %s to directory %s" %(len(index_range), os.path.dirname(image_files[0]), os.path.dirname(preprocessed_image_files[0])))
-    # iterate through the images and perform normalization
+    print("preprocess %d audio files from directory %s to directory %s" %(len(index_range), os.path.dirname(wav_files[0]), os.path.dirname(preprocessed_wav_files[0])))
+    # iterate through the audio files and perform normalization
 
     # read eye files
     # - note: the resulting value of eye_files may be None
     annotation_list = self.m_file_selector.annotation_list()
 
     for k in index_range:
-      image_file = image_files[k]
-      if os.path.exists(image_file):
-        preprocessed_image_file = preprocessed_image_files[k]
+      wav_file = wav_files[k]
+      if os.path.exists(wav_file):
+        preprocessed_wav_file = preprocessed_wav_files[k]
         
-        if not self.__check_file__(preprocessed_image_file, force):
+        if not self.__check_file__(preprocessed_wav_file, force):
           annotations = None
           if annotation_list != None:
             # read eyes position file
             annotations = utils.read_annotations(annotation_list[k], self.m_file_selector.m_db_options.annotation_type)
 
-          # call the image preprocessor
-          utils.ensure_dir(os.path.dirname(preprocessed_image_file))
-          preprocessed_image = preprocessor(str(image_file), str(preprocessed_image_file), annotations)
+          # call the wav preprocessor
+          utils.ensure_dir(os.path.dirname(preprocessed_wav_file))
+          preprocessed_wav = preprocessor(str(wav_file), str(preprocessed_wav_file), annotations)
       else:
-        print("WARNING: FILE DOES NOT EXIST: %s" %image_file)
+        print("WARNING: FILE DOES NOT EXIST: %s" %wav_file)
   
   def extract_features(self, extractor, indices = None, force=False):
     """Extracts the features using the given extractor"""
     self.m_tool = extractor
     if hasattr(extractor, 'load'):
       extractor.load(self.m_file_selector.extractor_file())
-    vad_files = self.m_file_selector.preprocessed_image_list()
+    vad_files = self.m_file_selector.preprocessed_wav_list()
     feature_files = self.m_file_selector.feature_list()
-    wav_files = self.m_file_selector.original_image_list()
+    wav_files = self.m_file_selector.original_wav_list()
 
     # extract the features
     if indices != None:
@@ -159,7 +159,7 @@ class ToolChainBBF:
     else:
       index_range = range(len(vad_files))
 
-    print("extract %d features from image directory %s to directory" %(len(index_range), os.path.dirname(vad_files[0]), os.path.dirname(feature_files[0])))
+    print("extract %d features from wav directory %s to directory" %(len(index_range), os.path.dirname(vad_files[0]), os.path.dirname(feature_files[0])))
     for k in index_range:
       vad_file = vad_files[k]
       feature_file = feature_files[k]
