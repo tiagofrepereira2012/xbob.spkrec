@@ -5,7 +5,7 @@ import bob
 tool = spkrectool.tools.IVecTool
 
 # 2/ GMM Training
-n_gaussians = 8
+n_gaussians = 256
 iterk = 25
 iterg_train = 25
 end_acc = 0.0001
@@ -16,7 +16,7 @@ update_variances = True
 norm_KMeans = True
 
 # 3/ IVector Training
-rt = 50
+rt = 100
 relevance_factor = 4
 max_iterations = 25
 n_iter_enrol = 1
