@@ -34,8 +34,8 @@ def main():
   utils.ensure_dir(out_dir)
   
   # Define the processor and the parameters
-  m_preprocessor_config =  imp.load_source('preprocessor', "config/preprocessing/manual.py")
-  preprocessor = spkrectool.preprocessing.Manual(m_preprocessor_config)
+  m_preprocessor_config =  imp.load_source('preprocessor', "config/preprocessing/external.py")
+  preprocessor = spkrectool.preprocessing.External(m_preprocessor_config)
   
   infile=open(input_file_list)
   for filename in infile:

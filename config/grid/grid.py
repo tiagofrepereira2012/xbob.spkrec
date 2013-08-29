@@ -4,11 +4,10 @@
 
 # default queue used for training
 training_queue = { 'queue':'q1d', 'memfree':'8G'}
-#training_queue = { 'queue':'q1d', 'memfree':'1G'}
+
 # number of images that one job should preprocess
 number_of_images_per_job = 1000
 preprocessing_queue = {'queue':'q1d', 'memfree':'1G'}
-
 
 # number of features that one job should extract
 number_of_features_per_job = 1000

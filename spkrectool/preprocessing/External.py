@@ -25,7 +25,7 @@ import time
 from .. import utils
 
 
-class Manual:
+class External:
   """Extracts Modulation of the Energy at 4Hz features"""
   def __init__(self, config):
     self.m_config = config
