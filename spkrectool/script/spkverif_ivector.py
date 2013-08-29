@@ -56,6 +56,8 @@ class ToolChainExecutorIVector (ToolChainExecutor.ToolChainExecutor):
       self.m_configuration.zt_norm_D_sameValue_dir = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.score_sub_dir, self.m_args.zt_dirs[4])
       self.m_configuration.scores_nonorm_dir = os.path.join(self.m_configuration.base_output_USER_dir, self.m_args.score_sub_dir, self.m_args.score_dirs[0]) 
       self.m_configuration.scores_ztnorm_dir = os.path.join(self.m_configuration.base_output_USER_dir, self.m_args.score_sub_dir, self.m_args.score_dirs[1])  
+    
+    self.m_configuration.default_extension = ".hdf5"
   
   
   def ivector_specific_configuration(self):

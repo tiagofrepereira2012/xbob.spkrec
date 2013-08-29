@@ -88,7 +88,7 @@ class ToolChainIvector(ToolChain):
         print("- Projection: splitting of index range %s" % str(indices))
       else:
         index_range = range(len(input_ivector_files))
-      print("project %d %s i-vectors to directory %s using Whitening Enroler" %(len(index_range), dir_type, self.m_file_selector.m_config.projected_whitened_ivector_dir))
+      print("project %d %s i-vectors to directory %s using Whitening Enroler" %(len(index_range), dir_type, self.m_file_selector.m_config.whitened_ivector_dir))
       for k in index_range:
         ivector_file = input_ivector_files[k]
         whitened_ivector_file = whitened_ivector_files[k] 
@@ -504,7 +504,7 @@ class ToolChainIvector(ToolChain):
   def compute_scores(self, tool, compute_zt_norm, dir_type, force = False, indices = None, groups = ['dev', 'eval'], types = ['A', 'B', 'C', 'D'], preload_probes = False, scoring_type = 'plda'):
     """Computes the scores for 'dev' and 'eval' groups"""
     if tool.m_config.COSINE_SCORING: scoring_type = 'cosine' 
-    print("Scoring type = ", scoring_type)
+    print("Scoring type = %s" %scoring_type)
     if scoring_type == 'plda' and hasattr(tool, 'load_plda_enroler'):
       # read the model enrolment file
       tool.load_plda_enroler(self.m_file_selector.plda_enroler_file())
