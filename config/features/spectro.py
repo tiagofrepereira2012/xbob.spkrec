@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import spkrectool
+import spkrec
 
-feature_extractor = spkrectool.feature_extraction.BBF
+feature_extractor = spkrec.feature_extraction.BBF
 
 # Cepstral parameters
 win_length_ms = 20

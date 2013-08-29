@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import spkrectool
+import spkrec
 
-preprocessor = spkrectool.preprocessing.External
+preprocessor = spkrec.preprocessing.External
 
 win_length_ms = 20
 win_shift_ms = 10

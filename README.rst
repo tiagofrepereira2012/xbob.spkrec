@@ -5,7 +5,7 @@ This is the speaker recognition toolkit, designed to run speaker verification/re
 experiments . It's originally based on facereclib tool:
 https://github.com/bioidiap/facereclib
 
-`xbob.speaker_recognition`_ is designed in a way that it should be easily possible to execute experiments combining different mixtures of:
+`xbob.spkrec`_ is designed in a way that it should be easily possible to execute experiments combining different mixtures of:
 
 * Speaker Recognition databases and their according protocols
 * Voice activity detection
@@ -14,7 +14,7 @@ https://github.com/bioidiap/facereclib
 
 In any case, results of these experiments will directly be comparable when the same database is employed.
 
-`xbob.speaker_recognition`_ is adapted to run speaker verification/recognition experiments with the SGE grid infrastructure at Idiap.
+`xbob.spkrec`_ is adapted to run speaker verification/recognition experiments with the SGE grid infrastructure at Idiap.
 
 
 If you use this package and/or its results, please cite the following
@@ -52,11 +52,11 @@ Installation
 
 Just download this package and decompress it locally::
 
-  $ wget http://pypi.python.org/packages/source/x/xbob.nist_sre_2012/xbob.speaker_recognition.zip
-  $ unzip xbob.speaker_recognition.zip
-  $ cd xbob.speaker_recognition
+  $ wget http://pypi.python.org/packages/source/x/xbob.nist_sre_2012/xbob.spkrec.zip
+  $ unzip xbob.spkrec.zip
+  $ cd xbob.spkrec
 
-`xbob.speaker_recognition`_ is based on the `BuildOut`_ python linking system. You only need to use buildout to bootstrap and have a working environment ready for
+`xbob.spkrec`_ is based on the `BuildOut`_ python linking system. You only need to use buildout to bootstrap and have a working environment ready for
 experiments::
 
   $ python bootstrap
@@ -96,7 +96,7 @@ If you want to run the experiments in the GRID at Idiap or any equivalent SGE, y
 * ``--grid``: The configuration file for the grid setup.
 
 If no grid configuration file is specified, the experiment is run sequentially on the local machine.
-For several databases, feature types, recognition algorithms, and grid requirements the `xbob.speaker_recognition`_ provides these configuration files.
+For several databases, feature types, recognition algorithms, and grid requirements the `xbob.spkrec`_ provides these configuration files.
 They are located in the *config/...* directories.
 It is also safe to design one experiment and re-use one configuration file for all options as long as the configuration file includes all desired information:
 
@@ -119,7 +119,7 @@ One way to compute the final result is to use the *bob_compute_perf.py* script f
 Experiment design
 -----------------
 
-To be very flexible, the tool chain in the `xbob.speaker_recognition`_ is designed in several stages::
+To be very flexible, the tool chain in the `xbob.spkrec`_ is designed in several stages::
 
   1. Signal Preprocessing
   2  Feature Extraction
@@ -149,7 +149,7 @@ This step aims to extract features. Depending on the configuration file, several
 Feature Projection
 ~~~~~~~~~~~~~~~~~~
 Some provided tools need to process the features before they can be used for verification.
-In the `xbob.speaker_recognition`_, this step is referenced as the **projection** step.
+In the `xbob.spkrec`_, this step is referenced as the **projection** step.
 Again, the projection might require training, which is executed using the extracted features from the training set.
 Afterward, all features are projected (using the the previously trained Projector).
 
@@ -169,7 +169,7 @@ Some of the models (the so-called T-Norm-Model) and some of the probe features (
 
 Command line options
 --------------------
-Additionally to the required command line options discussed above, there are several options to modify the behavior of the `xbob.speaker_recognition`_ experiments.
+Additionally to the required command line options discussed above, there are several options to modify the behavior of the `xbob.spkrec`_ experiments.
 One set of command line options change the directory structure of the output:
 
 * ``--temp-directory``: Base directory where to write temporary files into (the default is */idiap/temp/$USER/<DATABASE>* when using the grid or */scratch/$USER/<DATABASE>* when executing jobs locally)
@@ -217,7 +217,7 @@ There are some more command line options that can be specified:
 Databases
 ---------
 
-For the moment, there are 3 databases that are tested in `xbob.speaker_recognition`_. Their protocols are also shipped with the tool. You can use the script ``bob_compute_perf.py`` to compute EER and HTER on DEV and EVAL as follows:
+For the moment, there are 3 databases that are tested in `xbob.spkrec`_. Their protocols are also shipped with the tool. You can use the script ``bob_compute_perf.py`` to compute EER and HTER on DEV and EVAL as follows:
 
 .. code-block:: sh
 
@@ -312,7 +312,7 @@ We first invite you to read the paper describing our system submitted to the NIS
 .. _NIST: http://www.nist.gov/itl/iad/ig/focs.cfm
 .. _xbob.db.verification.filelist: https://pypi.python.org/pypi/xbob.db.verification.filelist
 .. _pysox: https://pypi.python.org/pypi/pysox
-.. _xbob.speaker_recognition: https://github.com/bioidiap/xbob.speaker_recognition
+.. _xbob.spkrec: https://github.com/bioidiap/xbob.spkrec
 .. _pypi: https://pypi.python.org/pypi
 .. _Voxforge: http://www.voxforge.org/
 .. _BANCA: http://www.ee.surrey.ac.uk/CVSSP/banca/

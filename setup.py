@@ -21,7 +21,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='speaker_recognition',
+    name='xbob.spkrec',
     version='0.0.1a0',
     description='Speaker recognition and speaker recognition toolchain',
 
@@ -32,13 +32,13 @@ setup(
 
     entry_points={
       'console_scripts': [
-        'spkverif_isv.py = spkrectool.script.spkverif_isv:main',
-        'spkverif_gmm.py = spkrectool.script.spkverif_isv:main',
-        'spkverif_ivector.py = spkrectool.script.spkverif_ivector:main',
-        'para_ubm_spkverif_isv.py = spkrectool.script.para_ubm_spkverif_isv:main',
-        'para_ubm_spkverif_gmm.py = spkrectool.script.para_ubm_spkverif_isv:main',
-        'para_ubm_spkverif_ivector.py = spkrectool.script.para_ubm_spkverif_ivector:main',
-#        'manual_vad_conversion.py = spkrectool.script.manual_vad_conversion:main',
+        'spkverif_isv.py = spkrec.script.spkverif_isv:main',
+        'spkverif_gmm.py = spkrec.script.spkverif_isv:main',
+        'spkverif_ivector.py = spkrec.script.spkverif_ivector:main',
+        'para_ubm_spkverif_isv.py = spkrec.script.para_ubm_spkverif_isv:main',
+        'para_ubm_spkverif_gmm.py = spkrec.script.para_ubm_spkverif_isv:main',
+        'para_ubm_spkverif_ivector.py = spkrec.script.para_ubm_spkverif_ivector:main',
+#        'manual_vad_conversion.py = spkrec.script.manual_vad_conversion:main',
         ],
       },
 

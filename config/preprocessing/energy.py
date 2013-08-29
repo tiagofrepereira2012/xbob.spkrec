@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import spkrectool
+import spkrec
 
-preprocessor = spkrectool.preprocessing.Energy
+preprocessor = spkrec.preprocessing.Energy
 
 # Cepstral parameters
 win_length_ms = 20

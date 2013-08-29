@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import spkrectool
+import spkrec
 import bob
-tool = spkrectool.tools.IVecTool
+tool = spkrec.tools.IVecTool
 
 # 2/ GMM Training
 n_gaussians = 256

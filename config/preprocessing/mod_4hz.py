@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import spkrectool
+import spkrec
 
-preprocessor = spkrectool.preprocessing.MOD_4HZ
+preprocessor = spkrec.preprocessing.MOD_4HZ
 
 # Cepstral parameters
 win_length_ms = 20
