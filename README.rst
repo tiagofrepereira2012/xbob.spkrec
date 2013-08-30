@@ -264,7 +264,7 @@ Another example is to use ISV toolchain instead of UBM-GMM:
 * ``DEV: EER = 1.41%``
 * ``EVAL: HTER = 1.56%``
   
-or also IVector toolchain where Whitening, L-Norm, LDA, WCCN and Cosine scoring or PLDA are applied:
+or also IVector toolchain where Whitening, L-Norm, LDA, WCCN are used like in this example where the score computation is done using Cosine distance:
 
 
   .. code-block:: sh
@@ -274,6 +274,8 @@ or also IVector toolchain where Whitening, L-Norm, LDA, WCCN and Cosine scoring 
 * ``DEV: EER = 15.33%``
 * ``EVAL: HTER = 15.78%``
   
+The scoring computation can also be done using PLDA:
+  
   .. code-block:: sh
 
   $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_plda.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_plda
@@ -281,6 +283,9 @@ or also IVector toolchain where Whitening, L-Norm, LDA, WCCN and Cosine scoring 
 * ``DEV: EER = 15.33%``
 * ``EVAL: HTER = 16.93%``
 
+
+Note that in the previous examples, our goal is not to optimize the parameters on the DEV set but to provide examples of use.
+  
 
 BANCA database
 ~~~~~~~~~~~~~~
