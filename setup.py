@@ -26,6 +26,7 @@ setup(
     description='Speaker recognition toolchain',
     url='https://pypi.python.org/pypi/xbob.spkrec',
     license='GPLv3',
+    keywords = "Speaker Recognition, Speaker verification, Gaussian Mixture Model, ISV, UBM-GMM, I-Vector, Audio processing, NIST SRE 2012, Database",
     author='Elie Khoury',
     author_email='Elie.Khoury@idiap.ch',
     long_description=open('README.rst').read(),
