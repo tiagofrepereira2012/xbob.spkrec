@@ -266,8 +266,7 @@ Another example is to use ISV toolchain instead of UBM-GMM:
   
 or also IVector toolchain where Whitening, L-Norm, LDA, WCCN are used like in this example where the score computation is done using Cosine distance:
 
-
-  .. code-block:: sh
+.. code-block:: sh
 
   $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_cosine.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_cosine
   
@@ -276,7 +275,7 @@ or also IVector toolchain where Whitening, L-Norm, LDA, WCCN are used like in th
   
 The scoring computation can also be done using PLDA:
   
-  .. code-block:: sh
+.. code-block:: sh
 
   $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_plda.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_plda
 
