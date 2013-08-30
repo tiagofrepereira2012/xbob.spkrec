@@ -22,7 +22,6 @@
 import numpy
 import bob
 from .. import utils
-from facereclib.utils.logger import debug, info, warn, error
 
 class Cepstral:
   """Extracts Cepstral coefficents"""
