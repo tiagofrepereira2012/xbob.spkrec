@@ -23,12 +23,17 @@ from setuptools import setup, find_packages
 setup(
     name='xbob.spkrec',
     version='0.0.1a0',
-    description='Speaker recognition and speaker recognition toolchain',
-
+    description='Speaker recognition toolchain',
+    url='https://pypi.python.org/pypi/xbob.spkrec',
+    license='GPLv3',
     author='Elie Khoury',
     author_email='Elie.Khoury@idiap.ch',
+    long_description=open('README.rst').read(),
 
+    # This line is required for any distutils based packaging.
     packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
 
     entry_points={
       'console_scripts': [
@@ -50,8 +55,15 @@ setup(
         "pysox",
         # databases
         "xbob.db.verification.filelist",
-        "xbob.db.voxforge"
-        
-        
+        "xbob.db.voxforge",      
     ],
+
+    classifiers = [
+      'Development Status :: 4 - Beta',
+      'Intended Audience :: Developers',
+      'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+      'Natural Language :: English',
+      'Programming Language :: Python',
+      'Topic :: Scientific/Engineering :: Artificial Intelligence',
+      ],
 )
