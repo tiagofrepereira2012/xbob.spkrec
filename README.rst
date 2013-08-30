@@ -241,8 +241,8 @@ One example of command line is:
 
 .. code-block:: sh
 
-  $ ./bin/spkverif_gmm.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm_200G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
-  
+  $ ./bin/spkverif_gmm.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm_256G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z 
+  -b ubm_gmm
 In this example, we used the following configuration:
 
 * Energy-based VAD,  
@@ -251,9 +251,36 @@ In this example, we used the following configuration:
 
 The performance of the system on DEV and EVAL are:
 
-* ``DEV: EER = 1.74%``
-* ``EVAL: HTER = 1.98%``
+* ``DEV: EER = 2.00%``
+* ``EVAL: HTER = 1.65%``
  
+Another example is to use ISV toolchain instead of UBM-GMM:
+
+
+.. code-block:: sh
+
+  $ ./bin/spkverif_isv.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/isv/isv_256g_u50.py  --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR  -z -b isv
+
+* ``DEV: EER = 1.41%``
+* ``EVAL: HTER = 1.56%``
+  
+or also IVector toolchain where Whitening, L-Norm, LDA, WCCN and Cosine scoring or PLDA are applied:
+
+
+  .. code-block:: sh
+
+  $/bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_cosine.py  -z -b ivector_cosine
+  
+* ``DEV: EER = 15.33%``
+* ``EVAL: HTER = 15.78%``
+  
+  .. code-block:: sh
+
+  $/bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_plda.py  -z -b ivector_plda
+
+* ``DEV: EER = 15.33%``
+* ``EVAL: HTER = 16.93%``
+
 
 BANCA database
 ~~~~~~~~~~~~~~

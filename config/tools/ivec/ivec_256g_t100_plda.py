@@ -35,7 +35,7 @@ PLDA_TRAINING_ITERATIONS = 200 # Maximum number of iterations for the EM loop
 PLDA_TRAINING_THRESHOLD = 1e-3 # Threshold for ending the EM loop
 
 SUBSPACE_DIMENSION_OF_F = 5 # Size of subspace F
-SUBSPACE_DIMENSION_OF_G = 10 # Size of subspace G
+SUBSPACE_DIMENSION_OF_G = 5 # Size of subspace G
 variance_flooring = 1e-5
 INIT_SEED = 0 # seed for initializing
 INIT_F_METHOD = bob.trainer.PLDATrainer.BETWEEN_SCATTER
@@ -47,7 +47,7 @@ INIT_S_RATIO = 1
 
 # 6/ LDA training
 # LDA subspace; if not set, LDA subspace is not truncated
-LDA_SUBSPACE_DIMENSION = 9
+LDA_SUBSPACE_DIMENSION = 8
 
 
 # cosine scoring? Default plda_scoring
