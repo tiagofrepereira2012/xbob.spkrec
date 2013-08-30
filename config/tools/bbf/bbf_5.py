@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import spkrec
+import xbob.spkrec
 
-tool = spkrec.tools.BBFTool
+tool = xbob.spkrec.tools.BBFTool
 
 # 4/ BBF Enrolment and scoring
 boosting_iterations = 5  # The number of iterations used in the discrete Ada Boosting

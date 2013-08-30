@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import spkrec
+import xbob.spkrec
 import numpy
 
-feature_extractor = spkrec.feature_extraction.Cepstral
+feature_extractor = xbob.spkrec.feature_extraction.Cepstral
 
 # Cepstral parameters
 win_length_ms = 20

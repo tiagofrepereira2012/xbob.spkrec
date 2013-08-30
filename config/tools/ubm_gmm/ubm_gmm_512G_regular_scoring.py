@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import spkrec
+import xbob.spkrec
 import bob
 
-tool = spkrec.tools.UBMGMMRegularTool
+tool = xbob.spkrec.tools.UBMGMMRegularTool
 
 
 # 2/ GMM Training

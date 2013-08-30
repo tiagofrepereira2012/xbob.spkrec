@@ -34,16 +34,20 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-
+    
+    namespace_packages = [
+      'xbob',
+    ],
+    
     entry_points={
       'console_scripts': [
-        'spkverif_isv.py = spkrec.script.spkverif_isv:main',
-        'spkverif_gmm.py = spkrec.script.spkverif_isv:main',
-        'spkverif_ivector.py = spkrec.script.spkverif_ivector:main',
-        'para_ubm_spkverif_isv.py = spkrec.script.para_ubm_spkverif_isv:main',
-        'para_ubm_spkverif_gmm.py = spkrec.script.para_ubm_spkverif_isv:main',
-        'para_ubm_spkverif_ivector.py = spkrec.script.para_ubm_spkverif_ivector:main',
-#        'manual_vad_conversion.py = spkrec.script.manual_vad_conversion:main',
+        'spkverif_isv.py = xbob.spkrec.script.spkverif_isv:main',
+        'spkverif_gmm.py = xbob.spkrec.script.spkverif_isv:main',
+        'spkverif_ivector.py = xbob.spkrec.script.spkverif_ivector:main',
+        'para_ubm_spkverif_isv.py = xbob.spkrec.script.para_ubm_spkverif_isv:main',
+        'para_ubm_spkverif_gmm.py = xbob.spkrec.script.para_ubm_spkverif_isv:main',
+        'para_ubm_spkverif_ivector.py = xbob.spkrec.script.para_ubm_spkverif_ivector:main',
+#        'manual_vad_conversion.py = xbob.spkrec.script.manual_vad_conversion:main',
         ],
       },
 

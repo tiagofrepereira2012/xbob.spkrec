@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import spkrec
+import xbob.spkrec
 
 # 1/ The tool
-tool = spkrec.tools.ISVTool
+tool = xbob.spkrec.tools.ISVTool
 
 # 2/ GMM Training
 n_gaussians = 8
