@@ -12,7 +12,7 @@ https://github.com/bioidiap/facereclib
 * Feature extraction
 * Recognition/Verification tools
 
-In any case, results of these experiments will directly be comparable when the same database is employed.
+In any case, results of these experiments will directly be comparable when the same dataset is employed.
 
 `xbob.spkrec`_ is adapted to run speaker verification/recognition experiments with the SGE grid infrastructure at Idiap.
 
@@ -96,7 +96,7 @@ If you want to run the experiments in the GRID at Idiap or any equivalent SGE, y
 * ``--grid``: The configuration file for the grid setup.
 
 If no grid configuration file is specified, the experiment is run sequentially on the local machine.
-For several databases, feature types, recognition algorithms, and grid requirements the `xbob.spkrec`_ provides these configuration files.
+For several datasets, feature types, recognition algorithms, and grid requirements the `xbob.spkrec`_ provides these configuration files.
 They are located in the *config/...* directories.
 It is also safe to design one experiment and re-use one configuration file for all options as long as the configuration file includes all desired information:
 
@@ -214,10 +214,10 @@ There are some more command line options that can be specified:
 * ``--dry-run``: When the grid is enabled, only print the tasks that would have been sent to the grid without actually send them. **WARNING** This command line option is ignored when no ``--grid`` option was specified!
 
 
-Databases
+Datasets
 ---------
 
-For the moment, there are 3 databases that are tested in `xbob.spkrec`_. Their protocols are also shipped with the tool. You can use the script ``bob_compute_perf.py`` to compute EER and HTER on DEV and EVAL as follows:
+For the moment, there are 4 databases that are tested in `xbob.spkrec`_. Their protocols are also shipped with the tool. You can use the script ``bob_compute_perf.py`` to compute EER and HTER on DEV and EVAL as follows:
 
 .. code-block:: sh
 
@@ -227,11 +227,11 @@ By default, this script will also generate the DET curve in a PDF file.
 
 In this README, we give examples of different toolchains applied on different databases: Voxforge, BANCA, TIMIT, MOBIO, and NIST SRE 2012.
 
-Voxforge database
+Voxforge dataset
 ~~~~~~~~~~~~~~~~~
 `Voxforge`_ is a free database used in free speech recognition engines. We randomly selected a little part of the english corpus (< 1GB).  It is used as a toy example for our speaker recognition tool since experiment can be easily run on a local machine, and the results can be obtained in a reasonnable amount of time (< 2h).
 
-Unlike TIMIT and BANCA, this database is completely free of charge.
+Unlike TIMIT and BANCA, this dataset is completely free of charge.
 
 More details about how to download the audio files used in our experiments, and how the data is splitted into Training, Development and Evaluation set can be found here::
   
@@ -247,14 +247,14 @@ In this example, we used the following configuration:
 
 * Energy-based VAD,  
 * (19 MFCC features + Energy) + First and second derivatives,
-* UBM-GMM Modelling (with 256 Gaussians), the scoring is done using the linear approximation of the LLR.
+* **UBM-GMM** Modelling (with 256 Gaussians), the scoring is done using the linear approximation of the LLR.
 
 The performance of the system on DEV and EVAL are:
 
 * ``DEV: EER = 2.00%``
 * ``EVAL: HTER = 1.65%``
  
-Another example is to use ISV toolchain instead of UBM-GMM:
+Another example is to use **ISV** toolchain instead of UBM-GMM:
 
 
 .. code-block:: sh
@@ -264,7 +264,7 @@ Another example is to use ISV toolchain instead of UBM-GMM:
 * ``DEV: EER = 1.41%``
 * ``EVAL: HTER = 1.56%``
   
-or also IVector toolchain where Whitening, L-Norm, LDA, WCCN are used like in this example where the score computation is done using Cosine distance:
+or also **IVector** toolchain where **Whitening, L-Norm, LDA, WCCN** are used like in this example where the score computation is done using **Cosine distance**:
 
 .. code-block:: sh
 
@@ -273,7 +273,7 @@ or also IVector toolchain where Whitening, L-Norm, LDA, WCCN are used like in th
 * ``DEV: EER = 15.33%``
 * ``EVAL: HTER = 15.78%``
   
-The scoring computation can also be done using PLDA:
+The scoring computation can also be done using **PLDA**:
   
 .. code-block:: sh
 
@@ -286,7 +286,7 @@ The scoring computation can also be done using PLDA:
 Note that in the previous examples, our goal is not to optimize the parameters on the DEV set but to provide examples of use.
   
 
-BANCA database
+BANCA dataset
 ~~~~~~~~~~~~~~
 `BANCA`_ is a simple bimodal database with relatively clean data. The results are already very good with a simple baseline UBM-GMM system. An example of use can be:
 
@@ -303,7 +303,7 @@ Here is the performance of this system:
 * ``EVAL: EER = 0.69%``
 
 
-TIMIT database
+TIMIT dataset
 ~~~~~~~~~~~~~~
 `TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, the processing is done on the development set, and LFCC features are used:
 
@@ -315,7 +315,7 @@ Here is the performance of the system on the Development set:
 
 * ``DEV: EER = 2.68%``
 
-MOBIO database
+MOBIO dataset
 ~~~~~~~~~~~~~~
 This is a more challenging database. The noise and the short duration of the segments make the task of speaker recognition relatively difficult. The following experiment on male group uses the 4Hz modulation energy based VAD, and the ISV (with dimU=50) modelling technique.
 
@@ -329,7 +329,7 @@ Here is the performance of this system:
 * ``EVAL: EER = 10.36%``
 
 
-NIST-SRE2012 database
+NIST-SRE2012 dataset
 ~~~~~~~~~~~~~~~~~~~~~
 We first invite you to read the paper describing our system submitted to the NIST-SRE2012 Evaluation. The protocols on the development set are the results of a joint work by the I4U group. To reproduce the results, please check this dedicated package::
 
