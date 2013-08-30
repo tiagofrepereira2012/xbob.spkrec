@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
-# Elie Khoury <elie.khoury@idiap.ch>
+# Elie Khoury <Elie.Khoury@idiap.ch>
+# Laurent El Shafey <laurent.el-shafey@idiap.ch>
+# Manuel Guenther <manuel.guenther@idiap.ch>
+# Fri Aug 30 11:46:58 CEST 2013
 #
 # Copyright (C) 2012-2013 Idiap Research Institute, Martigny, Switzerland
 #

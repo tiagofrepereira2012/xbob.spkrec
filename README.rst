@@ -333,7 +333,7 @@ NIST-SRE2012 dataset
 ~~~~~~~~~~~~~~~~~~~~~
 We first invite you to read the paper describing our system submitted to the NIST-SRE2012 Evaluation. The protocols on the development set are the results of a joint work by the I4U group. To reproduce the results, please check this dedicated package::
 
-  https://github.com/bioidiap/xbob.nist_sre_2012
+  https://github.com/bioidiap/xbob.spkrec.nist_sre12
 
 
 .. _Bob: http://idiap.github.com/bob/

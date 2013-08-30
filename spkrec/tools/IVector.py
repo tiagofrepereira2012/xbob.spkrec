@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Elie Khoury <Elie.Khoury@idiap.ch>
-#
+# Fri Aug 30 11:53:40 CEST 2013
+# 
 # Copyright (C) 2012-2013 Idiap Research Institute, Martigny, Switzerland
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,6 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
 
 import bob
 import numpy
@@ -23,6 +25,7 @@ from . import UBMGMMTool
 from itertools import izip
 from math import sqrt
 import logging
+
 logger = logging.getLogger("bob.c++")
 logger.setLevel(logging.INFO)
 logger.propagate = True

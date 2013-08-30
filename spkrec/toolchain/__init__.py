@@ -2,6 +2,7 @@
 # vim: set fileencoding=utf-8 :
 # Laurent El Shafey <Laurent.El-Shafey@idiap.ch>
 # Elie Khoury<Elie.Khoury@idiap.ch>
+# Fri Aug 30 11:49:27 CEST 2013
 #
 # Copyright (C) 2012-2013 Idiap Research Institute, Martigny, Switzerland
 #
