@@ -19,10 +19,8 @@
 
 """Features for speaker recognition"""
 
-import numpy,math
+import numpy
 import bob
-import os
-import time
 from .. import utils
 
 class BBF:
@@ -53,7 +51,7 @@ class BBF:
   def __call__(self, input_file, vad_file=None):
     """Computes and returns normalized spectral features for the given input wave file and its corresponding VAD file"""
     
-    print "Input file : ", input_file
+    print("Input file : %s" % input_file)
     rate_wavsample = utils.read(input_file)
     
     # Feature extraction
@@ -99,7 +97,7 @@ class BBF:
     else:
       normalized_features = filtered_features
     if normalized_features.shape[0] == 0:
-      print "Warning: no speech found in:", input_file
+      print("Warning: no speech found in: %s" % input_file)
       # But do not keep it empty!!! This avoids errors in next steps
       # TODO better handle the empty files
       normalized_features=numpy.array([numpy.zeros(len(features_mask))])

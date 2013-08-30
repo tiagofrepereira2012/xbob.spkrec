@@ -19,8 +19,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import bob
-import re
 import numpy
 
 def ensure_dir(dirname):

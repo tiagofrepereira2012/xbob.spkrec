@@ -20,7 +20,6 @@
 
 import bob
 import numpy
-import types
 from . import UBMGMMTool
 from itertools import izip
 from math import sqrt

@@ -19,9 +19,6 @@
 
 """Feature extraction tools"""
 
-import bob
-import numpy
-import math
 from .. import utils
 
 from Cepstral import Cepstral

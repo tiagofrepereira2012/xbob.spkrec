@@ -21,7 +21,6 @@
 # This is under test
 import bob
 import numpy
-import types
 
 class BBFModel:
   """Machine for BBF boosting"""

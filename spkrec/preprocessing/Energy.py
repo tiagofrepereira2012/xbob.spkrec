@@ -19,10 +19,8 @@
 
 """Energy-based voice activity detection for speaker recognition"""
 
-import numpy,math
+import numpy
 import bob
-import os
-import time
 from .. import utils
 
 import logging

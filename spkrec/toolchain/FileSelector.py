@@ -20,7 +20,6 @@
 
 import os
 from .. import utils
-import bob
 
 class FileSelector:
   """This class provides shortcuts for selecting different files for different stages of the verification process"""

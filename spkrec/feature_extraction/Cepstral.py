@@ -19,12 +19,11 @@
 
 """Cepstral Features for speaker recognition"""
 
-import numpy,math
+import numpy
 import bob
-import os
-import time
 from .. import utils
 from facereclib.utils.logger import debug, info, warn, error
+
 class Cepstral:
   """Extracts Cepstral coefficents"""
   def __init__(self, config):

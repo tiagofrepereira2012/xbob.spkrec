@@ -19,9 +19,6 @@
 
 """Voice Activity Detection tools"""
 
-import bob
-import numpy
-import math
 from .. import utils
 
 from MOD_4HZ import MOD_4HZ

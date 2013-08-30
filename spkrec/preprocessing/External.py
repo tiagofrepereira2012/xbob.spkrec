@@ -19,10 +19,8 @@
 
 """Features for speaker recognition"""
 
-import numpy,math
+import numpy
 import bob
-import os
-import time
 from .. import utils
 
 

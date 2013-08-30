@@ -19,9 +19,6 @@
 #
 
 import bob
-import numpy
-import os
-import math
 import facereclib.tools.UBMGMM as UBMGMM
 
 class UBMGMMRegularTool (UBMGMM):
