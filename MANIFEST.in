@@ -1,0 +1,4 @@
+include README.rst boostrap.py buildout.cfg
+recursive-include docs *.py *.rst
+recursive-include xbob *.sql3
+recursive-include protocols *.txt *.lst
