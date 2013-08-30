@@ -109,9 +109,7 @@ It is also safe to design one experiment and re-use one configuration file for a
 
 By default, the ZT score normalization is activated. To deactivate it, please add the ``-z`` to the command line.
 
-One way to compute the final result is to use the *bob_compute_perf.py* script from your Bob installation, e.g., by calling:
-
-.. code-block:: sh
+One way to compute the final result is to use the *bob_compute_perf.py* script from your Bob installation, e.g., by calling::
 
   $ bin/bob_compute_perf.py -d PATH/TO/USER/DIRECTORY/scores-dev -t PATH/TO/USER/DIRECTORY/scores-eval
 
@@ -217,9 +215,8 @@ There are some more command line options that can be specified:
 Datasets
 ---------
 
-For the moment, there are 4 databases that are tested in `xbob.spkrec`_. Their protocols are also shipped with the tool. You can use the script ``bob_compute_perf.py`` to compute EER and HTER on DEV and EVAL as follows:
+For the moment, there are 4 databases that are tested in `xbob.spkrec`_. Their protocols are also shipped with the tool. You can use the script ``bob_compute_perf.py`` to compute EER and HTER on DEV and EVAL as follows::
 
-.. code-block:: sh
 
   $ bin/bob_compute_perf.py -d scores-dev -t scores-eval 
 
@@ -237,12 +234,11 @@ More details about how to download the audio files used in our experiments, and 
   
   https://pypi.python.org/pypi/xbob.db.voxforge
   
-One example of command line is:
-
-.. code-block:: sh
+One example of command line is::
 
   $ ./bin/spkverif_gmm.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm_256G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z 
   -b ubm_gmm
+  
 In this example, we used the following configuration:
 
 * Energy-based VAD,  
@@ -254,28 +250,21 @@ The performance of the system on DEV and EVAL are:
 * ``DEV: EER = 2.00%``
 * ``EVAL: HTER = 1.65%``
  
-Another example is to use **ISV** toolchain instead of UBM-GMM:
-
-
-.. code-block:: sh
+Another example is to use **ISV** toolchain instead of UBM-GMM::
 
   $ ./bin/spkverif_isv.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/isv/isv_256g_u50.py  --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR  -z -b isv
 
 * ``DEV: EER = 1.41%``
 * ``EVAL: HTER = 1.56%``
   
-or also **IVector** toolchain where **Whitening, L-Norm, LDA, WCCN** are used like in this example where the score computation is done using **Cosine distance**:
-
-.. code-block:: sh
+or also **IVector** toolchain where **Whitening, L-Norm, LDA, WCCN** are used like in this example where the score computation is done using **Cosine distance**::
 
   $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_cosine.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_cosine
   
 * ``DEV: EER = 15.33%``
 * ``EVAL: HTER = 15.78%``
   
-The scoring computation can also be done using **PLDA**:
-  
-.. code-block:: sh
+The scoring computation can also be done using **PLDA**::
 
   $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_plda.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_plda
 
@@ -288,12 +277,9 @@ Note that in the previous examples, our goal is not to optimize the parameters o
 
 BANCA dataset
 ~~~~~~~~~~~~~~
-`BANCA`_ is a simple bimodal database with relatively clean data. The results are already very good with a simple baseline UBM-GMM system. An example of use can be:
-
-.. code-block:: sh
+`BANCA`_ is a simple bimodal database with relatively clean data. The results are already very good with a simple baseline UBM-GMM system. An example of use can be::
 
   $ bin/spkverif_gmm.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm_regular_scoring.py  -p config/preprocessing/energy.py -f config/features/mfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
-  
 
 The configuration in this example is similar to the previous one with the only difference of using the regular LLR instead of its linear approximation.
 
@@ -305,11 +291,9 @@ Here is the performance of this system:
 
 TIMIT dataset
 ~~~~~~~~~~~~~~
-`TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, the processing is done on the development set, and LFCC features are used:
+`TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, the processing is done on the development set, and LFCC features are used::
 
-.. code-block:: sh
-  
-  ./bin/spkverif_gmm.py -d config/database/timit.py -t config/tools/ubm_gmm_256G.py -p config/preprocessing/energy.py -f config/features/lfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -b lfcc -z --groups dev
+  $ ./bin/spkverif_gmm.py -d config/database/timit.py -t config/tools/ubm_gmm_256G.py -p config/preprocessing/energy.py -f config/features/lfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -b lfcc -z --groups dev
   
 Here is the performance of the system on the Development set:
 
@@ -317,9 +301,7 @@ Here is the performance of the system on the Development set:
 
 MOBIO dataset
 ~~~~~~~~~~~~~~
-This is a more challenging database. The noise and the short duration of the segments make the task of speaker recognition relatively difficult. The following experiment on male group uses the 4Hz modulation energy based VAD, and the ISV (with dimU=50) modelling technique.
-
-.. code-block:: sh
+This is a more challenging database. The noise and the short duration of the segments make the task of speaker recognition relatively difficult. The following experiment on male group uses the 4Hz modulation energy based VAD, and the ISV (with dimU=50) modelling technique::
 
   $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -p config/preprocessing/mod_4hz.py -f config/features/mfcc_60.py -t config/tools/isv_u50.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
   
@@ -329,9 +311,9 @@ Here is the performance of this system:
 * ``EVAL: EER = 10.36%``
 
 
-NIST-SRE2012 dataset
-~~~~~~~~~~~~~~~~~~~~~
-We first invite you to read the paper describing our system submitted to the NIST-SRE2012 Evaluation. The protocols on the development set are the results of a joint work by the I4U group. To reproduce the results, please check this dedicated package::
+NIST SRE 2012
+~~~~~~~~~~~~~
+We first invite you to read the paper describing our system submitted to the NIST SRE 2012 Evaluation. The protocols on the development set are the results of a joint work by the I4U group. To reproduce the results, please check this dedicated package::
 
   https://github.com/bioidiap/xbob.spkrec.nist_sre12
 
