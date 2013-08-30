@@ -22,6 +22,5 @@
 
 import spkverif_isv
 import spkverif_ivector
-import spkverif_bbf
 import para_ubm_spkverif_isv
 import external_vad_conversion

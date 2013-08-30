@@ -22,5 +22,4 @@
 from ToolChain import ToolChain
 from FileSelector import FileSelector
 from ToolChainISV import ToolChainISV
-from ToolChainBBF import ToolChainBBF
 from ToolChainIvector import ToolChainIvector

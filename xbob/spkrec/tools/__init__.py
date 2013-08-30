@@ -24,7 +24,6 @@
 from UBMGMM import UBMGMMTool
 from UBMGMMRegular import UBMGMMRegularTool
 from ISV import ISVTool
-from BBF import BBFTool
 from IVector import IVecTool
 
 import numpy
