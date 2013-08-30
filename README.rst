@@ -121,7 +121,7 @@ Experiment design
 
 To be very flexible, the tool chain in the `xbob.spkrec`_ is designed in several stages::
 
-  1. Signal Preprocessing
+  1. Signal Preprocessing (Voice Activity Detection)
   2  Feature Extraction
   3. Feature Projection
   4. Model Enrollment
@@ -269,14 +269,14 @@ or also IVector toolchain where Whitening, L-Norm, LDA, WCCN and Cosine scoring 
 
   .. code-block:: sh
 
-  $/bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_cosine.py  -z -b ivector_cosine
+  $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_cosine.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_cosine
   
 * ``DEV: EER = 15.33%``
 * ``EVAL: HTER = 15.78%``
   
   .. code-block:: sh
 
-  $/bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_plda.py  -z -b ivector_plda
+  $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_plda.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_plda
 
 * ``DEV: EER = 15.33%``
 * ``EVAL: HTER = 16.93%``
