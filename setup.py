@@ -64,7 +64,7 @@ setup(
     ],
 
     classifiers = [
-      'Development Status :: 4 - Beta',
+      'Development Status :: 3 - Alpha',
       'Intended Audience :: Developers',
       'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
       'Natural Language :: English',
