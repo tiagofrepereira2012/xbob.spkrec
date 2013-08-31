@@ -60,7 +60,8 @@ setup(
         "pysox",
         # databases
         "xbob.db.verification.filelist",
-        "xbob.db.voxforge",      
+        "xbob.db.voxforge",
+        # "xbob.db.mobio",   
     ],
 
     classifiers = [
