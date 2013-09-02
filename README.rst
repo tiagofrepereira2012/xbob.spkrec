@@ -230,7 +230,7 @@ Voxforge dataset
 
 Unlike TIMIT and BANCA, this dataset is completely free of charge.
 
-More details about how to download the audio files used in our experiments, and how the data is splitted into Training, Development and Evaluation set can be found here::
+More details about how to download the audio files used in our experiments, and how the data is split into Training, Development and Evaluation set can be found here::
   
   https://pypi.python.org/pypi/xbob.db.voxforge
   
