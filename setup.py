@@ -23,7 +23,7 @@ from setuptools import setup, find_packages
 setup(
     name='xbob.spkrec',
     version='0.0.1a1',
-    description='Speaker recognition toolchain',
+    description='Speaker recognition toolkit',
     url='https://pypi.python.org/pypi/xbob.spkrec',
     license='GPLv3',
     keywords = "Speaker Recognition, Speaker verification, Gaussian Mixture Model, ISV, UBM-GMM, I-Vector, Audio processing, NIST SRE 2012, Database",
