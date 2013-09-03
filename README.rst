@@ -149,7 +149,7 @@ Feature Projection
 Some provided tools need to process the features before they can be used for verification.
 In the `xbob.spkrec`_, this step is referenced as the **projection** step.
 Again, the projection might require training, which is executed using the extracted features from the training set.
-Afterward, all features are projected (using the the previously trained Projector).
+Afterward, all features are projected (using the previously trained Projector).
 
 
 Model Enrollment
@@ -226,7 +226,7 @@ In this README, we give examples of different toolchains applied on different da
 
 Voxforge dataset
 ~~~~~~~~~~~~~~~~~
-`Voxforge`_ is a free database used in free speech recognition engines. We randomly selected a little part of the english corpus (< 1GB).  It is used as a toy example for our speaker recognition tool since experiment can be easily run on a local machine, and the results can be obtained in a reasonnable amount of time (< 2h).
+`Voxforge`_ is a free database used in free speech recognition engines. We randomly selected a small part of the english corpus (< 1GB).  It is used as a toy example for our speaker recognition tool since experiment can be easily run on a local machine, and the results can be obtained in a reasonnable amount of time (< 2h).
 
 Unlike TIMIT and BANCA, this dataset is completely free of charge.
 
