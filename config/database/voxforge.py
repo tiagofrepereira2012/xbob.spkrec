@@ -8,7 +8,7 @@ name = 'VoxForge'
 db = xbob.db.voxforge.Database()
 protocol = None
 
-# put the full path to the folder that contains the audio files
-wav_input_dir = "/idiap/temp/ekhoury/VoxForge/"
+# directory where the wave files are stored
+wav_input_dir = "/path/to/VoxForge/"
 wav_input_ext = ".wav"
 

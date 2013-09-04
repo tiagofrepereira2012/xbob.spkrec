@@ -7,6 +7,7 @@ name = 'timit'
 db = xbob.db.verification.filelist.Database('protocols/timit/2/')
 protocol = None
 
-wav_input_dir = "/idiap/resource/database/timit/timit/"
+# directory where the wave files are stored
+wav_input_dir = "/path/to/timit/"
 wav_input_ext = ".wav"
 
