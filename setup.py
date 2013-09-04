@@ -22,7 +22,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='xbob.spkrec',
-    version='0.0.1a1',
+    version='0.0.1a2',
     description='Speaker recognition toolkit',
     url='https://pypi.python.org/pypi/xbob.spkrec',
     license='GPLv3',

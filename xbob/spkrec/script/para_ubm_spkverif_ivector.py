@@ -413,7 +413,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
     # feature UBM projection
     if not self.m_args.skip_projection_ubm and hasattr(self.m_tool, 'project_gmm'):
       job_ids['feature_projection_ubm'] = self.submit_grid_job(
-              'projection_ubm', 
+              'projection-ubm', 
               list_to_split = self.m_file_selector.feature_list('IVector'),
               number_of_files_per_job = self.m_grid_config.number_of_projections_per_job,
               dependencies = deps, 
@@ -471,13 +471,13 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
        
     # i-vectors extraction
     if not self.m_args.skip_projection_ivector and hasattr(self.m_tool, 'project_ivector'):
-      job_ids['feature_projection_ivector'] = self.submit_grid_job(
-              'feature-projection-ivector', 
+      job_ids['projection_ivector'] = self.submit_grid_job(
+              'projection-ivector', 
               list_to_split = self.m_file_selector.feature_list('IVector'),
               number_of_files_per_job = self.m_grid_config.number_of_projections_per_job,
               dependencies = deps, 
               **self.m_grid_config.projection_queue)
-      deps.append(job_ids['feature_projection_ivector'])
+      deps.append(job_ids['projection_ivector'])
     
     
     # train whitening
@@ -568,7 +568,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
       list_to_split = self.m_file_selector.model_ids(group)
       if not self.m_args.skip_model_enrolment:
         job_ids['enrol_%s_N'%group] = self.submit_grid_job(
-                'enrol_models --group=%s --model-type=N'%group, 
+                'enrol-models --group=%s --model-type=N'%group, 
                 name = "enrol-N-%s"%group,  
                 list_to_split = self.m_file_selector.model_ids(group), 
                 number_of_files_per_job = self.m_grid_config.number_of_models_per_enrol_job, 
@@ -578,7 +578,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
   
         if not self.m_args.no_zt_norm:
           job_ids['enrol_%s_T'%group] = self.submit_grid_job(
-                  'enrol_models --group=%s --model-type=T'%group,
+                  'enrol-models --group=%s --model-type=T'%group,
                   name = "enrol-T-%s"%group, 
                   list_to_split = self.m_file_selector.tmodel_ids(group), 
                   number_of_files_per_job = self.m_grid_config.number_of_models_per_enrol_job, 
@@ -589,7 +589,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
       # compute A,B,C, and D scores
       if not self.m_args.skip_score_computation:
         job_ids['score_%s_A'%group] = self.submit_grid_job(
-                'compute_scores --group=%s --score-type=A'%group, 
+                'compute-scores --group=%s --score-type=A'%group, 
                 name = "score-A-%s"%group, 
                 list_to_split = self.m_file_selector.model_ids(group), 
                 number_of_files_per_job = self.m_grid_config.number_of_models_per_score_job, 
@@ -599,7 +599,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
         
         if not self.m_args.no_zt_norm:
           job_ids['score_%s_B'%group] = self.submit_grid_job(
-                  'compute_scores --group=%s --score-type=B'%group, 
+                  'compute-scores --group=%s --score-type=B'%group, 
                   name = "score-B-%s"%group, 
                   list_to_split = self.m_file_selector.model_ids(group), 
                   number_of_files_per_job = self.m_grid_config.number_of_models_per_score_job, 
@@ -607,7 +607,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
                   **self.m_grid_config.score_queue)
           
           job_ids['score_%s_C'%group] = self.submit_grid_job(
-                  'compute_scores --group=%s --score-type=C'%group, 
+                  'compute-scores --group=%s --score-type=C'%group, 
                   name = "score-C-%s"%group, 
                   list_to_split = self.m_file_selector.tmodel_ids(group), 
                   number_of_files_per_job = self.m_grid_config.number_of_models_per_score_job, 
@@ -615,7 +615,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
                   **self.m_grid_config.score_queue)
                   
           job_ids['score_%s_D'%group] = self.submit_grid_job(
-                  'compute_scores --group=%s --score-type=D'%group, 
+                  'compute-scores --group=%s --score-type=D'%group, 
                   name = "score-D-%s"%group, 
                   list_to_split = self.m_file_selector.tmodel_ids(group), 
                   number_of_files_per_job = self.m_grid_config.number_of_models_per_score_job, 
@@ -625,7 +625,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
           # compute zt-norm
           score_deps[group] = [job_ids['score_%s_A'%group], job_ids['score_%s_B'%group], job_ids['score_%s_C'%group], job_ids['score_%s_D'%group]]
           job_ids['score_%s_Z'%group] = self.submit_grid_job(
-                  'compute_scores --group=%s --score-type=Z'%group,
+                  'compute-scores --group=%s --score-type=Z'%group,
                   name = "score-Z-%s"%group,
                   dependencies = score_deps[group], **self.m_grid_config.score_queue) 
           concat_deps[group].extend([job_ids['score_%s_B'%group], job_ids['score_%s_C'%group], job_ids['score_%s_D'%group], job_ids['score_%s_Z'%group]])
@@ -703,7 +703,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
 
       
     # project the features ubm
-    elif self.m_args.execute_sub_task == 'projection_ubm':
+    elif self.m_args.execute_sub_task == 'projection-ubm':
       self.m_tool_chain.project_gmm_features(
           self.m_tool, 
           indices = self.indices(self.m_file_selector.feature_list('ISV'), self.m_grid_config.number_of_projections_per_job), 
@@ -729,7 +729,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
 
     
     # project the features ivector
-    if self.m_args.execute_sub_task == 'projection_ivector':
+    if self.m_args.execute_sub_task == 'projection-ivector':
       self.m_tool_chain.project_ivector_features(
           self.m_tool, 
           indices = self.indices(self.m_file_selector.feature_list('IVector'), self.m_grid_config.number_of_projections_per_job), 
@@ -737,14 +737,14 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
           extractor = self.m_feature_extractor)
     
     # train model whitening enroler
-    if self.m_args.execute_sub_task == 'train_whitening_enroler':
+    if self.m_args.execute_sub_task == 'train-whitening-enroler':
       self.m_tool_chain.train_whitening_enroler(
           self.m_tool, 
           dir_type='projected_ivector',
           force = self.m_args.force)
     
     # project the features ivector
-    if self.m_args.execute_sub_task == 'whitening_ivector':
+    if self.m_args.execute_sub_task == 'whitening-ivector':
       self.m_tool_chain.whitening_ivector(
           self.m_tool, 
           dir_type='projected_ivector',
@@ -752,7 +752,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
           force = self.m_args.force)
 
     # project the features ivector
-    if self.m_args.execute_sub_task == 'lnorm_ivector':
+    if self.m_args.execute_sub_task == 'lnorm-ivector':
       self.m_tool_chain.lnorm_ivector(
           self.m_tool, 
           dir_type='whitened_ivector',
@@ -760,14 +760,14 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
           force = self.m_args.force)
               
     # train LDA projector
-    if self.m_args.execute_sub_task == 'lda_train_projector':
+    if self.m_args.execute_sub_task == 'lda-train-projector':
       self.m_tool_chain.lda_train_projector(
           self.m_tool, 
           dir_type='lnorm_ivector',
           force = self.m_args.force)
     
     # project the features ivector
-    if self.m_args.execute_sub_task == 'lda_project_ivector':
+    if self.m_args.execute_sub_task == 'lda-project-ivector':
       self.m_tool_chain.lda_project_ivector(
           self.m_tool, 
           dir_type='lnorm_ivector',
@@ -776,14 +776,14 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
       
     
     # train WCCN projector
-    if self.m_args.execute_sub_task == 'wccn_train_projector':
+    if self.m_args.execute_sub_task == 'wccn-train-projector':
       self.m_tool_chain.wccn_train_projector(
           self.m_tool, 
           dir_type='lda_projected_ivector',
           force = self.m_args.force)
     
     # project the features ivector
-    if self.m_args.execute_sub_task == 'wccn_project_ivector':
+    if self.m_args.execute_sub_task == 'wccn-project-ivector':
       self.m_tool_chain.wccn_project_ivector(
           self.m_tool, 
           dir_type='lda_projected_ivector',
@@ -794,7 +794,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
     cur_type = 'wccn_projected_ivector'
     
     # train plda enroler
-    if self.m_args.execute_sub_task == 'train_plda_enroler':
+    if self.m_args.execute_sub_task == 'train-plda-enroler':
       self.m_tool_chain.train_plda_enroler(
           self.m_tool,
           dir_type=cur_type,
@@ -802,7 +802,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
     
       
     # enrol models
-    if self.m_args.execute_sub_task == 'enrol_models':
+    if self.m_args.execute_sub_task == 'enrol-models':
       if self.m_args.model_type == 'N':
         self.m_tool_chain.enrol_models(
             self.m_tool,
@@ -825,7 +825,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
             types = ['T'], 
             force = self.m_args.force)        
     # compute scores
-    if self.m_args.execute_sub_task == 'compute_scores':
+    if self.m_args.execute_sub_task == 'compute-scores':
       if self.m_args.score_type in ['A', 'B']:
         self.m_tool_chain.compute_scores(
             self.m_tool, 
@@ -972,7 +972,7 @@ def parse_args(command_line_arguments = sys.argv[1:]):
   #################### sub-tasks being executed by this script ##########################
 
   parser.add_argument('--execute-sub-task',
-      choices = ('preprocess', 'feature-extraction', 'normalize-features', 'kmeans-init', 'kmeans-e-step', 'kmeans-m-step', 'gmm-init', 'gmm-e-step', 'gmm-m-step', 'projection_ubm', 'ivec-init', 'ivec-e-step', 'ivec-m-step', 'feature-projection-ivector', 'train-whitening-enroler', 'whitening-ivector', 'lnorm-ivector', 'lda-train-projector', 'lda-project-ivector', 'wccn-train-projector', 'wccn-project-ivector', 'train-plda-enroler', 'enrol_models', 'compute_scores',  'concatenate'),
+      choices = ('preprocess', 'feature-extraction', 'normalize-features', 'kmeans-init', 'kmeans-e-step', 'kmeans-m-step', 'gmm-init', 'gmm-e-step', 'gmm-m-step', 'projection-ubm', 'ivec-init', 'ivec-e-step', 'ivec-m-step', 'projection-ivector', 'train-whitening-enroler', 'whitening-ivector', 'lnorm-ivector', 'lda-train-projector', 'lda-project-ivector', 'wccn-train-projector', 'wccn-project-ivector', 'train-plda-enroler', 'enrol-models', 'compute-scores',  'concatenate'),
       help = argparse.SUPPRESS) #'Executes a subtask (FOR INTERNAL USE ONLY!!!)'
   parser.add_argument('--iteration', type=int,
       help = argparse.SUPPRESS) #'The current iteration of KMeans or GMM training' 
