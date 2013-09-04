@@ -74,9 +74,9 @@ class ToolChainExecutor:
     ############## options to modify default directories or file names ####################
     dir_group = parser.add_argument_group('\nDirectories that can be changed according to your requirements')
     dir_group.add_argument('-T', '--temp-directory', metavar = 'DIR', type = str, dest = 'temp_dir',
-        help = 'The directory for temporary files; if not specified, /idiap/temp/$USER/database-name/sub-dir (or /scratch/$USER/database-name/sub-dir, when executed locally) is used')
+        help = 'The directory for temporary files; if not specified, temp/database-name/sub-dir (or /scratch/$USER/database-name/sub-dir, when executed locally) is used')
     dir_group.add_argument('-U', '--user-directory', metavar = 'DIR', type = str, dest = 'user_dir',
-        help = 'The directory for temporary files; if not specified, /idiap/user/$USER/database-name/sub-dir is used')
+        help = 'The directory for temporary files; if not specified, results/database-name/sub-dir is used')
     dir_group.add_argument('-b', '--sub-directory', metavar = 'DIR', type = str, dest = 'sub_dir', default = 'default',
         help = 'The sub-directory where the results of the current experiment should be stored.')
     dir_group.add_argument('-s', '--score-sub-directory', metavar = 'DIR', type = str, dest = 'score_sub_dir', default = 'scores',
@@ -172,15 +172,15 @@ class ToolChainExecutor:
     if self.m_args.user_dir:
       self.m_configuration.base_output_USER_dir = os.path.join(self.m_args.user_dir, self.m_args.sub_dir)
     else:
-      self.m_configuration.base_output_USER_dir = os.path.join("/idiap/user", user_name, self.m_database_config.name, self.m_args.sub_dir)
+      self.m_configuration.base_output_USER_dir = os.path.join("results", self.m_database_config.name, self.m_args.sub_dir)
 
     if self.m_args.temp_dir:
       self.m_configuration.base_output_TEMP_dir = os.path.join(self.m_args.temp_dir, self.m_args.sub_dir)
     else:
       if not self.m_args.grid:
-        self.m_configuration.base_output_TEMP_dir = os.path.join("/scratch", user_name, self.m_database_config.name, self.m_args.sub_dir)
+        self.m_configuration.base_output_TEMP_dir = os.path.join("temp", self.m_database_config.name, self.m_args.sub_dir)
       else:
-        self.m_configuration.base_output_TEMP_dir = os.path.join("/idiap/temp", user_name, self.m_database_config.name, self.m_args.sub_dir)
+        self.m_configuration.base_output_TEMP_dir = os.path.join("temp", self.m_database_config.name, self.m_args.sub_dir)
 
     self.m_configuration.extractor_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.extractor_file)
     self.m_configuration.projector_file = os.path.join(self.m_configuration.base_output_TEMP_dir, self.m_args.projector_file)
