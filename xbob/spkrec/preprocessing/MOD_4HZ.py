@@ -39,8 +39,6 @@ class MOD_4HZ:
     max_iterations = self.m_config.max_iterations
     alpha = self.m_config.alpha
     
-    useMod4Hz = self.m_config.useMod4Hz
-    
     n_samples = len(energy_array)
     
     ratio_for_threshold = 5
@@ -142,11 +140,10 @@ class MOD_4HZ:
     wl = self.m_config.win_length_ms
     ws = self.m_config.win_shift_ms
     nf = self.m_config.n_filters
-    nc = self.m_config.n_ceps
+    
 
     f_min = self.m_config.f_min
     f_max = self.m_config.f_max
-    dw = self.m_config.delta_win
     pre = self.m_config.pre_emphasis_coef
 
     c = bob.ap.Spectrogram(rate_wavsample[0], wl, ws, nf, f_min, f_max, pre)
@@ -168,12 +165,12 @@ class MOD_4HZ:
 
     labels = utils.smoothing(labels,10) # discard isolated speech less than 100ms
     
-    return labels
+    return labels, energy_array, mod_4hz
     
   
   def __call__(self, input_file, output_file, annotations = None):
     """labels speech (1) and non-speech (0) parts for the given input wave file using 4Hz modulation energy and energy"""
     
-    labels = self.mod_4hz(input_file)
+    [labels, energy_array, mod_4hz] = self.mod_4hz(input_file)
     bob.io.save(labels, output_file)
     
