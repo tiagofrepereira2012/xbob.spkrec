@@ -80,7 +80,7 @@ class ToolChainExecutorParallelISV (ToolChainExecutor.ToolChainExecutor, Paralle
     self.parallel_gmm_training_configuration()
     self.zt_norm_configuration()  
     self.isv_specific_configuration()
-    
+    self.m_configuration.default_extension = ".hdf5"
         
   def execute_tool_chain(self):
     """Executes the ZT tool chain on the local machine"""

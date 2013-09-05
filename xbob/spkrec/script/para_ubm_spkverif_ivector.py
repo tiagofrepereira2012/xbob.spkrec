@@ -93,6 +93,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
     self.parallel_gmm_training_configuration()
     self.parallel_ivec_training_configuration()
     self.zt_norm_configuration()  
+    self.m_configuration.default_extension = ".hdf5"
   
   def ivector_initialize(self, force=False):
     """Initializes the IVector training (non-parallel)."""
