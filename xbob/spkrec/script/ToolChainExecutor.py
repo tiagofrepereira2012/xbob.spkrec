@@ -258,7 +258,7 @@ class ToolChainExecutor:
           stdout=logdir, stderr=logdir, name=name, array=array,
           **kwargs)
 
-      print("submitted: %d" %job)
+      print("submitted: %s" %job)
       return job.id()
     else:
       self.m_fake_job_id += 1
