@@ -236,7 +236,7 @@ More details about how to download the audio files used in our experiments, and 
   
 One example of command line is::
 
-  $ ./bin/spkverif_gmm.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm_256G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z 
+  $ ./bin/spkverif_gmm.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm/ubm_gmm_256G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z 
   -b ubm_gmm
   
 In this example, we used the following configuration:
