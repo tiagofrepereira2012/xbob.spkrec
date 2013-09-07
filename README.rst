@@ -236,8 +236,9 @@ More details about how to download the audio files used in our experiments, and 
   
 One example of command line is::
 
-  $ ./bin/spkverif_gmm.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ubm_gmm/ubm_gmm_256G.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z 
-  -b ubm_gmm
+  $ ./bin/spkverif_gmm.py -d config/database/voxforge.py -p config/preprocessing/energy.py \
+   -f config/features/mfcc_60.py -t config/tools/ubm_gmm/ubm_gmm_256G.py -b ubm_gmm -z \ 
+   --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR 
   
 In this example, we used the following configuration:
 
@@ -252,21 +253,27 @@ The performance of the system on DEV and EVAL are:
  
 Another example is to use **ISV** toolchain instead of UBM-GMM::
 
-  $ ./bin/spkverif_isv.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/isv/isv_256g_u50.py  --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR  -z -b isv
+  $ ./bin/spkverif_isv.py -d config/database/voxforge.py -p config/preprocessing/energy.py \ 
+   -f config/features/mfcc_60.py -t config/tools/isv/isv_256g_u50.py  -z -b isv \ 
+   --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR  
 
 * ``DEV: EER = 1.41%``
 * ``EVAL: HTER = 1.56%``
   
 or also **IVector** toolchain where **Whitening, L-Norm, LDA, WCCN** are used like in this example where the score computation is done using **Cosine distance**::
 
-  $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_cosine.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_cosine
+  $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py \
+   -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_cosine.py -z -b ivector_cosine \ 
+   --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR 
   
 * ``DEV: EER = 15.33%``
 * ``EVAL: HTER = 15.78%``
   
 The scoring computation can also be done using **PLDA**::
 
-  $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_plda.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z -b ivector_plda
+  $ ./bin/spkverif_ivector.py -d config/database/voxforge.py -p config/preprocessing/energy.py \ 
+   -f config/features/mfcc_60.py -t config/tools/ivec/ivec_256g_t100_plda.py -z -b ivector_plda \
+   --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR 
 
 * ``DEV: EER = 15.33%``
 * ``EVAL: HTER = 16.93%``
@@ -279,7 +286,8 @@ BANCA dataset
 ~~~~~~~~~~~~~~
 `BANCA`_ is a simple bimodal database with relatively clean data. The results are already very good with a simple baseline UBM-GMM system. An example of use can be::
 
-  $ bin/spkverif_gmm.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm/ubm_gmm_256G_regular_scoring.py  -p config/preprocessing/energy.py -f config/features/mfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
+  $ bin/spkverif_gmm.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm/ubm_gmm_256G_regular_scoring.py \
+   -p config/preprocessing/energy.py -f config/features/mfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
 
 The configuration in this example is similar to the previous one with the only difference of using the regular LLR instead of its linear approximation.
 
@@ -293,7 +301,8 @@ TIMIT dataset
 ~~~~~~~~~~~~~~
 `TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, the processing is done on the development set, and LFCC features are used::
 
-  $ ./bin/spkverif_gmm.py -d config/database/timit.py -t config/tools/ubm_gmm/ubm_gmm_256G.py -p config/preprocessing/energy.py -f config/features/lfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -b lfcc -z --groups dev
+  $ ./bin/spkverif_gmm.py -d config/database/timit.py -t config/tools/ubm_gmm/ubm_gmm_256G.py -p config/preprocessing/energy.py \ 
+   -f config/features/lfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -b lfcc -z --groups dev
   
 Here is the performance of the system on the Development set:
 
@@ -303,7 +312,8 @@ MOBIO dataset
 ~~~~~~~~~~~~~~
 This is a more challenging database. The noise and the short duration of the segments make the task of speaker recognition relatively difficult. The following experiment on male group uses the 4Hz modulation energy based VAD, and the ISV (with dimU=50) modelling technique::
 
-  $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -p config/preprocessing/mod_4hz.py -f config/features/mfcc_60.py -t config/tools/isv/isv_u50.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
+  $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -p config/preprocessing/mod_4hz.py -f config/features/mfcc_60.py \ 
+   -t config/tools/isv/isv_u50.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
   
 Here is the performance of this system:
   
