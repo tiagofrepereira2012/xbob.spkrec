@@ -335,7 +335,7 @@ class ToolChainExecutorParallelIVector (ToolChainExecutor.ToolChainExecutor, Par
               list_to_split = self.m_file_selector.feature_list('IVector'), 
               number_of_files_per_job = self.m_grid_config.number_of_audio_files_per_job, 
               dependencies = deps, 
-              **self.m_grid_config.preprocessing_queue)
+              **self.m_grid_config.extraction_queue)
       deps.append(job_ids['feature-extraction'])      
 
     ######################################################################################
