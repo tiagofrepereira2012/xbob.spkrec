@@ -52,8 +52,8 @@ Installation
 
 Just download this package and decompress it locally::
 
-  $ wget http://pypi.python.org/packages/source/x/xbob.spkrec/xbob.spkrec-0.0.1.zip
-  $ unzip xbob.spkrec-0.0.1.zip
+  $ wget http://pypi.python.org/packages/source/x/xbob.spkrec/xbob.spkrec-0.0.1a6.zip
+  $ unzip xbob.spkrec-0.0.1a6.zip
   $ cd xbob.spkrec
 
 `xbob.spkrec`_ is based on the `BuildOut`_ python linking system. You only need to use buildout to bootstrap and have a working environment ready for
