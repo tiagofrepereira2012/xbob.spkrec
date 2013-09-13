@@ -172,7 +172,7 @@ class ToolChain:
           utils.ensure_dir(os.path.dirname(preprocessed_wav_file))
           preprocessed_wav = preprocessor(str(wav_file), str(preprocessed_wav_file), annotations)
       else:
-        print("WARNING: FILE DOES NOT EXIST: ", wav_file)
+        print("WARNING: FILE DOES NOT EXIST: %s" % wav_file)
 
 
   
@@ -223,7 +223,7 @@ class ToolChain:
         # extract feature
         feature = extractor(wav_file, vad_file)
         if self.check_features(feature)==0: 
-            print("Warning: something's wrong with the features: ", str(feature_file))
+            print("Warning: something's wrong with the features: %s" % str(feature_file))
         # Save feature
         self.__save_feature__(feature, str(feature_file))
 

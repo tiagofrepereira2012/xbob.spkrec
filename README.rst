@@ -286,8 +286,9 @@ BANCA dataset
 ~~~~~~~~~~~~~~
 `BANCA`_ is a simple bimodal database with relatively clean data. The results are already very good with a simple baseline UBM-GMM system. An example of use can be::
 
-  $ bin/spkverif_gmm.py -d config/database/banca_audio_G.py -t config/tools/ubm_gmm/ubm_gmm_256G_regular_scoring.py \
-   -p config/preprocessing/energy.py -f config/features/mfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
+  $ bin/spkverif_gmm.py -d config/database/banca_audio_G.py -p config/preprocessing/energy.py \
+    -f config/features/mfcc_60.py -t config/tools/ubm_gmm/ubm_gmm_256G_regular_scoring.py \
+    --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
 
 The configuration in this example is similar to the previous one with the only difference of using the regular LLR instead of its linear approximation.
 
@@ -301,8 +302,9 @@ TIMIT dataset
 ~~~~~~~~~~~~~~
 `TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, the processing is done on the development set, and LFCC features are used::
 
-  $ ./bin/spkverif_gmm.py -d config/database/timit.py -t config/tools/ubm_gmm/ubm_gmm_256G.py -p config/preprocessing/energy.py \ 
-   -f config/features/lfcc_60.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -b lfcc -z --groups dev
+  $ ./bin/spkverif_gmm.py -d config/database/timit.py -p config/preprocessing/energy.py \ 
+    -f config/features/lfcc_60.py -t config/tools/ubm_gmm/ubm_gmm_256G.py \ 
+    --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -b lfcc -z --groups dev
   
 Here is the performance of the system on the Development set:
 
@@ -312,8 +314,9 @@ MOBIO dataset
 ~~~~~~~~~~~~~~
 This is a more challenging database. The noise and the short duration of the segments make the task of speaker recognition relatively difficult. The following experiment on male group uses the 4Hz modulation energy based VAD, and the ISV (with dimU=50) modelling technique::
 
-  $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -p config/preprocessing/mod_4hz.py -f config/features/mfcc_60.py \ 
-   -t config/tools/isv/isv_u50.py --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
+  $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -p config/preprocessing/mod_4hz.py \ 
+   -f config/features/mfcc_60.py -t config/tools/isv/isv_u50.py \ 
+   --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR -z
   
 Here is the performance of this system:
   
