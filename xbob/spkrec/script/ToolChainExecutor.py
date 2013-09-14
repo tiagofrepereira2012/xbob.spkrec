@@ -152,7 +152,7 @@ class ToolChainExecutor:
     self.m_bin_dir = os.path.realpath(os.path.dirname(sys.argv[0]))
     self.m_executable = os.path.join(self.m_bin_dir, os.path.basename(calling_file))
     # generate job manager and set the temp dir
-    self.m_job_manager = gridtk.manager.JobManager(statefile = self.m_args.gridtk_db)
+    self.m_job_manager = gridtk.sge.JobManagerSGE(database = self.m_args.gridtk_db)
     self.m_temp_dir = temp_dir if temp_dir else self.m_configuration.base_output_TEMP_dir
 
 
@@ -254,12 +254,16 @@ class ToolChainExecutor:
 
     # submit the job to the job mamager
     if not self.m_args.dry_run:
-      job = self.m_job_manager.submit(use_cmd, deps=dependencies, cwd=True,
-          stdout=logdir, stderr=logdir, name=name, array=array,
+      job_id = self.m_job_manager.submit(
+          command_line = use_cmd, 
+          dependencies=dependencies,
+          cwd=True,
+          log_dir = logdir,
+          name=name, 
+          array=array,
           **kwargs)
-
-      print("submitted: %s" %job)
-      return job.id()
+      print("submitted: %s" %job_id)
+      return job_id
     else:
       self.m_fake_job_id += 1
       print('would have submitted job %s with id %d as' %(name, self.m_fake_job_id)),
