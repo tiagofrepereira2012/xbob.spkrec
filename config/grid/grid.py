@@ -24,3 +24,5 @@ enrol_queue = { 'queue':'q1d', 'memfree':'1G' }
 # number of models that one score computation should use
 number_of_models_per_score_job = 10
 score_queue = { 'queue':'q1d', 'memfree':'1G' }
+
+grid_type = 'sge' # on Idiap grid

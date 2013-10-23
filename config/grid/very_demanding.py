@@ -24,3 +24,5 @@ enrol_queue = {'queue':'q1d'}
 # number of models that one score computation should use
 number_of_models_per_score_job = 50
 score_queue = {'queue':'q1d', 'io_big':True}
+
+grid_type = 'sge' # on Idiap grid
