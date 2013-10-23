@@ -49,7 +49,6 @@ class ToolChainExecutor:
     # generate the tools that we will need
     self.m_preprocessor = self.m_preprocessor_config.preprocessor(self.m_preprocessor_config)
     self.m_feature_extractor = self.m_feature_extractor_config.feature_extractor(self.m_feature_extractor_config)
-    print self.m_tool_config
     self.m_tool = self.m_tool_config.tool(self.m_tool_config)
 
   def required_command_line_options(parser):
@@ -89,7 +88,7 @@ class ToolChainExecutor:
         help = 'Name of the file to write the feature projector into')
     file_group.add_argument('--enroler-file' , type = str, metavar = 'FILE', default = 'Enroler.hdf5',
         help = 'Name of the file to write the model enroler into')
-    file_group.add_argument('-G', '--submit-db-file', type = str, metavar = 'FILE', default = 'submitted.db', dest = 'gridtk_db',
+    file_group.add_argument('-G', '--submit-db-file', type = str, metavar = 'FILE', default = 'submitted.sql3', dest = 'gridtk_db',
         help = 'The db file in which the submitted jobs will be written (only valid with the --grid option)')
 
     sub_dir_group = parser.add_argument_group('\nSubdirectories of certain parts of the toolchain. You can specify directories in case you want to reuse parts of the experiments (e.g. extracted features) in other experiments. Please note that these directories are relative to the --temp-dir')
@@ -138,21 +137,37 @@ class ToolChainExecutor:
     Just hand over all parameters of the spkverify script, and this function will do the rest.
     Please call this function before submitting jobs to the grid
     using the submit_jobs_to_grid function"""
-
+    
     # we want to have the executable with the name of this file, which is laying in the bin directory
-    self.m_common_parameters = ''
-    for p in parameters:
-      self.m_common_parameters += p + ' '
+    self.m_common_parameters = [p for p in parameters[0:] if not '--skip' in p and not '--no' in p and p not in ('-q', '--dry-run')]
 
     # job id used for the dry-run
     self.m_fake_job_id = fake_job_id
-
-
+    
     # define the dir from which the current executable was called
-    self.m_bin_dir = os.path.realpath(os.path.dirname(sys.argv[0]))
+    if os.path.exists(parameters[0]):
+      self.m_bin_dir = os.path.dirname(os.path.realpath(parameters[0]))
+    else:
+      # This should happen only during nose testing under some weird conditions.
+      # Since nose tests should not actually run anything in the grid, we can use a fake directory here.
+      self.m_bin_dir = './bin'
     self.m_executable = os.path.join(self.m_bin_dir, os.path.basename(calling_file))
+    self.m_jman = os.path.join(self.m_bin_dir, 'jman')
     # generate job manager and set the temp dir
-    self.m_job_manager = gridtk.sge.JobManagerSGE(database = self.m_args.gridtk_db)
+    if self.m_grid_config.grid_type == 'local':
+      self.m_job_manager = gridtk.local.JobManagerLocal(database = self.m_args.gridtk_db, wrapper_script = self.m_jman)
+    elif self.m_grid_config.grid_type == 'sge':
+      self.m_job_manager = gridtk.sge.JobManagerSGE(database = self.m_args.gridtk_db, wrapper_script = self.m_jman)
+    else:
+      raise ValueError("The JobManager type '%s' is not supported.")
+    self.m_logs_directory = os.path.join(temp_dir if temp_dir else self.m_configuration.base_output_TEMP_dir, "grid_tk_logs")
+
+
+
+
+
+
+    # To remove
     self.m_temp_dir = temp_dir if temp_dir else self.m_configuration.base_output_TEMP_dir
 
 
@@ -225,16 +240,18 @@ class ToolChainExecutor:
   def submit_grid_job(self, command, list_to_split = None, number_of_files_per_job = 1, dependencies=[], name = None, **kwargs):
     """Submits a job to the grid"""
 
+    
     # create the command to be executed
     cmd = [
             self.m_executable,
             '--execute-sub-task',
-            command,
-            self.m_common_parameters
           ]
-
+          
+    cmd += command.split()
+    cmd += self.m_common_parameters
+    
     # if no job name is specified, create one
-    if name == None:
+    if name is None:
       name = command.split(' ')[0].replace('--','')
       log_sub_dir = command.replace(' ','__').replace('--','')
     else:
@@ -243,21 +260,16 @@ class ToolChainExecutor:
     logdir = os.path.join(self.m_temp_dir, 'logs', log_sub_dir)
 
     # generate job array
-    if list_to_split != None:
+    if list_to_split is not None:
       array = self.__generate_job_array__(list_to_split, number_of_files_per_job)
     else:
-      array = (1,1,1)
-
-    # create the grid wrapper for the command
-    use_cmd = ['-S', os.path.join(self.m_bin_dir, 'python')]
-    use_cmd.extend(cmd)
+      array = None
 
     # submit the job to the job mamager
     if not self.m_args.dry_run:
       job_id = self.m_job_manager.submit(
-          command_line = use_cmd, 
+          command_line = cmd, 
           dependencies=dependencies,
-          cwd=True,
           log_dir = logdir,
           name=name, 
           array=array,

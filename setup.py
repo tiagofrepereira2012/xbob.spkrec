@@ -54,7 +54,7 @@ setup(
 
     install_requires=[
         "setuptools", # for whatever
-        "gridtk",   # SGE job submission at Idiap
+        "gridtk >= 1.0.3",   # SGE job submission at Idiap
         "bob >= 1.2.0",      # base signal proc./machine learning library
         "facereclib",
         "pysox",
