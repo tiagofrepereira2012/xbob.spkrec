@@ -22,5 +22,6 @@
 from .. import utils
 
 from Cepstral import Cepstral
-
+from HTKFeatures import HTKFeatures
+from SPROFeatures import SPROFeatures
 
