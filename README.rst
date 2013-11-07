@@ -3,7 +3,7 @@ Speaker Recognition Toolkit
 
 This is the speaker recognition toolkit, designed to run speaker verification/recognition
 experiments . It's originally based on facereclib tool:
-https://github.com/bioidiap/facereclib
+https://pypi.python.org/pypi/facereclib/1.2.0
 
 `xbob.spkrec`_ is designed in a way that it should be easily possible to execute experiments combining different mixtures of:
 
@@ -68,7 +68,7 @@ This also requires that bob (>= 1.2.0) is installed.
 Running experiments
 -------------------
 
-These two commands will automatically download all desired packages (`gridtk`_, `pysox`_ and `xbob.db.verification.filelist`_ ) from GitHub or `pypi`_ and generate some scripts in the bin directory, including the following scripts::
+These two commands will automatically download all desired packages (`gridtk`_, `pysox`_ and `xbob.db.verification.filelist`_ ) from `pypi`_ and generate some scripts in the bin directory, including the following scripts::
   
    $ bin/spkverif_isv.py
    $ bin/spkverif_ivector.py
@@ -328,7 +328,7 @@ NIST SRE 2012
 ~~~~~~~~~~~~~
 We first invite you to read the paper describing our system submitted to the NIST SRE 2012 Evaluation. The protocols on the development set are the results of a joint work by the I4U group. To reproduce the results, please check this dedicated package::
 
-  https://github.com/bioidiap/xbob.spkrec.nist_sre12
+  https://pypi.python.org/pypi/xbob.spkrec.nist_sre12
 
 
 .. _Bob: http://idiap.github.com/bob/
@@ -338,7 +338,7 @@ We first invite you to read the paper describing our system submitted to the NIS
 .. _NIST: http://www.nist.gov/itl/iad/ig/focs.cfm
 .. _xbob.db.verification.filelist: https://pypi.python.org/pypi/xbob.db.verification.filelist
 .. _pysox: https://pypi.python.org/pypi/pysox
-.. _xbob.spkrec: https://github.com/bioidiap/xbob.spkrec
+.. _xbob.spkrec: https://pypi.python.org/pypi/xbob.spkrec
 .. _pypi: https://pypi.python.org/pypi
 .. _Voxforge: http://www.voxforge.org/
 .. _BANCA: http://www.ee.surrey.ac.uk/CVSSP/banca/
