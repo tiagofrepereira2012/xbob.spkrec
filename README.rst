@@ -3,7 +3,7 @@ Speaker Recognition Toolkit
 
 This is the speaker recognition toolkit, designed to run speaker verification/recognition
 experiments . It's originally based on facereclib tool:
-https://pypi.python.org/pypi/facereclib/1.2.0
+https://pypi.python.org/pypi/facereclib
 
 `xbob.spkrec`_ is designed in a way that it should be easily possible to execute experiments combining different mixtures of:
 
