@@ -356,9 +356,10 @@ class IVecTool (UBMGMMTool):
     # Initializes an array for the data
     data = self.lda_read_data(training_files)
     print("  -> Training LinearMachine using LDA")
-    t = bob.trainer.FisherLDATrainer()
+    #t = bob.trainer.FisherLDATrainer()
     # In case of trouble, use the pseudo-inverse computation flag to true
     #t = bob.trainer.FisherLDATrainer(use_pinv=True)
+    t = bob.trainer.FisherLDATrainer(strip_to_rank=False)
     self.lda_machine, __eig_vals = t.train(data)
     # resize the machine if desired
     if self.m_config.LDA_SUBSPACE_DIMENSION:
