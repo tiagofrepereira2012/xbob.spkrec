@@ -86,8 +86,9 @@ def probes_used_extract_scores(full_scores, same_probes):
   return model_scores 
 
 
-def read(filename):
-  """Read video.FrameContainer containing preprocessed frames"""
+# deprecated
+def read_pysox(filename):
+  """Read audio file"""
   import pysox, tempfile, os
   fileName, fileExtension = os.path.splitext(filename)
   wav_filename = filename
@@ -106,6 +107,17 @@ def read(filename):
     data = numpy.cast['float'](data)
   if sph: os.unlink(wav_filename)
   return [rate,data]
+
+
+def read(filename):
+  """Read audio file"""
+  import xbob.sox
+  audio = xbob.sox.reader(filename)
+  (rate, data) = audio.load()
+  # We consider there is only 1 channel in the audio file => data[0]
+  data= numpy.cast['float'](data[0]*pow(2,15)) # pow(2,15) is used to get the same native format as for scipy.io.wavfile.read
+  return [rate,data]
+
 
 
 def normalize_std_array(vector):

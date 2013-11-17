@@ -22,7 +22,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='xbob.spkrec',
-    version='0.0.2a1',
+    version='1.0.0',
     description='Speaker recognition toolkit',
     url='https://pypi.python.org/pypi/xbob.spkrec',
     license='GPLv3',
@@ -44,6 +44,7 @@ setup(
       'console_scripts': [
         'spkverif_isv.py = xbob.spkrec.script.spkverif_isv:main',
         'spkverif_gmm.py = xbob.spkrec.script.spkverif_isv:main',
+        'spkverif_jfa.py = xbob.spkrec.script.spkverif_jfa:main',
         'spkverif_ivector.py = xbob.spkrec.script.spkverif_ivector:main',
         'para_ubm_spkverif_isv.py = xbob.spkrec.script.para_ubm_spkverif_isv:main',
         'para_ubm_spkverif_gmm.py = xbob.spkrec.script.para_ubm_spkverif_isv:main',
@@ -57,10 +58,10 @@ setup(
         "gridtk >= 1.0.3",   # SGE job submission at Idiap
         "bob >= 1.2.0",      # base signal proc./machine learning library
         "facereclib",
-        "pysox",
         # databases
         "xbob.db.verification.filelist",
         "xbob.db.voxforge",
+        "xbob.sox"
         # "xbob.db.mobio",   
     ],
 
