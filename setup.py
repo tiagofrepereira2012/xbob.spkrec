@@ -50,6 +50,7 @@ setup(
         'para_ubm_spkverif_gmm.py = xbob.spkrec.script.para_ubm_spkverif_isv:main',
         'para_ubm_spkverif_ivector.py = xbob.spkrec.script.para_ubm_spkverif_ivector:main',
         'fusion.py = xbob.spkrec.script.fusion:main',
+        'evaluate.py = facereclib.script.evaluate:main',
 #        'manual_vad_conversion.py = xbob.spkrec.script.manual_vad_conversion:main',
         ],
       },
