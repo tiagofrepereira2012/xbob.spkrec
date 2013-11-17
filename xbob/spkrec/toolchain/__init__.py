@@ -23,3 +23,4 @@ from ToolChain import ToolChain
 from FileSelector import FileSelector
 from ToolChainISV import ToolChainISV
 from ToolChainIvector import ToolChainIvector
+from ToolChainJFA import ToolChainJFA

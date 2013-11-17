@@ -24,6 +24,7 @@
 from UBMGMM import UBMGMMTool
 from UBMGMMRegular import UBMGMMRegularTool
 from ISV import ISVTool
+from JFA import JFATool
 from IVector import IVecTool
 
 import numpy
