@@ -77,21 +77,32 @@ class Cepstral:
 
     # Voice activity detection
     if vad_file is None:
-      labels=label = numpy.array(numpy.ones(cepstral_features.shape[0]), dtype=numpy.int16)
+      labels=numpy.array(numpy.ones(cepstral_features.shape[0]), dtype=numpy.int16)
     else:
       labels=bob.io.load(str(vad_file))
 
     features_mask = self.m_config.features_mask
+    #if labels[-1] ==0:
     filtered_features = numpy.ndarray(shape=((labels == 1).sum(),len(features_mask)), dtype=numpy.float64)
+    #else:
+    #  filtered_features = numpy.ndarray(shape=((labels == 1).sum()+1,len(features_mask)), dtype=numpy.float64)
     i=0
     cur_i=0
-   
+    
     for row in cepstral_features:
-      if labels[i]==1:
-        for k in range(len(features_mask)):
-          filtered_features[cur_i,k] = row[features_mask[k]]
-        cur_i = cur_i + 1
-      i = i+1
+      if i < len(labels):
+        if labels[i]==1:
+          for k in range(len(features_mask)):
+            filtered_features[cur_i,k] = row[features_mask[k]]
+          cur_i = cur_i + 1
+        i = i+1
+      else:
+        if labels[-1]==1:
+          if cur_i == cepstral_features.shape[0]:
+            for k in range(len(features_mask)):
+              filtered_features[cur_i,k] = row[features_mask[k]]
+            cur_i = cur_i + 1
+        i = i+1
 
     if self.m_config.normalizeFeatures:
       normalized_features = self.normalize_features(filtered_features)
