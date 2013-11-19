@@ -3,7 +3,7 @@
 import xbob.spkrec
 
 # 1/ The tool
-tool = xbob.spkrec.tools.ISVTool
+tool = xbob.spkrec.tools.JFATool
 
 # 2/ GMM Training
 n_gaussians = 256
@@ -17,8 +17,8 @@ update_variances = True
 norm_KMeans = True
 
 # 3/ JFA Training
-rv = 50
-ru = 50 # The dimensionality of the subspace
+rv = 10
+ru = 10 # The dimensionality of the subspace
 relevance_factor = 4
 n_iter_train = 10
 n_iter_enrol = 1
