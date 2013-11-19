@@ -130,7 +130,7 @@ class ToolChainJFA(ToolChain):
     i = 0
     for k in probe_files:
       # read probe
-      probe = self.__read_probe__(str(k))
+      probe = self.m_tool.read_probe(str(k))
       # compute score
       scores[0,i] = self.m_tool.score(model, probe)
       i += 1
@@ -167,7 +167,7 @@ class ToolChainJFA(ToolChain):
       all_probes = {}
       # read all probe files into memory
       for k in all_probe_files:
-        all_probes[k] = self.__read_probe__(str(all_probe_files[k][0]))
+        all_probes[k] = self.m_tool.read_probe(str(all_probe_files[k][0]))
       print("Computing A matrix")
 
     # Computes the raw scores for each model
@@ -203,12 +203,7 @@ class ToolChainJFA(ToolChain):
   def __scores_b__(self, model_ids, group, force, preload_probes):
     """Computes B scores"""
     # probe files:
-    if self.m_use_projected_isv_dir:
-      dir_type = 'projected_isv'
-    elif self.m_use_projected_ubm_dir:
-      dir_type = 'projected_ubm'
-    else:
-      dir_type = 'features'
+    dir_type = 'projected_ubm'
     zprobe_objects = self.m_file_selector.zprobe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
     if preload_probes:
@@ -216,7 +211,7 @@ class ToolChainJFA(ToolChain):
       zprobes = {}
       # read all probe files into memory
       for k in zprobe_objects:
-        zprobes[k] = self.__read_probe__(str(zprobe_objects[k][0]))
+        zprobes[k] = self.m_tool.read_probe(str(zprobe_objects[k][0]))
       print("Computing B matrix")
 
     # Loads the models
@@ -236,12 +231,7 @@ class ToolChainJFA(ToolChain):
   def __scores_c__(self, tmodel_ids, group, force, preload_probes):
     """Computed C scores"""
     # probe files:
-    if self.m_use_projected_isv_dir:
-      dir_type = 'projected_isv'
-    elif self.m_use_projected_ubm_dir:
-      dir_type = 'projected_ubm'
-    else:
-      dir_type = 'features'
+    dir_type = 'projected_ubm'
     probe_files = self.m_file_selector.probe_files(group, dir_type)
 
     # preload the probe files for a faster access (and fewer network load)
@@ -250,7 +240,7 @@ class ToolChainJFA(ToolChain):
       probes = {}
       # read all probe files into memory
       for k in probe_files:
-        probes[k] = self.__read_probe__(str(k))
+        probes[k] = self.m_tool.read_probe(str(k))
       print("Computing C matrix")
 
     # Computes the raw scores for the T-Norm model
@@ -269,12 +259,7 @@ class ToolChainJFA(ToolChain):
       
   def __scores_d__(self, tmodel_ids, group, force, preload_probes):
     # probe files:
-    if self.m_use_projected_isv_dir:
-      dir_type = 'projected_isv'
-    elif self.m_use_projected_ubm_dir:
-      dir_type = 'projected_ubm'
-    else:
-      dir_type = 'features'
+    dir_type = 'projected_ubm'
     zprobe_objects = self.m_file_selector.zprobe_objects(group)
     zprobe_files = self.m_file_selector.zprobe_files(group, dir_type)
     # preload the probe files for a faster access (and fewer network load)
@@ -283,7 +268,7 @@ class ToolChainJFA(ToolChain):
       zprobes = {}
       # read all probe files into memory
       for k in zprobe_files:
-        zprobes[k] = self.__read_probe__(str(k))
+        zprobes[k] = self.m_tool.read_probe(str(k))
       print("Computing D matrix")
 
     # Gets the Z-Norm impostor samples
@@ -315,10 +300,6 @@ class ToolChainJFA(ToolChain):
     """Computes the scores for 'dev' and 'eval' groups"""
     # save tool for internal use
     self.m_tool = tool
-    self.m_use_projected_isv_dir = False
-
-    self.m_use_projected_ubm_dir = False
-    
     # load the projector, if needed
     if hasattr(tool,'load_projector'):
       tool.load_projector(self.m_file_selector.projector_file())
@@ -377,8 +358,6 @@ class ToolChainJFA(ToolChain):
   def zt_norm(self, tool, groups = ['dev', 'eval']):
     """Computes ZT-Norm using the previously generated files"""
     for group in groups:
-      self.m_use_projected_isv_dir = False
-      self.m_use_projected_ubm_dir = False
       
       # list of models
       model_ids = self.m_file_selector.model_ids(group)

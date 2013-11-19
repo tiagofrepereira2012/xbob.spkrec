@@ -68,11 +68,12 @@ This also requires that bob (>= 1.2.0) is installed.
 Running experiments
 -------------------
 
-These two commands will automatically download all desired packages (`gridtk`_, `pysox`_ and `xbob.db.verification.filelist`_ ) from `pypi`_ and generate some scripts in the bin directory, including the following scripts::
+The above two commands will automatically download all desired packages (`gridtk`_, `pysox`_ and `xbob.db.verification.filelist`_ ) from `pypi`_ and generate some scripts in the bin directory, including the following scripts::
   
    $ bin/spkverif_isv.py
    $ bin/spkverif_ivector.py
    $ bin/spkverif_gmm.py
+   $ bin/spkverif_jfa.py
    $ bin/para_ubm_spkverif_isv.py
    $ bin/para_ubm_spkverif_ivector.py
    $ bin/para_ubm_spkverif_gmm.py
@@ -259,6 +260,15 @@ Another example is to use **ISV** toolchain instead of UBM-GMM::
 
 * ``DEV: EER = 1.41%``
 * ``EVAL: HTER = 1.56%``
+
+One can also try **JFA** toolchain::
+
+  $ ./bin/spkverif_jfa.py -d config/database/voxforge.py -p config/preprocessing/energy.py \ 
+   -f config/features/mfcc_60.py -t config/tools/jfa/jfa_256_v5_u10.py  -z -b jfa \ 
+   --user-directory PATH/TO/USER/DIR --temp-directory PATH/TO/TEMP/DIR
+   
+* ``DEV: EER = 5.65%``
+* ``EVAL: HTER = 4.82%``   
   
 or also **IVector** toolchain where **Whitening, L-Norm, LDA, WCCN** are used like in this example where the score computation is done using **Cosine distance**::
 

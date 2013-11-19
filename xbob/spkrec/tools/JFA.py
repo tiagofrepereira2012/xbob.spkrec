@@ -80,7 +80,8 @@ class JFATool (ISVTool):
     machine.jfa_base = self.m_jfabase
     return machine
 
-  read_probe = read_feature
+  def read_probe(self, feature_file):
+    return self.read_feature(feature_file)
 
   def score(self, model, probe):
     """Computes the score for the given model and the given probe"""
