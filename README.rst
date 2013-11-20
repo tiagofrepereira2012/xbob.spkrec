@@ -47,8 +47,8 @@ publications:
     }
 
 
-Installation
-------------
+I- Installation
+----------------
 
 Just download this package and decompress it locally::
 
@@ -65,8 +65,8 @@ experiments::
 This also requires that bob (>= 1.2.0) is installed.
 
 
-Running experiments
--------------------
+II- Running experiments
+------------------------
 
 The above two commands will automatically download all desired packages (`gridtk`_, `pysox`_ and `xbob.db.verification.filelist`_ ) from `pypi`_ and generate some scripts in the bin directory, including the following scripts::
   
@@ -77,6 +77,9 @@ The above two commands will automatically download all desired packages (`gridtk
    $ bin/para_ubm_spkverif_isv.py
    $ bin/para_ubm_spkverif_ivector.py
    $ bin/para_ubm_spkverif_gmm.py
+   $ bin/fusion.py
+   $ bin/evaluate.py
+   
 
   
 These scripts can be used to employ different 
@@ -110,13 +113,9 @@ It is also safe to design one experiment and re-use one configuration file for a
 
 By default, the ZT score normalization is activated. To deactivate it, please add the ``-z`` to the command line.
 
-One way to compute the final result is to use the *bob_compute_perf.py* script from your Bob installation, e.g., by calling::
 
-  $ bin/bob_compute_perf.py -d PATH/TO/USER/DIRECTORY/scores-dev -t PATH/TO/USER/DIRECTORY/scores-eval
-
-
-Experiment design
------------------
+III- Experiment design
+-----------------------
 
 To be very flexible, the tool chain in the `xbob.spkrec`_ is designed in several stages::
 
@@ -125,19 +124,21 @@ To be very flexible, the tool chain in the `xbob.spkrec`_ is designed in several
   3. Feature Projection
   4. Model Enrollment
   5. Scoring
+  6. Fusion
+  7. Evaluation
 
 Note that not all tools implement all of the stages.
 
 
-Voice Activity Detection 
-~~~~~~~~~~~~~~~~~~~~~~~~
+1. Voice Activity Detection 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This step aims to filter out the non speech part. Depending on the configuration file, several routines can be enabled or disabled.
 
 * Energy-based VAD
 * 4Hz Modulation energy based VAD
 
-Feature Extraction
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2. Feature Extraction
+~~~~~~~~~~~~~~~~~~~~~
 This step aims to extract features. Depending on the configuration file, several routines can be enabled or disabled.
 
 * LFCC/MFCC feature extraction
@@ -145,30 +146,44 @@ This step aims to extract features. Depending on the configuration file, several
 * Feature normalization
 
 
-Feature Projection
-~~~~~~~~~~~~~~~~~~
+3. Feature Projection
+~~~~~~~~~~~~~~~~~~~~~
 Some provided tools need to process the features before they can be used for verification.
 In the `xbob.spkrec`_, this step is referenced as the **projection** step.
 Again, the projection might require training, which is executed using the extracted features from the training set.
 Afterward, all features are projected (using the previously trained Projector).
 
 
-Model Enrollment
-~~~~~~~~~~~~~~~~
+4. Model Enrollment
+~~~~~~~~~~~~~~~~~~~
 Model enrollment defines the stage, where several (projected or unprojected) features of one identity are used to enroll the model for that identity.
 In the easiest case, the features are simply averaged, and the average feature is used as a model.
 More complex procedures, which again might require a model enrollment training stage, create models in a different way.
 
 
-Scoring
-~~~~~~~
+5. Scoring
+~~~~~~~~~~
 In the final scoring stage, the models are compared to probe features and a similarity score is computed for each pair of model and probe.
 Some of the models (the so-called T-Norm-Model) and some of the probe features (so-called Z-Norm-probe-features) are split up, so they can be used to normalize the scores later on.
 
+6. Fusion
+~~~~~~~~~
+The score fusion of different score outputs uses `logistic regression`_.
 
-Command line options
---------------------
-Additionally to the required command line options discussed above, there are several options to modify the behavior of the `xbob.spkrec`_ experiments.
+
+7. Evaluation
+~~~~~~~~~~~~~
+One way to compute the final result is to use the *bin/evaluate.py* e.g., by calling::
+
+  $ bin/evaluate.py -d PATH/TO/USER/DIRECTORY/scores-dev -e PATH/TO/USER/DIRECTORY/scores-eval -c EER -D DET.pdf -x 
+  
+This will compute the EER, the minCLLR, CLLR, and draw the DET curve.
+
+
+IV- Command line options
+------------------------
+
+Additionally to some of the required command line options discussed above, there are several options to modify the behavior of the `xbob.spkrec`_ experiments.
 One set of command line options change the directory structure of the output:
 
 * ``--temp-directory``: Base directory where to write temporary files into (the default is */idiap/temp/$USER/<DATABASE>* when using the grid or */scratch/$USER/<DATABASE>* when executing jobs locally)
@@ -209,12 +224,10 @@ There are some more command line options that can be specified:
 
 * ``--no-zt-norm``: Disables the computation of the ZT-Norm scores.
 * ``--groups``: Enabled to limit the computation to the development ('dev') or test ('eval') group. By default, both groups are evaluated.
-* ``--preload-probes``: Speeds up the score computation by loading all probe features (by default, they are loaded each time they are needed). Use this option only, when you are sure that all probe features fit into memory.
-* ``--dry-run``: When the grid is enabled, only print the tasks that would have been sent to the grid without actually send them. **WARNING** This command line option is ignored when no ``--grid`` option was specified!
 
 
-Datasets
----------
+V- Datasets
+------------
 
 For the moment, there are 4 databases that are tested in `xbob.spkrec`_. Their protocols are also shipped with the tool. You can use the script ``bob_compute_perf.py`` to compute EER and HTER on DEV and EVAL as follows::
 
@@ -225,8 +238,8 @@ By default, this script will also generate the DET curve in a PDF file.
 
 In this README, we give examples of different toolchains applied on different databases: Voxforge, BANCA, TIMIT, MOBIO, and NIST SRE 2012.
 
-Voxforge dataset
-~~~~~~~~~~~~~~~~~
+1. Voxforge dataset
+~~~~~~~~~~~~~~~~~~~
 `Voxforge`_ is a free database used in free speech recognition engines. We randomly selected a small part of the english corpus (< 1GB).  It is used as a toy example for our speaker recognition tool since experiment can be easily run on a local machine, and the results can be obtained in a reasonnable amount of time (< 2h).
 
 Unlike TIMIT and BANCA, this dataset is completely free of charge.
@@ -292,8 +305,8 @@ The scoring computation can also be done using **PLDA**::
 Note that in the previous examples, our goal is not to optimize the parameters on the DEV set but to provide examples of use.
   
 
-BANCA dataset
-~~~~~~~~~~~~~~
+2. BANCA dataset
+~~~~~~~~~~~~~~~~
 `BANCA`_ is a simple bimodal database with relatively clean data. The results are already very good with a simple baseline UBM-GMM system. An example of use can be::
 
   $ bin/spkverif_gmm.py -d config/database/banca_audio_G.py -p config/preprocessing/energy.py \
@@ -308,8 +321,8 @@ Here is the performance of this system:
 * ``EVAL: EER = 0.69%``
 
 
-TIMIT dataset
-~~~~~~~~~~~~~~
+3. TIMIT dataset
+~~~~~~~~~~~~~~~~
 `TIMIT`_ is one of the oldest databases (year 1993) used to evaluate speaker recognition systems. In the following example, the processing is done on the development set, and LFCC features are used::
 
   $ ./bin/spkverif_gmm.py -d config/database/timit.py -p config/preprocessing/energy.py \ 
@@ -320,8 +333,9 @@ Here is the performance of the system on the Development set:
 
 * ``DEV: EER = 2.68%``
 
-MOBIO dataset
-~~~~~~~~~~~~~~
+
+4. MOBIO dataset
+~~~~~~~~~~~~~~~~
 This is a more challenging database. The noise and the short duration of the segments make the task of speaker recognition relatively difficult. The following experiment on male group uses the 4Hz modulation energy based VAD, and the ISV (with dimU=50) modelling technique::
 
   $ ./bin/spkverif_isv.py -d config/database/mobio_male_twothirds_wav.py -p config/preprocessing/mod_4hz.py \ 
@@ -334,8 +348,8 @@ Here is the performance of this system:
 * ``EVAL: EER = 10.36%``
 
 
-NIST SRE 2012
-~~~~~~~~~~~~~
+5. NIST SRE 2012
+~~~~~~~~~~~~~~~~
 We first invite you to read the paper describing our system submitted to the NIST SRE 2012 Evaluation. The protocols on the development set are the results of a joint work by the I4U group. To reproduce the results, please check this dedicated package::
 
   https://pypi.python.org/pypi/xbob.spkrec.nist_sre12
@@ -353,3 +367,4 @@ We first invite you to read the paper describing our system submitted to the NIS
 .. _Voxforge: http://www.voxforge.org/
 .. _BANCA: http://www.ee.surrey.ac.uk/CVSSP/banca/
 .. _TIMIT: http://www.ldc.upenn.edu/Catalog/catalogEntry.jsp?catalogId=LDC93S1
+.. _logistic regression: http://en.wikipedia.org/wiki/Logistic_regression
