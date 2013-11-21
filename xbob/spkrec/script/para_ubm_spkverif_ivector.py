@@ -1031,10 +1031,10 @@ def speaker_verify(args, external_dependencies = [], external_fake_job_id = 0):
     return executor.add_jobs_to_grid(external_dependencies)
     
 
-def main():
+def main(command_line_parameters = sys.argv):
   """Executes the main function"""
   # do the command line parsing
-  args = parse_args()
+  args = parse_args(command_line_parameters)
   # verify that the input files exist
   for f in (args.database, args.preprocessor, args.tool):
     if not os.path.exists(str(f)):
