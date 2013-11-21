@@ -68,7 +68,7 @@ This also requires that bob (>= 1.2.0) is installed.
 II- Running experiments
 ------------------------
 
-The above two commands will automatically download all desired packages (`gridtk`_, `pysox`_ and `xbob.db.verification.filelist`_ ) from `pypi`_ and generate some scripts in the bin directory, including the following scripts::
+The above two commands will automatically download all desired packages (`gridtk`_, `xbob.sox`_ and `xbob.db.verification.filelist`_ ) from `pypi`_ and generate some scripts in the bin directory, including the following scripts::
   
    $ bin/spkverif_isv.py
    $ bin/spkverif_ivector.py
@@ -355,13 +355,13 @@ We first invite you to read the paper describing our system submitted to the NIS
   https://pypi.python.org/pypi/xbob.spkrec.nist_sre12
 
 
-.. _Bob: http://idiap.github.com/bob/
+.. _Bob: http://www.idiap.ch/software/bob
 .. _local.bob.recipe: https://github.com/idiap/local.bob.recipe
-.. _gridtk: https://github.com/idiap/gridtk
+.. _gridtk: https://pypi.python.org/pypi/gridtk
 .. _BuildOut: http://www.buildout.org/
 .. _NIST: http://www.nist.gov/itl/iad/ig/focs.cfm
 .. _xbob.db.verification.filelist: https://pypi.python.org/pypi/xbob.db.verification.filelist
-.. _pysox: https://pypi.python.org/pypi/pysox
+.. _xbob.sox: https://pypi.python.org/pypi/xbob.sox
 .. _xbob.spkrec: https://pypi.python.org/pypi/xbob.spkrec
 .. _pypi: https://pypi.python.org/pypi
 .. _Voxforge: http://www.voxforge.org/

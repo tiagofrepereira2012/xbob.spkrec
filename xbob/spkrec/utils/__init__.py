@@ -86,29 +86,6 @@ def probes_used_extract_scores(full_scores, same_probes):
   return model_scores 
 
 
-# deprecated
-def read_pysox(filename):
-  """Read audio file"""
-  import pysox, tempfile, os
-  fileName, fileExtension = os.path.splitext(filename)
-  wav_filename = filename
-  sph = False
-  if fileExtension == '.sph':
-    sph = True
-    infile = pysox.CSoxStream(filename)
-    wav_filename = tempfile.mkstemp('.wav')[1]
-    outfile = pysox.CSoxStream(wav_filename,'w', infile.get_signal())
-    chain = pysox.CEffectsChain(infile, outfile)
-    chain.flow_effects()
-    outfile.close()
-  import scipy.io.wavfile
-  rate, data = scipy.io.wavfile.read(str(wav_filename)) # the data is read in its native format
-  if data.dtype =='int16':
-    data = numpy.cast['float'](data)
-  if sph: os.unlink(wav_filename)
-  return [rate,data]
-
-
 def read(filename):
   """Read audio file"""
   import xbob.sox

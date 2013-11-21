@@ -1,2 +1,3 @@
 include README.rst bootstrap.py buildout.cfg COPYING
 recursive-include protocols *.txt *.lst
+recursive-include config *.py
