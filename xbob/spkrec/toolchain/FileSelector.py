@@ -62,9 +62,11 @@ class FileSelector:
     # default are the basic world model training files
     files = self.m_db.objects(protocol=self.m_config.protocol, **self.__options__('all_files_options'))
     if tool_type == 'ISV' or tool_type == 'IVector':
-      files = files + self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
+      if 'optional_world_1' in self.m_db.groups():
+        files = files + self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_1', **self.__options__('all_files_options'))
     if tool_type == 'IVector':
-      files = files + self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))    
+      if 'optional_world_2' in self.m_db.groups():
+        files = files + self.m_db.objects(protocol=self.m_config.protocol, groups='optional_world_2', **self.__options__('all_files_options'))    
     # sort files and remove duplicated files  
     files = self.sort(files)
     known = set()
@@ -137,13 +139,19 @@ class FileSelector:
     """Returns the list of features that should be used for projector training"""
     directory=self.m_config.projected_ubm_dir
     extension=self.m_config.default_extension
-    return self.select_training_files('optional_world_1', directory, extension)
+    if 'optional_world_1' in self.m_db.groups():
+      return self.select_training_files('optional_world_1', directory, extension)
+    else:
+      return self.select_training_files('world', directory, extension)
 
   def training_plda_list(self):
     """Returns the list of features that should be used for projector training"""
     directory=self.m_config.features_dir
     extension=self.m_config.default_extension
-    return self.select_training_files('optional_world_2', directory, extension)
+    if 'optional_world_2' in self.m_db.groups():
+      return self.select_training_files('optional_world_2', directory, extension)
+    else:
+      return self.select_training_files('world', directory, extension)
 
 
   def training_feature_list_by_clients(self, dir_type, step):
@@ -158,19 +166,34 @@ class FileSelector:
       group = 'world'
       cur_world_options = self.__options__('world_projector_options')
     elif step == 'train_enroler':
-      group = 'optional_world_1'
+      if 'optional_world_1' in self.m_db.groups():
+        group = 'optional_world_1'
+      else:
+        group= 'world'
       cur_world_options = self.__options__('world_enroler_options')
     elif step == 'train_whitening_enroler':
-      group = 'optional_world_1'
+      if 'optional_world_1' in self.m_db.groups():
+        group = 'optional_world_1'
+      else:
+        group = 'world'
       cur_world_options = self.__options__('world_enroler_options')
     elif step == 'lda_train_projector':
-      group = 'optional_world_1'
+      if 'optional_world_1' in self.m_db.groups():
+        group = 'optional_world_1'
+      else:
+        group = 'world'
       cur_world_options = self.__options__('world_enroler_options')
     elif step == 'wccn_train_projector':
-      group = 'optional_world_1'
+      if 'optional_world_1' in self.m_db.groups():
+        group = 'optional_world_1'
+      else:
+        group = 'world'
       cur_world_options = self.__options__('world_enroler_options')
     elif step == 'train_plda_enroler':
-      group = 'optional_world_2'
+      if 'optional_world_1' in self.m_db.groups():
+        group = 'optional_world_2'
+      else:
+        group = 'world'
       cur_world_options = self.__options__('world_enroler_options')
       
 
