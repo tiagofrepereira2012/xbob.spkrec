@@ -719,7 +719,7 @@ def speaker_verify(args, external_dependencies = [], external_fake_job_id = 0):
 def main(command_line_parameters = sys.argv):
   """Executes the main function"""
   # do the command line parsing
-  args = parse_args(command_line_parameters)
+  args = parse_args(command_line_parameters[1:])
   # verify that the input files exist
   for f in (args.database, args.preprocessor, args.tool):
     if not os.path.exists(str(f)):
