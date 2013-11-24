@@ -35,9 +35,6 @@ class MOD_4HZ:
     #########################
     ## Initialisation part ##
     #########################
-    #index = self.m_config.energy_mask
-    max_iterations = self.m_config.max_iterations
-    alpha = self.m_config.alpha
     
     n_samples = len(energy_array)
     

@@ -12,6 +12,3 @@ f_min = 0.0
 f_max = 4000
 pre_emphasis_coef = 1.0
 
-# VAD parameters
-alpha = 2
-max_iterations = 10
