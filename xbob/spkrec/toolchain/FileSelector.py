@@ -325,7 +325,7 @@ class FileSelector:
   def client_id_from_model_id(self, model_id):
     """Returns the client id for the given model id."""
     if hasattr(self.m_db, 'get_client_id_from_model_id'):
-      return self.m_db.get_client_id_from_model_id(model_id)
+      return self.m_db.get_client_id_from_model_id(model_id, protocol=self.m_config.protocol)
     else:
       return model_id
     
